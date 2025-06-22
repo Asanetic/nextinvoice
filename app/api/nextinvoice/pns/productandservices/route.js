@@ -137,7 +137,7 @@ const ProductandservicesInputsArr = {
 
 //--- End inventory inputs array --//
 
-    
+  
     if (ProductandservicesFormAction === "add_inventory") 
     {
       
