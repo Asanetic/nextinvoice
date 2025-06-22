@@ -155,6 +155,7 @@ const ProductandservicesInputsArr = {
       
     }
     
+    
     if (ProductandservicesFormAction === "update_inventory") {
       
       // update table Productandservices
