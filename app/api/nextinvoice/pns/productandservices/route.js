@@ -155,15 +155,12 @@ const ProductandservicesInputsArr = {
       
     }
     
-    
+
     if (ProductandservicesFormAction === "update_inventory") {
       
       // update table Productandservices
       const result = await mosySqlUpdate("inventory", ProductandservicesInputsArr, body, `primkey='${inventory_uptoken_value}'`);
-
-
       
-
       return Response.json({
         status: 'success',
         message: result.message,
