@@ -186,6 +186,8 @@ export async function GET(request) {
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
 
+    console.log('Chromium path:', puppeteer.executablePath());
+
     const page = await browser.newPage();
 
     await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
