@@ -178,8 +178,6 @@ export async function GET(request) {
 
   try {
 
-    const page = await browser.newPage();
-
     const puppeteer = require('puppeteer');
 
     const browser = await puppeteer.launch({
@@ -188,6 +186,7 @@ export async function GET(request) {
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
 
+    const page = await browser.newPage();
 
     await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
