@@ -208,6 +208,10 @@ export async function GET(request) {
       }
     });
   } catch (err) {
+    const puppeteer = require('puppeteer');
+
+    console.log('Chromium path:', puppeteer.executablePath());
+
     console.error('PDF generation error:', err);
     return new Response(`Failed to generate PDF ${err}`, { status: 500 });
   }
