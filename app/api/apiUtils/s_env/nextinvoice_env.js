@@ -8,8 +8,8 @@ const mosyDbConfig = {
   },
   production: {
     DB_HOST: '127.0.0.1',
-    DB_USER: 'firebirdbill',
-    DB_PASS: 'firebirdbill001',
+    DB_USER: 'nextadmin',
+    DB_PASS: 'UltraSecurePass123!',
     DB_NAME: 'firebirdbill',
   }
 };
