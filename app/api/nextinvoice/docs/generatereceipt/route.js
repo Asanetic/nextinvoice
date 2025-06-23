@@ -207,6 +207,6 @@ export async function GET(request) {
     });
   } catch (err) {
     console.error('PDF generation error:', err);
-    return new Response('Failed to generate PDF', { status: 500 });
+    return new Response(`Failed to generate PDF ${err}`, { status: 500 });
   }
 }
