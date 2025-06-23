@@ -214,7 +214,7 @@ export async function downloadReceipt({invoiceId="test"})
               closeMosyCard()
               // ✅ Return the data
             } else {
-              MosyNotify({message : `Error generating invoice... ${response.message}`, addTimer: false, icon:"times-circle" , iconColor: "text-danger"})
+              MosyNotify({message : `Error generating receipt... ${response.message}`, addTimer: false, icon:"times-circle" , iconColor: "text-danger"})
 
               console.log('Error fetching docs data:', response);
 
@@ -225,7 +225,7 @@ export async function downloadReceipt({invoiceId="test"})
 
             console.log('Error:', err);
             
-            MosyNotify({message : `Fatal error generating invoice... ${err}`, addTimer: false, icon:"times-circle" , iconColor: "text-danger"})
+            MosyNotify({message : `Fatal error generating receipt... ${err}`, addTimer: false, icon:"times-circle" , iconColor: "text-danger"})
 
             return []; //  Even safer fallback
 
