@@ -34,7 +34,7 @@ export async function GET(request) {
   
   const grandTotal = Number(invoiceSubTotal) - Number(invoiceDetails?.discount);
 
-  const invoiceBal = Number(totalAmountPaid)-Number(grandTotal)
+  const invoiceBal = Number(grandTotal)-Number(totalAmountPaid)
 
   const invoiceItemsRows = invoiceItemList.map(item => `
     <tr>
