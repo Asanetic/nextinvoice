@@ -214,16 +214,21 @@ export async function downloadReceipt({invoiceId="test"})
               closeMosyCard()
               // ✅ Return the data
             } else {
-              MosyNotify({message : `Error generating invoice... ${response}`, addTimer: false, icon:"times-circle" , iconColor: "text-danger"})
+              MosyNotify({message : `Error generating invoice... ${response.message}`, addTimer: false, icon:"times-circle" , iconColor: "text-danger"})
 
               console.log('Error fetching docs data:', response);
+
               return []; // Safe fallback
+
             }
           } catch (err) {
+
             console.log('Error:', err);
-            MosyNotify({message : `Error generating invoice... ${err}`, addTimer: false, icon:"time-circle" , iconColor: "text-danger"})
+            
+            MosyNotify({message : `Fatal error generating invoice... ${err}`, addTimer: false, icon:"times-circle" , iconColor: "text-danger"})
 
             return []; //  Even safer fallback
+
           }
 }
 
