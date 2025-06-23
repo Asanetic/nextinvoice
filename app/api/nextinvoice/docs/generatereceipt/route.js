@@ -30,6 +30,7 @@ export async function GET(request) {
   const logoUrl = `${baseUrl}/api/mediaroom?media=${btoa(vendorDetails?.logo || 'logo.png')}`;
   const badgeUrl = `${baseUrl}/api/mediaroom?media=${btoa('unpaid_badge.jpg')}`;
 
+  console.log(`---base url--- ${badgeUrl} ${baseUrl}`)
   
   const grandTotal = Number(invoiceSubTotal) - Number(invoiceDetails?.discount);
 
