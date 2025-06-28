@@ -1,7 +1,7 @@
 
 import { base64Decode, mosyFlexSelect , mosyQddata, mosySumRows, mosyCountRows , mosyQuickSel, mosyFlexQuickSel} from '../../../apiUtils/dataControl/dataUtils';
 
-//computed column mutations for Mycompanies 
-export const MycompaniesRowMutations = {
+//computed column mutations for Messagetemplates 
+export const MessagetemplatesRowMutations = {
 
 }

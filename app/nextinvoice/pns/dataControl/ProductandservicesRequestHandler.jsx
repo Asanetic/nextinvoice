@@ -123,7 +123,7 @@ export async function initProductandservicesProfileData(rawQstr) {
   }
   
 
-  MosyNotify({message : 'Refreshing Product and services' , icon:'refresh', addTimer:false})
+  MosyNotify({message : 'Refreshing Product and Services' , icon:'refresh', addTimer:false})
 
   const encodedMutations = btoa(JSON.stringify(rawMutations));
 
@@ -134,7 +134,9 @@ export async function initProductandservicesProfileData(rawQstr) {
       params: { 
       q: btoa(rawQstr),         
       mutations: encodedMutations,
-      fullQ : true
+      fullQ : true,
+      aw : btoa(``),
+      src : btoa(`initProductandservicesProfileData`)
       },
     });
 
@@ -203,7 +205,7 @@ export async function getProductandservicesListData(qstr = "") {
   if(qstr=='')
   {
    fullWhere = false 
-   qstr=btoa(' order by primkey desc')
+   qstr=btoa('')
   }
   
   //add the following data in response
@@ -224,7 +226,9 @@ export async function getProductandservicesListData(qstr = "") {
         q: qstr, 
         mutations: encodedMutations,
         fullQ : fullWhere,
-        pagination : `l:qinventory_page:${recordsPerPage}:${pageNo}`
+        pagination : `l:qinventory_page:${recordsPerPage}:${pageNo}`,
+        aw:btoa(`order by primkey desc`),
+        src : btoa(`getProductandservicesListData`)        
         },
     });
 

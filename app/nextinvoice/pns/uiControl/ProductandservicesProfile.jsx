@@ -123,7 +123,7 @@ export default function ProductandservicesProfile({ dataIn = {}, dataOut = {} })
       
       
       <div className="col-md-11 rounded text-left p-2 mb-0  bg-white ">
-        <div className="col-md-12 p-2 pr-lg-4 pl-lg-4 m-0">
+        <div className={` profile_container col-md-12 m-0 p-0  ${showNavigationIsle &&("pr-lg-4 pl-lg-4 m-0")}`}>
           <form onSubmit={postProductandservicesFormData} encType="multipart/form-data" id="inventory_profile_form">
             
             {/*    Title isle      */}

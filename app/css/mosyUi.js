@@ -134,6 +134,47 @@ const MosyUiTheme = () => (
  margin-top:0px;
 }
 
+/* All modals take full width on small screens */
+/* Pure percentage-based modal widths */
+.mosycard_wide {
+  width: 80% !important;
+  max-width: 80% !important;
+}
+
+.mosycard_medium {
+  width: 65% !important;
+  max-width: 65% !important;
+}
+
+.mosycard_full {
+  width: 95% !important;
+  max-width: 95% !important;
+}
+
+/* On mobile: full width always */
+@media (max-width: 768px) {
+  .mosycard_wide,
+  .mosycard_medium,
+  .mosycard_full {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+
+/* Ensure the modal content doesn't overflow the screen */
+.mosycard_scrollable {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Optional: prevent backdrop scroll */
+body.modal-open {
+  overflow: hidden;
+}
+
+
+
 .main_list_container{
   padding-left:20px!important;
   padding-right:20px!important;

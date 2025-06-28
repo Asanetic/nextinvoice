@@ -1,4 +1,4 @@
-import DynamicModal from "./DynamicModal";
+import DynamicModalProvider from "./DynamicModalProvider";
 
 export default function AdminFooter() {
   return (
@@ -10,7 +10,7 @@ export default function AdminFooter() {
       <div id="ajax_snack"></div>
       <div id="alert_box"></div>
       <div id="magic_alert"></div>
-      <DynamicModal />
+      <DynamicModalProvider />
 
 
     </>

@@ -287,7 +287,7 @@ $mini_list_array=[
      //" invoice_id ='\${invoice_paymentsNode?.invoice_id}' order by primkey desc "=>''.$camelcasetbl_prefix.'List::{`Invoice Payment history`}:../snippets/list::hide:InteprateInvoicepaymentsEvent', 
 
      //"tag ='\${infosnippetsNode?.tag}' order by primkey desc "=>''.$camelcasetbl_prefix.'List:{`Related ${infosnippetsNode?.tag} Notes`}:../snippets/list:::InteprateInfosnippetsEvent', 
-     "invoice_id ='\${invoice_paymentsNode?.invoice_id}' order by primkey desc "=>''.$camelcasetbl_prefix.'List:{`Invoice Payment history`}:../snippets/list::hide:InteprateInvoicepaymentsEvent', 
+     "invoice_id ='\${invoice_paymentsNode?.invoice_id}' "=>''.$camelcasetbl_prefix.'List:{`Invoice Payment history`}:../snippets/list::hide:InteprateInvoicepaymentsEvent', 
      //"deposit_file_id='\${bankingNode?.record_id}' order by primkey desc "=>'DeposithistoryList:{`Deposits list`}:../inventory/fuel::hide:InteprateDeposithistoryEvent', 
     
   ];

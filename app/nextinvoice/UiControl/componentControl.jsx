@@ -10,7 +10,8 @@ import { mosyPostFormData, mosyGetData, mosyUpdateUrlParam, mosyUrlParam, magicR
 import {MosyCard, closeMosyCard } from "../../components/MosyCard";   
 
 import { mosyInputProps, mosyCellClass } from './formControlEngine';
-import { MosyNotify } from '../../MosyUtils/ActionModals';
+
+import { MosyExtendLiveSearch } from './customUI';
 
 
 function isComponentEnabled(tblName, actionType = 'cu') {
@@ -367,7 +368,10 @@ export function SmartDropdown({
         const res = await mosyGetData({
           endpoint: apiEndpoint,
           params: { 
-          q: btoa(`group by ${labelField}`),         
+          q: btoa(``),         
+          aw : btoa(`group by ${labelField}`),
+          fullQ :false,
+          src : btoa(`${inputName}`)
           },
         });
         
@@ -525,14 +529,24 @@ export function LiveSearchDropdown({
       const customParams = { [`q${tblName}`] : encodedQuery}
         
       const queryFilterStr = MosyFilterEngine(tblName, true, customParams)
-        
+
+      let fullQ = false
+
+      if(queryFilterStr!='')
+      {
+        fullQ=true
+      }
+
       try {
         
         // Fetch the  data with the given key
         const res = await mosyGetData({
           endpoint: apiEndpoint,
           params: { 
-          q: btoa(queryFilterStr),         
+          q: btoa(queryFilterStr),    
+          fullQ : fullQ,
+          src : btoa(`${parentTable} - ${hiddenInputName}`)
+
           },
         });
         
@@ -541,7 +555,7 @@ export function LiveSearchDropdown({
         if (data.status === 'success') {
           setResults(data.data || []);
         } else {
-          console.error('API error:', data.message);
+          console.error('API error:', res);
         }
       } catch (err) {
         console.error('Fetch error:', err);
@@ -550,6 +564,7 @@ export function LiveSearchDropdown({
       }
     }, 400);
 
+    //console.log(`live search tbl ${tblName} isfocused ${isFocused} reslts ${results.length}  isloading ${loading} hasSearched ${hasSearched}`)
     return () => clearTimeout(debounceRef.current);
   }, [query, apiEndpoint, tblName]);
 
@@ -598,6 +613,8 @@ export function LiveSearchDropdown({
   const cellClass = mosyCellClass(parentTable, hiddenInputName, context, cellOverrides);
   const inputProps = mosyInputProps(parentTable, hiddenInputName, context, inputOverrides);
 
+  const createNewCellClass = mosyCellClass(parentTable, `${hiddenInputName}_create_new`, context, cellOverrides);
+
   return (
                       
     <div className={`form-group ${defaultColSize} hive_data_cell ${cellClass}`}>
@@ -617,33 +634,69 @@ export function LiveSearchDropdown({
         {...inputProps}
       />
 
-      {isFocused && (loading || results.length > 0) && (
-        <ul
-          className="list-group position-absolute w-100 bg-white"
-          style={{ maxHeight: '220px', overflowY: 'auto', zIndex: 9 }}
-        >
-          {loading && (
-            <li className="list-group-item text-muted">
-              <i className="fa fa-spinner fa-spin me-2"></i> Searching...
+        {isFocused && (
+          <ul
+            className="list-group position-absolute w-100 bg-white shadow"
+            style={{ maxHeight: '220px', overflowY: 'auto', zIndex: 9 }}
+          >
+            {loading && (
+              <li className="list-group-item text-muted">
+                <i className="fa fa-spinner fa-spin me-2"></i> Searching...
+              </li>
+            )}
+
+            {!loading && results.length > 0 && results.map((item) => (
+              <li
+                key={`${item[valueField]}=${magicRandomStr()}`}
+                className="list-group-item list-group-item-action"
+                onClick={() => handleSelect(item)}
+                style={{ cursor: 'pointer' }}
+              >
+                {item[displayField]}
+              </li>
+            ))}
+
+            {!loading && results.length === 0 && hasSearched && (
+              <li className="list-group-item text-muted p-2">
+              <div className="d-flex justify-content-between align-items-center">
+                <span className="d-flex align-items-center badge">
+                  <i className="fa fa-info-circle mr-2"></i> No results found
+                </span>
+
+                <u
+                  onClick={() => setIsFocused(false)}
+                  style={{ cursor: 'pointer' }}
+                  className="text-danger badge pr-2"
+                >
+                  <i className="fa fa-times-circle me-1"></i> Close
+                </u>
+              </div>
             </li>
-          )}
-          {!loading && results.length === 0 && hasSearched && (
-            <li className="list-group-item text-muted">
-              <i className="fa fa-info-circle me-2"></i> No results found
-            </li>
-          )}
-          {results.map((item) => (
+            )}
+
+            {/* Always show Add New when focused */}
             <li
-              key={`${item[valueField]}=${magicRandomStr()}`}
-              className="list-group-item list-group-item-action"
-              onClick={() => handleSelect(item)}
-              style={{ cursor: 'pointer' }}
+              className={`list-group-item list-group-item-action text-primary ${createNewCellClass}`}
+              style={{ cursor: 'pointer', fontWeight: 'bold' }}
+              onClick={() => {
+                setTimeout(() => setIsFocused(false), 50);
+                MosyExtendLiveSearch({
+                  table: tblName,
+                  label,
+                  query,
+                  context,
+                  hiddenInputName,
+                  parentTable
+                });
+                setIsFocused(false);
+              }}
             >
-              {item[displayField]}
+              <i className="fa fa-plus me-2 text-success"></i>
+              <span className="badge">{'Add new'}</span>
             </li>
-          ))}
-        </ul>
-      )}
+          </ul>
+        )}
+
 
       {selected && (
         <input type="hidden" name={hiddenInputName} value={selected[valueField]} onChange={onInputChange} />

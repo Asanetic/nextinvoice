@@ -225,7 +225,7 @@ import {
        } from '../../UiControl/componentControl';
 
 //nextinvoice custom functions
-import { loadVendorHeaders, loadClientHeaders, downloadQuotation , genDocNo } from '../../nextinvoice_custom_functions';
+import { loadVendorHeaders, loadClientHeaders, downloadQuotation , genDocNo , convertToInvoice} from '../../nextinvoice_custom_functions';
 
 //inv items
 import  InvoiceitemsProfile from '../../docitems/uiControl/InvoiceitemsProfile';
@@ -233,13 +233,6 @@ import  InvoiceitemsProfile from '../../docitems/uiControl/InvoiceitemsProfile';
 import  InvoiceitemsList from '../../docitems/uiControl/InvoiceitemsList';
 
 import {InteprateInvoiceitemsEvent} from '../../docitems/dataControl/InvoiceitemsRequestHandler';
-
-
-//invoice payments
-import  InvoicepaymentsProfile from '../../payments/uiControl/InvoicepaymentsProfile';
-
-import {InteprateInvoicepaymentsEvent} from '../../payments/dataControl/InvoicepaymentsRequestHandler';
-
 
 //large text manager
 import MosyHtmlEditor from '../../../MosyUtils/htmlEditor'
@@ -295,7 +288,7 @@ $widget_and_ist_array=[
 
 /// mini list creator configs
 $mini_list_array=[
-       " invoice_id ='\${invoicesNode?.invoice_id}' order by primkey desc "=>'InvoiceitemsList:{`Quotation items`}:../snippets/list::hide:InteprateInvoiceitemsEvent', 
+       //" invoice_id ='\${invoicesNode?.invoice_id}' "=>'InvoiceitemsList:{`Quotation items`}:../snippets/list::hide:InteprateInvoiceitemsEvent', 
 
      //"tag ='\${infosnippetsNode?.tag}' order by primkey desc "=>''.$camelcasetbl_prefix.'List:{`Related ${infosnippetsNode?.tag} Notes`}:../snippets/list:::InteprateInfosnippetsEvent', 
      //""=>''.$camelcasetbl_prefix.'List:{`More Notes`}:../snippets/list:::InteprateInfosnippetsEvent', 
@@ -305,7 +298,7 @@ $mini_list_array=[
 
 /// mini list creator configs
 $subprofile_list_array=[
-    "where invoice_id ='\${invoicesNode?.invoice_id}' order by primkey desc  "=>'InvoiceitemsProfile:{`Manage Items`}:_:_:hide:InteprateInvoiceitemsEvent:setInvoiceitemsCustomProfileQuery:invoice_items', 
+    "where invoice_id ='\${invoicesNode?.invoice_id}'  "=>'InvoiceitemsProfile:{`Manage Items`}:_:_:hide:InteprateInvoiceitemsEvent:setInvoiceitemsCustomProfileQuery:invoice_items', 
 
     //"  where invoice_id ='\${invoicesNode?.invoice_id}' order by primkey desc  "=>'InvoicepaymentsProfile:{`Manage payments`}:_:_:hide:InteprateInvoicepaymentsEvent:setInvoicepaymentsCustomProfileQuery:invoice_payments', 
   
@@ -365,7 +358,10 @@ $profile_btn_table_array=[
         ",  */ 
     
       "print: Print quotation"=>"downloadQuotation({invoiceId:(invoicesNode?.primkey || '')})",
-      "send: Send reminder"=>"console.log(`first next js button....`)",
+      //"send: Send reminder"=>"console.log(`first next js button....`)",
+      "copy: Convert to invoice"=>"      
+      stateItemSetters.setQuotationlistActionStatus('add_invoices');
+      convertToInvoice(handleInputChange)",
       //"search: Search users"=>"console.log(`first next js button users test....`)",
       //"refresh: sync work schedule"=>"syncWorkSchedule()"
   ],

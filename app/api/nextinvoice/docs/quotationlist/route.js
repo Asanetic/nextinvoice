@@ -7,8 +7,10 @@ import {QuotationlistRowMutations} from './QuotationlistRowMutations';
 import listQuotationlistRowMutationsKeys from './QuotationlistMutationKeys';
 
 //be gate keeper and auth 
-import { validateSelect } from '../../beMonitor';
+import { validateSelect , mosyMutateQuery, mutateInputArray } from '../../beMonitor';
 import { processAuthToken } from '../../../auth/authManager';
+
+import { AddQuotationlist, UpdateQuotationlist } from './QuotationlistDbGateway';
 
 
 export async function GET(request) {
@@ -50,6 +52,11 @@ export async function GET(request) {
     if (!enhancedParams.q) delete enhancedParams.q;
     if (!enhancedParams.function_cols) enhancedParams.function_cols = '';
 
+    //append further queries to client query request , account filters order by group by  etc
+    const mutatedQparam = mosyMutateQuery('invoices', searchParams, authData, 'primkey')
+
+    enhancedParams.q=mutatedQparam
+    
     let requestValid =validateSelect('invoices', queryParams, authData)
 
     if(!requestValid)
@@ -119,57 +126,63 @@ export async function POST(QuotationlistRequest) {
     
     const QuotationlistFormAction = body.invoices_mosy_action;
     const invoices_uptoken_value = base64Decode(body.invoices_uptoken);
-
-		//--- Begin  invoices inputs array ---// 
-
-const QuotationlistInputsArr = {
-  "invoice_no" : "?", 
-  "date_due" : "?", 
-  "client_id" : "?", 
-  "invoice_amount" : "?", 
-  "amount_paid" : "?", 
-  "remark" : "?", 
-  "date_created" : "?", 
-  "paid_status" : "?", 
-  "created_by" : "?", 
-  "name" : "?", 
-  "invoice_stage" : "?", 
-  "paid_on" : "?", 
-  "supplier_id" : "?", 
-  "invoice_type" : "?", 
-  "account_affect" : "?", 
-  "inv_no_int" : "?", 
-  "invoice_key" : "?", 
-  "client_name" : "?", 
-  "client_tel" : "?", 
-  "client_email" : "?", 
-  "hive_site_id" : "?", 
-  "hive_site_name" : "?", 
-  "vendor_headers" : "?", 
-  "client_headers" : "?", 
-  "vendor_name" : "?", 
-  "currency" : "?", 
-  "discount" : "?", 
-  "date_paid" : "?", 
-  "ref_no" : "?", 
-  "quotation" : "?", 
-  "date_updated" : "?", 
-  "folder" : "?", 
-  "footnote" : "?", 
-
-};
-
-//--- End invoices inputs array --//
-
     
+    const newId = magicRandomStr(7);
+
+
+		
+  
+  //--- Begin  invoices inputs array ---// 
+  const QuotationlistInputsArr = {
+
+    "invoice_no" : "?", 
+    "date_due" : "?", 
+    "client_id" : "?", 
+    "invoice_amount" : "?", 
+    "amount_paid" : "?", 
+    "remark" : "?", 
+    "date_created" : "?", 
+    "paid_status" : "?", 
+    "created_by" : "?", 
+    "name" : "?", 
+    "invoice_stage" : "?", 
+    "paid_on" : "?", 
+    "supplier_id" : "?", 
+    "invoice_type" : "?", 
+    "account_affect" : "?", 
+    "inv_no_int" : "?", 
+    "invoice_key" : "?", 
+    "client_name" : "?", 
+    "client_tel" : "?", 
+    "client_email" : "?", 
+    "hive_site_id" : "?", 
+    "hive_site_name" : "?", 
+    "vendor_headers" : "?", 
+    "client_headers" : "?", 
+    "vendor_name" : "?", 
+    "currency" : "?", 
+    "discount" : "?", 
+    "date_paid" : "?", 
+    "ref_no" : "?", 
+    "quotation" : "?", 
+    "date_updated" : "?", 
+    "folder" : "?", 
+    "footnote" : "?", 
+
+  };
+
+  //--- End invoices inputs array --//
+
+    //mutate requested values
+    const mutatedDataArray =mutateInputArray('invoices',QuotationlistInputsArr, QuotationlistRequest, newId, authData)
+
     if (QuotationlistFormAction === "add_invoices") 
     {
       
-      const newId = magicRandomStr(7);
-      QuotationlistInputsArr.invoice_id = newId;
+      mutatedDataArray.invoice_id = newId;
       
       // Insert into table Quotationlist
-      const result = await mosySqlInsert("invoices", QuotationlistInputsArr, body);
+      const result = await AddQuotationlist(newId, mutatedDataArray, body, authData);     
 
        
 
@@ -184,8 +197,7 @@ const QuotationlistInputsArr = {
     if (QuotationlistFormAction === "update_invoices") {
       
       // update table Quotationlist
-      const result = await mosySqlUpdate("invoices", QuotationlistInputsArr, body, `primkey='${invoices_uptoken_value}'`);
-
+      const result = await UpdateQuotationlist(newId, mutatedDataArray, body, authData, `primkey='${invoices_uptoken_value}'`)
 
       
 

@@ -7,8 +7,10 @@ import {ClientlistRowMutations} from './ClientlistRowMutations';
 import listClientlistRowMutationsKeys from './ClientlistMutationKeys';
 
 //be gate keeper and auth 
-import { validateSelect } from '../../beMonitor';
+import { validateSelect , mosyMutateQuery, mutateInputArray } from '../../beMonitor';
 import { processAuthToken } from '../../../auth/authManager';
+
+import { AddClientlist, UpdateClientlist } from './ClientlistDbGateway';
 
 
 export async function GET(request) {
@@ -50,6 +52,11 @@ export async function GET(request) {
     if (!enhancedParams.q) delete enhancedParams.q;
     if (!enhancedParams.function_cols) enhancedParams.function_cols = '';
 
+    //append further queries to client query request , account filters order by group by  etc
+    const mutatedQparam = mosyMutateQuery('clients', searchParams, authData, 'primkey')
+
+    enhancedParams.q=mutatedQparam
+    
     let requestValid =validateSelect('clients', queryParams, authData)
 
     if(!requestValid)
@@ -119,35 +126,41 @@ export async function POST(ClientlistRequest) {
     
     const ClientlistFormAction = body.clients_mosy_action;
     const clients_uptoken_value = base64Decode(body.clients_uptoken);
-
-		//--- Begin  clients inputs array ---// 
-
-const ClientlistInputsArr = {
-  "client_name" : "?", 
-  "client_email" : "?", 
-  "client_tel" : "?", 
-  "client_location" : "?", 
-  "client_photo" : "?", 
-  "gender" : "?", 
-  "date_registered" : "?", 
-  "password" : "?", 
-  "admin_id" : "?", 
-  "hive_site_id" : "?", 
-  "hive_site_name" : "?", 
-
-};
-
-//--- End clients inputs array --//
-
     
+    const newId = magicRandomStr(7);
+
+
+		
+  
+  //--- Begin  clients inputs array ---// 
+  const ClientlistInputsArr = {
+
+    "client_name" : "?", 
+    "client_email" : "?", 
+    "client_tel" : "?", 
+    "client_location" : "?", 
+    "client_photo" : "?", 
+    "gender" : "?", 
+    "date_registered" : "?", 
+    "password" : "?", 
+    "admin_id" : "?", 
+    "hive_site_id" : "?", 
+    "hive_site_name" : "?", 
+
+  };
+
+  //--- End clients inputs array --//
+
+    //mutate requested values
+    const mutatedDataArray =mutateInputArray('clients',ClientlistInputsArr, ClientlistRequest, newId, authData)
+
     if (ClientlistFormAction === "add_clients") 
     {
       
-      const newId = magicRandomStr(7);
-      ClientlistInputsArr.client_id = newId;
+      mutatedDataArray.client_id = newId;
       
       // Insert into table Clientlist
-      const result = await mosySqlInsert("clients", ClientlistInputsArr, body);
+      const result = await AddClientlist(newId, mutatedDataArray, body, authData);     
 
        
 
@@ -162,8 +175,7 @@ const ClientlistInputsArr = {
     if (ClientlistFormAction === "update_clients") {
       
       // update table Clientlist
-      const result = await mosySqlUpdate("clients", ClientlistInputsArr, body, `primkey='${clients_uptoken_value}'`);
-
+      const result = await UpdateClientlist(newId, mutatedDataArray, body, authData, `primkey='${clients_uptoken_value}'`)
 
       
 

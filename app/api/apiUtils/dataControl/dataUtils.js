@@ -89,15 +89,26 @@ export async function mosySqlUpdate(tbl, fieldsAndValuesJson, formBody, whereStr
   }
 }
 
-// Base64 encode in Node.js
+// Base64 encode in Node.js with error handling
 export function base64Encode(str) {
-  return Buffer.from(str).toString('base64');
+  try {
+    return Buffer.from(str).toString('base64');
+  } catch (error) {
+    console.error('Error encoding to Base64:', error.message);
+    return "";
+  }
 }
 
-// Base64 decode in Node.js
+// Base64 decode in Node.js with error handling
 export function base64Decode(encodedStr) {
-  return Buffer.from(encodedStr, 'base64').toString('utf-8');
+  try {
+    return Buffer.from(encodedStr, 'base64').toString('utf-8');
+  } catch (error) {
+    console.error('Error decoding from Base64:', error.message);
+    return "";
+  }
 }
+
 
 
 export async function mosyUploadFile(fileObj, subDir = 'uploads/users') 

@@ -37,6 +37,11 @@ import {
 //mini list
 import  ClientlistList from './ClientlistList';
 
+///invoice history
+import InvoicelistList from '../../docs/uiControl/InvoicelistList';
+
+import { InteprateInvoicelistEvent } from '../../docs/dataControl/InvoicelistRequestHandler';
+
 
 // export profile
 
@@ -129,8 +134,8 @@ export default function ClientlistProfile({ dataIn = {}, dataOut = {} }) {
       {/* ================== Start Feature Section========================== ------*/}
       
       
-      <div className="col-md-11 rounded text-left p-2 mb-0  bg-white ">
-        <div className="col-md-12 p-2 pr-lg-4 pl-lg-4 m-0">
+      <div className="col-md-12 rounded text-left p-2 mb-0  bg-white ">
+        <div className={` profile_container col-md-12 m-0 p-0  ${showNavigationIsle &&("pr-lg-4 pl-lg-4 m-0")}`}>
           <form onSubmit={postClientlistFormData} encType="multipart/form-data" id="clients_profile_form">
             
             {/*    Title isle      */}
@@ -311,55 +316,91 @@ export default function ClientlistProfile({ dataIn = {}, dataOut = {} }) {
           </style>
           {clientsNode?.primkey && (
             <section className="col-md-12 m-0 bg-white pt-5 p-0 ">
-              <h5 className="col-md-12 text-left  border-bottom pl-lg-1 text-muted mb-3"> {`More Accounts`} </h5>
+              <h5 className="col-md-12 text-left  border-bottom pl-lg-1 text-muted mb-3"> {`Account history`} </h5>
               
               <div className="col-md-12 p-2 text-right ">
-                <a href={`../clients/list?clients_mosyfilter`} className="cpointer"> View More  <i className="fa fa-arrow-right "></i></a>
+                <a href={`../docs/invoices?clients_mosyfilter=${btoa(`client_id ='${clientsNode?.client_id}'`)}`} className="cpointer"> View More  <i className="fa fa-arrow-right "></i></a>
               </div>
               
-              <ClientlistList
+              <InvoicelistList
               key={`${customQueryStr}-${localEventSignature}`}
               dataIn={{
                 parentStateSetters : stateItemSetters,
                 parentUseEffectKey : localEventSignature,
                 showNavigationIsle:false,
-                customQueryStr : '',
-                customProfilePath:""
+                customQueryStr : btoa(`where client_id ='${clientsNode?.client_id}'`),
+                customProfilePath:"../docs/invoiceprofile"
                 
               }}
               
               dataOut={{
-                setChildDataOut: InteprateClientlistEvent,
+                setChildDataOut: InteprateInvoicelistEvent,
                 setChildDataOutSignature: (sig) => console.log("Signature changed:", sig),
               }}
               />
             </section>
           )}
-        </div>
+          
+          <style jsx global>{`
+          .data_list_section {
+            display: none;
+          }
+          .bottom_tbl_handler{
+            padding-bottom:70px!important;
+          }
+          `}
+        </style>
+        {clientsNode?.primkey && (
+          <section className="col-md-12 m-0 bg-white pt-5 p-0 ">
+            <h5 className="col-md-12 text-left  border-bottom pl-lg-1 text-muted mb-3"> {`More Accounts`} </h5>
+            
+            <div className="col-md-12 p-2 text-right ">
+              <a href={`../clients/list?clients_mosyfilter`} className="cpointer"> View More  <i className="fa fa-arrow-right "></i></a>
+            </div>
+            
+            <ClientlistList
+            key={`${customQueryStr}-${localEventSignature}`}
+            dataIn={{
+              parentStateSetters : stateItemSetters,
+              parentUseEffectKey : localEventSignature,
+              showNavigationIsle:false,
+              customQueryStr : '',
+              customProfilePath:""
+              
+            }}
+            
+            dataOut={{
+              setChildDataOut: InteprateClientlistEvent,
+              setChildDataOutSignature: (sig) => console.log("Signature changed:", sig),
+            }}
+            />
+          </section>
+        )}
       </div>
     </div>
-    
-    
-    {/* snack notifications -- */}
-    {snackMessage &&(
-      <MosySnackWidget
-      content={snackMessage}
-      duration={5000}
-      type="custom"
-      onDone={() => {
-        stateItemSetters.setSnackMessage("");
-        stateItem.snackOnDone(); // Run whats inside onDone
-        deleteUrlParam("snack_alert")
-      }}
-      
-      />)}
-      {/* snack notifications -- */}
-      
-      
-      {/* ================== End Feature Section========================== ------*/}
-    </div>
-    
-  );
+  </div>
   
+  
+  {/* snack notifications -- */}
+  {snackMessage &&(
+    <MosySnackWidget
+    content={snackMessage}
+    duration={5000}
+    type="custom"
+    onDone={() => {
+      stateItemSetters.setSnackMessage("");
+      stateItem.snackOnDone(); // Run whats inside onDone
+      deleteUrlParam("snack_alert")
+    }}
+    
+    />)}
+    {/* snack notifications -- */}
+    
+    
+    {/* ================== End Feature Section========================== ------*/}
+  </div>
+  
+);
+
 }
 

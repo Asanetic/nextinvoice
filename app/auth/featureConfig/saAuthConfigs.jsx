@@ -19,7 +19,7 @@ const saAuthConfigs = {
   emailCol: "email",
   phoneCol: "tel",
   passwordCol: "login_password",
-  sessionColumns : "user_id,email,tel,name",
+  sessionColumns : "user_id,email,tel,name,hive_site_id,hive_site_name",
 
   // Post-login redirect
   afterSplashPage:`${hiveRoutes.nextinvoice}/docs/invoices`,

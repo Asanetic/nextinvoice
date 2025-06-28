@@ -115,11 +115,16 @@ export default function NavSidebar({
             <ul>
             <li className="menu-title p-4"> </li>    
             <li>
-              <a className="nav-link" href={`${hiveRoutes.nextinvoice}/dashboard/main`}>
+              <a className="nav-link d-none" href={`${hiveRoutes.nextinvoice}/dashboard/main`}>
                 <i className="fa fa-home"></i> <span> Dashboard </span>
               </a>
             </li>
-              
+            <li>
+                <a className="nav-link" href={`${hiveRoutes.nextinvoice}/docs/invoiceprofile`}>
+                  <i className="fa fa-plus-circle"></i> <span> Create invoice </span>
+                </a>
+              </li>
+
               <li className="submenu">
                 <a href="#"><i className="fa fa-copy"></i> <span> Invoices </span> <span className="menu-arrow"></span></a>
                 <ul style={{display: "none"}} >
@@ -168,27 +173,24 @@ export default function NavSidebar({
                </li>  
 
                <li className="submenu">
-                <a href="#"><i className="fa fa-file-text"></i> <span> Notifications </span> <span className="menu-arrow"></span></a>
+                <a href="#"><i className="fa fa-envelope"></i> <span> Notifications </span> <span className="menu-arrow"></span></a>
                 <ul style={{display: "none"}} >
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/docs/invoices/profile`}>SMS</a></li>
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/docs/invoices/list`}>Email</a></li>
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/docs/invoices/list`}>Manage notifications</a></li>
+                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/reminders/sms`}>Send message</a></li>
+                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/reminders/smslist`}>Manage messages</a></li>
+                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/messagetemplates/list`}>Message templates</a></li>                
                 </ul>
                </li>
 
                <li>
-                <a className="nav-link" href={`${hiveRoutes.nextinvoice}/dashboard/main`}>
+                <a className="nav-link" href="">
                   <i className="fa fa-database"></i> <span> Billing </span>
                 </a>
               </li>
-                      
-               <li className="submenu">
-                <a href="#"><i className="fa fa-gear"></i> <span> Settings </span> <span className="menu-arrow"></span></a>
-                <ul style={{display: "none"}} >
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/docs/invoices/profile`}>System users</a></li>
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/docs/invoices/list`}>System settings</a></li>
-                </ul>
-               </li>  
+              <li>
+                <a className="nav-link" href={`${hiveRoutes.nextinvoice}/accounts/list`}>
+                  <i className="fa fa-shield"></i> <span> My account </span>
+                </a>
+              </li>                      
 
             </ul>
           </div>

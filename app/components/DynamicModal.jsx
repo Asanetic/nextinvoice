@@ -1,17 +1,19 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
-import { registerModal } from './MosyCard'
+import { registerModal } from './MosyCard';
 
-function DynamicModal() {
+function DynamicModal({ id = "smartmodaldefaultId", zIndex }) {
+
   const [modalProps, setModalProps] = useState(null);
   const modalRef = useRef();
 
   useEffect(() => {
     registerModal(
       (props) => setModalProps(props),
-      () => setModalProps(null)
+      () => setModalProps(null),
+      id // Pass ID to registration
     );
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (modalProps) document.body.classList.add('modal-open');
@@ -32,16 +34,22 @@ function DynamicModal() {
 
   return (
     <>
-      <div className="modal-backdrop fade show"></div>
+      <div className="modal-backdrop fade show"
+        style={{ zIndex: (modalProps?.zIndex || zIndex || 1055) - 10 }}
+      ></div>
       <div
-        className="modal fade show"
+        className="modal fade show "
         tabIndex="-1"
         role="dialog"
-        style={{ display: 'block', zIndex: 1055 }}
+        style={{ display: 'block', zIndex: modalProps?.zIndex || zIndex || 1055 }}
         onMouseDown={handleOutsideClick}
       >
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content col-md-12 shadow" ref={modalRef}>
+
+        <div
+          className={`modal-dialog modal-dialog-centered mosycard_scrollable ${modalProps?.modalClass || ""}`}
+          role="document"
+        >
+          <div className="modal-content col-md-12 shadow border" ref={modalRef}>
             <div className="modal-header col-md-12">
               <h6 className="modal-title col-md-12 ml-4 pl-4 ml-lg-2 pl-lg-2">
                 {modalProps.title}
@@ -55,7 +63,9 @@ function DynamicModal() {
                 <i className="fa fa-times"></i>
               </button>
             </div>
-            <div className="modal-body col-md-12 p-0 m-0 border-top border_set">{modalProps.body}</div>
+            <div className="modal-body col-md-12 p-0 m-0 border-top border_set">
+              {modalProps.body}
+            </div>
           </div>
         </div>
       </div>

@@ -6,11 +6,11 @@ import { InteprateProductandservicesEvent } from '../dataControl/Productandservi
 
     
 export async function generateMetadata({ searchParams }) {
-  const mosyTitle = "Product and services profile"//searchParams?.mosyTitle || "Product and services";
+  const mosyTitle = "Product and Services profile"//searchParams?.mosyTitle || "Product and Services";
 
   return {
-    title: mosyTitle ? decodeURIComponent(mosyTitle) : `Product and services profile`,
-    description: 'nextinvoice Product and services',
+    title: mosyTitle ? decodeURIComponent(mosyTitle) : `Product and Services profile`,
+    description: 'nextinvoice Product and Services',
     
     icons: {
       icon: "/logo.png"

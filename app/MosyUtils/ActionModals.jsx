@@ -21,7 +21,8 @@ export function MosyAlertCard({
   onYes,
   onNo,
   dismissable = true,
-  autoDismissOnClick=true
+  autoDismissOnClick=true,
+  id="smartmodaldefaultId"
 }) {
   clearMosyTimer(); // Stop notify if active
 
@@ -78,7 +79,8 @@ export function MosyAlertCard({
       <p className="mt-3 mb-3">{message}</p>
       {buttonRow}
     </div>,
-    dismissable
+    dismissable,
+    id
   );
 }
 
@@ -88,7 +90,8 @@ export function MosyNotify({
   icon = "info-circle", 
   iconColor = "text-primary", 
   duration = 5000 ,
-  addTimer = true
+  addTimer = true,
+  id= "smartmodaldefaultId"
 }) {
   clearMosyTimer(); //  Stop old timer
 
@@ -102,7 +105,8 @@ export function MosyNotify({
       </div>      
     </div>,
     <div></div>, // no buttons
-    true
+    true,
+    id
   );
 
   if(addTimer){

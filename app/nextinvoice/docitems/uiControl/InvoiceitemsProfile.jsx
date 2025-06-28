@@ -31,6 +31,8 @@ import {
   SmartDropdown,
 } from '../../UiControl/componentControl';
 
+import  InvoiceitemsList from './InvoiceitemsList';
+
 // export profile
 
 export default function InvoiceitemsProfile({ dataIn = {}, dataOut = {} }) {
@@ -123,7 +125,7 @@ export default function InvoiceitemsProfile({ dataIn = {}, dataOut = {} }) {
       
       
       <div className="col-md-12 rounded text-left p-2 mb-0  bg-white ">
-        <div className="col-md-12 p-2 pr-lg-0 pl-lg-0 m-0">
+        <div className={` profile_container col-md-12 m-0 p-0  ${showNavigationIsle &&("pr-lg-4 pl-lg-4 m-0")}`}>
           <form onSubmit={postInvoiceitemsFormData} encType="multipart/form-data" id="invoice_items_profile_form">
             
             {/*    Title isle      */}
@@ -210,7 +212,7 @@ export default function InvoiceitemsProfile({ dataIn = {}, dataOut = {} }) {
                   
                   <div className="row justify-content-start col-md-12 p-0 m-0 ">
                     <LiveSearchDropdown
-                    apiEndpoint=" /api/nextinvoice/pns/productandservices"
+                    apiEndpoint="/api/nextinvoice/pns/productandservices"
                     tblName="inventory"
                     parentTable="invoice_items"
                     inputName="txt__inventory_item_name_item_id"
@@ -335,31 +337,63 @@ export default function InvoiceitemsProfile({ dataIn = {}, dataOut = {} }) {
               {/*<hive_mini_list/>*/}
               
               
-            </div>
+              
+              <style jsx global>{`
+              .data_list_section {
+                display: none;
+              }
+              .bottom_tbl_handler{
+                padding-bottom:70px!important;
+              }
+              `}
+            </style>
+            {invoice_itemsNode?.primkey && (
+              <section className="col-md-12 m-0 bg-white pt-5 p-0 ">
+                <h5 className="col-md-12 text-left  border-bottom pl-lg-1 text-muted mb-3"> {`Document items`} </h5>
+                
+                <InvoiceitemsList
+                key={`${customQueryStr}-${localEventSignature}`}
+                dataIn={{
+                  parentStateSetters : stateItemSetters,
+                  parentUseEffectKey : localEventSignature,
+                  showNavigationIsle:false,
+                  customQueryStr : btoa(`where  invoice_id ='${invoice_itemsNode?.invoice_id}' `),
+                  customProfilePath:""
+                  
+                }}
+                
+                dataOut={{
+                  setChildDataOut: InteprateInvoiceitemsEvent,
+                  setChildDataOutSignature: (sig) => console.log("Signature changed:", sig),
+                }}
+                />
+              </section>
+            )}
           </div>
         </div>
-        
-        
-        {/* snack notifications -- */}
-        {snackMessage &&(
-          <MosySnackWidget
-          content={snackMessage}
-          duration={5000}
-          type="custom"
-          onDone={() => {
-            stateItemSetters.setSnackMessage("");
-            stateItem.snackOnDone(); // Run whats inside onDone
-            deleteUrlParam("snack_alert")
-          }}
-          
-          />)}
-          {/* snack notifications -- */}
-          
-          
-          {/* ================== End Feature Section========================== ------*/}
-        </div>
-        
-      );
+      </div>
       
-    }
+      
+      {/* snack notifications -- */}
+      {snackMessage &&(
+        <MosySnackWidget
+        content={snackMessage}
+        duration={5000}
+        type="custom"
+        onDone={() => {
+          stateItemSetters.setSnackMessage("");
+          stateItem.snackOnDone(); // Run whats inside onDone
+          deleteUrlParam("snack_alert")
+        }}
+        
+        />)}
+        {/* snack notifications -- */}
+        
+        
+        {/* ================== End Feature Section========================== ------*/}
+      </div>
+      
+    );
     
+  }
+  

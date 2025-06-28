@@ -92,8 +92,8 @@ $additional_details_segment_title="";
   
 $col_size_def='col-md-12';
 
-$def_profile_container_class="col-md-11 rounded text-left p-2 mb-0  bg-white ";
-$def_profile_inner_container_class="col-md-12 p-2 pr-lg-4 pl-lg-4 m-0";  
+$def_profile_container_class="col-md-12 rounded text-left p-2 mb-0  bg-white ";
+$def_profile_inner_container_class='` profile_container col-md-12 m-0 p-0  ${showNavigationIsle &&("pr-lg-4 pl-lg-4 m-0")}`';  
 $override_justify_class="justify-content-center";
 $overide_img_section_class="col-md-6 mr-lg-5";
 $override_large_col_size="col-md-6 hive_data_cell";
@@ -206,7 +206,7 @@ import { MosyAlertCard, MosyNotify ,closeMosyModal } from  '../../../MosyUtils/A
 import MosySnackWidget from '../../../MosyUtils/MosySnackWidget';
 
 //basic utils
-import { mosyScrollTo , deleteUrlParam, mosyFormInputHandler,mosyUrlParam  } from '../../../MosyUtils/hiveUtils';
+import { mosyScrollTo , deleteUrlParam, mosyFormInputHandler,mosyUrlParam , magicRandomStr } from '../../../MosyUtils/hiveUtils';
 
 //data control and processors
 import { inteprate".$camelcasetbl_prefix."FormAction, ".$camelcasetbl."ProfileData , popDeleteDialog, Inteprate".$camelcasetbl_prefix."Event } from '../dataControl/".$camelcasetbl_prefix."RequestHandler';
@@ -225,7 +225,7 @@ import {
        } from '../../UiControl/componentControl';
 
 //nextinvoice custom functions
-import { loadVendorHeaders, loadClientHeaders, downloadInvoice } from '../../nextinvoice_custom_functions';
+import { loadVendorHeaders, loadClientHeaders, downloadInvoice , genDocNo , sendReminder } from '../../nextinvoice_custom_functions';
 
 //inv items
 import  InvoiceitemsProfile from '../../docitems/uiControl/InvoiceitemsProfile';
@@ -295,7 +295,7 @@ $widget_and_ist_array=[
 
 /// mini list creator configs
 $mini_list_array=[
-       " invoice_id ='\${invoicesNode?.invoice_id}' order by primkey desc "=>'InvoiceitemsList:{`Invoice items`}:../snippets/list::hide:InteprateInvoiceitemsEvent', 
+      // " invoice_id ='\${invoicesNode?.invoice_id}'  "=>'InvoiceitemsList:{`Invoice items`}:../snippets/list::hide:InteprateInvoiceitemsEvent', 
 
      //"tag ='\${infosnippetsNode?.tag}' order by primkey desc "=>''.$camelcasetbl_prefix.'List:{`Related ${infosnippetsNode?.tag} Notes`}:../snippets/list:::InteprateInfosnippetsEvent', 
      //""=>''.$camelcasetbl_prefix.'List:{`More Notes`}:../snippets/list:::InteprateInfosnippetsEvent', 
@@ -305,9 +305,9 @@ $mini_list_array=[
 
 /// mini list creator configs
 $subprofile_list_array=[
-    "where invoice_id ='\${invoicesNode?.invoice_id}' order by primkey desc  "=>'InvoiceitemsProfile:{`Manage Items`}:_:_:hide:InteprateInvoiceitemsEvent:setInvoiceitemsCustomProfileQuery:invoice_items', 
+    "where invoice_id ='\${invoicesNode?.invoice_id}'  "=>'InvoiceitemsProfile:{`Manage Items`}:_:_:hide:InteprateInvoiceitemsEvent:setInvoiceitemsCustomProfileQuery:invoice_items', 
 
-    "  where invoice_id ='\${invoicesNode?.invoice_id}' order by primkey desc  "=>'InvoicepaymentsProfile:{`Manage payments`}:_:_:hide:InteprateInvoicepaymentsEvent:setInvoicepaymentsCustomProfileQuery:invoice_payments', 
+    "  where invoice_id ='\${invoicesNode?.invoice_id}'   "=>'InvoicepaymentsProfile:{`Manage payments`}:_:_:hide:InteprateInvoicepaymentsEvent:setInvoicepaymentsCustomProfileQuery:invoice_payments', 
   
   ];
 
@@ -365,7 +365,7 @@ $profile_btn_table_array=[
         ",  */ 
     
       "print: Print invoice"=>"downloadInvoice({invoiceId:(invoicesNode?.primkey || '')})",
-      "send: Send reminder"=>"console.log(`first next js button....`)",
+      "send: Send reminder"=>"sendReminder()",
       //"search: Search users"=>"console.log(`first next js button users test....`)",
       //"refresh: sync work schedule"=>"syncWorkSchedule()"
   ],

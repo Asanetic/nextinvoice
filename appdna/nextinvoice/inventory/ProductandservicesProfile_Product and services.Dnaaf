@@ -17,13 +17,14 @@ $record_id_col_name="record_id";
 $nextjs_tbl_alias="pns";
 
 // Report configurations
-$main_report_title_="Product and services";
+$main_report_title_="Product and Services";
+$last_file_name=str_replace(" ","", strtolower($main_report_title_));//$api_endpoint_name;
+
 $api_endpoint_name="manage";
 
 $multigrid_col_span="9";
 $enable_multigrid_view_more_link ="";
   
-$last_file_name=str_replace(" ","", strtolower($main_report_title_));//$api_endpoint_name;
 
 $profile_file_name="profile";
 $list_file_name="list";
@@ -93,7 +94,7 @@ $additional_details_segment_title="";
 $col_size_def='col-md-12';
 
 $def_profile_container_class="col-md-11 rounded text-left p-2 mb-0  bg-white ";
-$def_profile_inner_container_class="col-md-12 p-2 pr-lg-4 pl-lg-4 m-0";  
+$def_profile_inner_container_class='` profile_container col-md-12 m-0 p-0  ${showNavigationIsle &&("pr-lg-4 pl-lg-4 m-0")}`';  
 $override_justify_class="justify-content-start";
 $overide_img_section_class="col-md-6 mr-lg-5";
 $override_large_col_size="col-md-12 hive_data_cell";

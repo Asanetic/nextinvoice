@@ -5,7 +5,12 @@ import { magicRandomStr } from "../../MosyUtils/hiveUtils";
 import { MosyNotify } from "../../MosyUtils/ActionModals";
 import { chatWithGPT } from "./customFunctions";
 
-//dynamic live search / organic live search 
+import ClientlistProfile from "../clients/uiControl/ClientlistProfile";
+
+import ProductandservicesProfile from '../pns/uiControl/ProductandservicesProfile'
+
+import MessagetemplatesProfile from  '../messagetemplates/uiControl/MessagetemplatesProfile'
+//dynamic live search / organic live  search 
 export function MosyLiveSearch({
     api = "",
     tableName = "",
@@ -93,6 +98,48 @@ export function MosyLiveSearch({
         />
       </>
     );
+  }
+
+
+  export function MosyExtendLiveSearch({
+    table,
+    label,
+    query,
+    context,
+    hiddenInputName,
+    parentTable
+  }) {
+   
+    console.log(`[MosyExtendLiveSearch] Triggered for table: ${table} parent ${parentTable}`);
+
+    if(table=="clients"){
+    MosyCard("",<>
+      <ClientlistProfile                           
+          dataIn={{ parentUseEffectKey: "initClientlistProfile" , showNavigationIsle : false }}                           
+      />
+    </>, false , "modal1", "mosycard_wide")
+    }
+
+    if(table=="inventory"){
+      MosyCard("",<>
+        <ProductandservicesProfile                           
+            dataIn={{ parentUseEffectKey: "initInventory" , showNavigationIsle : false }}                           
+        />
+      </>, false , "modal1", "mosycard_wide")
+      }
+
+     if(parentTable=="invoice_payments"){
+      window.location="../docs/invoiceprofile"
+     }
+     if(table=="message_templates"){
+      MosyCard("",<>
+        <MessagetemplatesProfile                           
+            dataIn={{ parentUseEffectKey: "inittempates" , showNavigationIsle : false }}                           
+        />
+      </>, false , "modal1", "mosycard_wide")
+     }
+      
+
   }
   
   export function loadSmartSearch() {

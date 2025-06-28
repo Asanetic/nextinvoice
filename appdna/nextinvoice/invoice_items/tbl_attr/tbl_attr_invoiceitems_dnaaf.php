@@ -111,7 +111,7 @@ $novanest_module_ui_blueprint_=[
     //how do you want the inputs to be arranged in the ui list & profile 
     "desired_column_order"=>[
 
-        'invoice_items' => ['primkey','record_id', "invoice_id","item_name", 'item_remark','quantity',"rate","totals","date_created","balance"],
+        'invoice_items' => ['primkey','record_id', "invoice_id","item_id", 'item_remark','quantity',"rate","totals","date_created","balance"],
 
     ],
     
@@ -142,7 +142,7 @@ $novanest_module_ui_blueprint_=[
     "skip_cols_profile"=>["tax" , "discount" , "date_created" , "account_context" , "account_name" , "item_key" , "stock_type" , "invoice_edit_key" , "selling_price" , "sale_state" , "remaining_qty" , "add_to_stock" , "hive_site_id" , "hive_site_name" ],
         
     ///=============================================   skip  these columns on the list page 
-    "skip_cols_list"=>["tax" , "discount" , "date_created" , "account_context" , "account_name" , "item_key" , "stock_type" , "invoice_edit_key" , "selling_price" , "sale_state" , "remaining_qty" , "add_to_stock" , "hive_site_id" , "hive_site_name"],
+    "skip_cols_list"=>["tax" , "discount" , "date_created" , "account_context" , "account_name" , "item_key" , "stock_type" , "invoice_edit_key" , "selling_price" , "sale_state" , "remaining_qty" , "add_to_stock" , "hive_site_id" , "hive_site_name","item_name"],
         
     ///=============================================   these columns diplays running balance amount 
     "running_bal_col_tbl"=>[],    
@@ -221,7 +221,7 @@ $novanest_module_ui_blueprint_=[
     
     //=============================================        on the ui , these columns connect values from other tables
     "connection_cols"=>[
-      'item_id'=>"inventory:record_id:item_name: /api/nextinvoice/pns/productandservices: 
+      'item_id'=>"inventory:record_id:item_name:/api/nextinvoice/pns/productandservices: 
       {
 
         handleInputChange('txt_item_remark',(dataRes?.item_remark));

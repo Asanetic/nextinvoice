@@ -138,7 +138,9 @@ export async function initQuotationlistProfileData(rawQstr) {
       params: { 
       q: btoa(rawQstr),         
       mutations: encodedMutations,
-      fullQ : true
+      fullQ : true,
+      aw : btoa(``),
+      src : btoa(`initQuotationlistProfileData`)
       },
     });
 
@@ -207,7 +209,7 @@ export async function getQuotationlistListData(qstr = "") {
   if(qstr=='')
   {
    fullWhere = false 
-   qstr=btoa(' order by primkey desc')
+   qstr=btoa('')
   }
   
   //add the following data in response
@@ -232,7 +234,9 @@ export async function getQuotationlistListData(qstr = "") {
         q: qstr, 
         mutations: encodedMutations,
         fullQ : fullWhere,
-        pagination : `l:qinvoices_page:${recordsPerPage}:${pageNo}`
+        pagination : `l:qinvoices_page:${recordsPerPage}:${pageNo}`,
+        aw:btoa(`order by primkey desc`),
+        src : btoa(`getQuotationlistListData`)        
         },
     });
 

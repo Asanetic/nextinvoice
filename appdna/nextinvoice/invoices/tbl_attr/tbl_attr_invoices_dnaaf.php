@@ -216,7 +216,7 @@ $novanest_module_ui_blueprint_=[
     //additional column values on the profile ui
     "custom_profile_col_data"=>["national_id"=>"?"],
     
-    "custom_profile_default_data"=>["invoice_type"=>'{`invoice`}', "invoice_kkno"=>'{`Inv/${magicRandomStr()}`}'],
+    "custom_profile_default_data"=>["invoice_type"=>'{`invoice`}', "invoice_no"=>'{(invoicesNode?.invoice_no || `INV/${magicRandomStr(5)}/${genDocNo()}`)}'],
     
     //=============================================        on the ui , these columns connect values from other tables
     "connection_cols"=>[
@@ -228,7 +228,7 @@ $novanest_module_ui_blueprint_=[
         handleInputChange('txt_client_email',(dataRes?.client_email));
 
       }",
-      "vendor_name"=>"companies:company_id:business_name:/api/nextinvoice/vendors/mycompanies: {handleInputChange('txt_vendor_headers',loadVendorHeaders(dataRes))}"
+      "vendor_name"=>"companies:company_id:business_name:/api/nextinvoice/vendors/businesslist: {handleInputChange('txt_vendor_headers',loadVendorHeaders(dataRes))}"
     ],
     
     //sample

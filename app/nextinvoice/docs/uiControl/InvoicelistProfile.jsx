@@ -13,7 +13,7 @@ import { MosyAlertCard, MosyNotify ,closeMosyModal } from  '../../../MosyUtils/A
 import MosySnackWidget from '../../../MosyUtils/MosySnackWidget';
 
 //basic utils
-import { mosyScrollTo , deleteUrlParam, mosyFormInputHandler,mosyUrlParam, magicRandomStr  } from '../../../MosyUtils/hiveUtils';
+import { mosyScrollTo , deleteUrlParam, mosyFormInputHandler,mosyUrlParam , magicRandomStr } from '../../../MosyUtils/hiveUtils';
 
 //data control and processors
 import { inteprateInvoicelistFormAction, invoicelistProfileData , popDeleteDialog, InteprateInvoicelistEvent } from '../dataControl/InvoicelistRequestHandler';
@@ -32,7 +32,7 @@ import {
 } from '../../UiControl/componentControl';
 
 //nextinvoice custom functions
-import { loadVendorHeaders, loadClientHeaders, downloadInvoice, genDocNo } from '../../nextinvoice_custom_functions';
+import { loadVendorHeaders, loadClientHeaders, downloadInvoice , genDocNo , sendReminder } from '../../nextinvoice_custom_functions';
 
 //inv items
 import  InvoiceitemsProfile from '../../docitems/uiControl/InvoiceitemsProfile';
@@ -143,7 +143,7 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
   useEffect(() => {
     if (invoicesNode?.primkey && setInvoiceitemsCustomProfileQuery) {
       
-      const query = `where invoice_id ='${invoicesNode?.invoice_id}' order by primkey desc   `;
+      const query = `where invoice_id ='${invoicesNode?.invoice_id}'   `;
       
       const tokenUrl = mosyUrlParam("invoice_items_uptoken")
       
@@ -162,7 +162,7 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
   useEffect(() => {
     if (invoicesNode?.primkey && setInvoicepaymentsCustomProfileQuery) {
       
-      const query = `  where invoice_id ='${invoicesNode?.invoice_id}' order by primkey desc   `;
+      const query = `  where invoice_id ='${invoicesNode?.invoice_id}'    `;
       
       const tokenUrl = mosyUrlParam("invoice_payments_uptoken")
       
@@ -182,8 +182,8 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
       {/* ================== Start Feature Section========================== ------*/}
       
       
-      <div className="col-md-11 rounded text-left p-2 mb-0  bg-white ">
-        <div className="col-md-12 p-2 pr-lg-4 pl-lg-4 m-0">
+      <div className="col-md-12 rounded text-left p-2 mb-0  bg-white ">
+        <div className={` profile_container col-md-12 m-0 p-0  ${showNavigationIsle &&("pr-lg-4 pl-lg-4 m-0")}`}>
           <form onSubmit={postInvoicelistFormData} encType="multipart/form-data" id="invoices_profile_form">
             
             {/*    Title isle      */}
@@ -232,7 +232,7 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
                   <MosyActionButton
                   label=" Send reminder"
                   icon="send"
-                  onClick={()=>{console.log(`first next js button....`)}}
+                  onClick={()=>{sendReminder()}}
                   />
                   
                 </>
@@ -305,7 +305,7 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
                     context={{hostParent : hostParent}}
                     />
                     <LiveSearchDropdown
-                    apiEndpoint="/api/nextinvoice/vendors/mycompanies"
+                    apiEndpoint="/api/nextinvoice/vendors/businesslist"
                     tblName="companies"
                     parentTable="invoices"
                     inputName="txt__companies_business_name_vendor_name"
@@ -552,6 +552,7 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
                   parentUseEffectKey : localEventSignature,
                   showNavigationIsle:false,
                   customQueryStr : invoiceitemsCustomProfileQuery,
+                  hostParent : "InvoicelistProfile",
                   customProfileData :
                   //invoice data
                   {
@@ -573,40 +574,6 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
                 
               </section>
             )}
-
-            
-          <style jsx global>{`
-            .data_list_section {
-              display: none;
-            }
-            .bottom_tbl_handler{
-              padding-bottom:70px!important;
-            }
-            `}
-          </style>
-          {invoicesNode?.primkey && (
-            <section className="col-md-12 m-0 bg-white pt-5 p-0 ">
-              <h5 className="col-md-12 text-left  border-bottom pl-lg-1 text-muted mb-3"> {`Invoice items`} </h5>
-              
-              <InvoiceitemsList
-              key={`${customQueryStr}-${localEventSignature}`}
-              dataIn={{
-                parentStateSetters : stateItemSetters,
-                parentUseEffectKey : localEventSignature,
-                showNavigationIsle:false,
-                customQueryStr : btoa(`where  invoice_id ='${invoicesNode?.invoice_id}' order by primkey desc `),
-                customProfilePath:""
-                
-              }}
-              
-              dataOut={{
-                setChildDataOut: InteprateInvoiceitemsEvent,
-                setChildDataOutSignature: (sig) => console.log("Signature changed:", sig),
-              }}
-              />
-            </section>
-          )}
-
             {invoicesNode?.primkey && (
               <section className="col-md-12 m-0 bg-white pt-5 p-0 ">
                 <h5 className="col-md-12 text-left  border-bottom pl-lg-1 text-muted mb-3"> {`Manage payments`} </h5>
@@ -618,6 +585,7 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
                   parentUseEffectKey : localEventSignature,
                   showNavigationIsle:false,
                   customQueryStr : invoicepaymentsCustomProfileQuery,
+                  hostParent : "InvoicelistProfile",
                   customProfileData :
                   //invoice data
                   {
@@ -640,32 +608,31 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
               </section>
             )}
             
-
+          </div>
         </div>
       </div>
-    </div>
-    
-    
-    {/* snack notifications -- */}
-    {snackMessage &&(
-      <MosySnackWidget
-      content={snackMessage}
-      duration={5000}
-      type="custom"
-      onDone={() => {
-        stateItemSetters.setSnackMessage("");
-        stateItem.snackOnDone(); // Run whats inside onDone
-        deleteUrlParam("snack_alert")
-      }}
       
-      />)}
+      
       {/* snack notifications -- */}
+      {snackMessage &&(
+        <MosySnackWidget
+        content={snackMessage}
+        duration={5000}
+        type="custom"
+        onDone={() => {
+          stateItemSetters.setSnackMessage("");
+          stateItem.snackOnDone(); // Run whats inside onDone
+          deleteUrlParam("snack_alert")
+        }}
+        
+        />)}
+        {/* snack notifications -- */}
+        
+        
+        {/* ================== End Feature Section========================== ------*/}
+      </div>
       
-      
-      {/* ================== End Feature Section========================== ------*/}
-    </div>
+    );
     
-  );
+  }
   
-}
-

@@ -138,7 +138,9 @@ export async function initInvoicepaymentsProfileData(rawQstr) {
       params: { 
       q: btoa(rawQstr),         
       mutations: encodedMutations,
-      fullQ : true
+      fullQ : true,
+      aw : btoa(``),
+      src : btoa(`initInvoicepaymentsProfileData`)
       },
     });
 
@@ -207,7 +209,7 @@ export async function getInvoicepaymentsListData(qstr = "") {
   if(qstr=='')
   {
    fullWhere = false 
-   qstr=btoa(' order by primkey desc')
+   qstr=btoa('')
   }
   
   //add the following data in response
@@ -232,7 +234,9 @@ export async function getInvoicepaymentsListData(qstr = "") {
         q: qstr, 
         mutations: encodedMutations,
         fullQ : fullWhere,
-        pagination : `l:qinvoice_payments_page:${recordsPerPage}:${pageNo}`
+        pagination : `l:qinvoice_payments_page:${recordsPerPage}:${pageNo}`,
+        aw:btoa(`order by primkey desc`),
+        src : btoa(`getInvoicepaymentsListData`)        
         },
     });
 

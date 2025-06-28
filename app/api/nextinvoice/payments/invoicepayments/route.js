@@ -7,8 +7,10 @@ import {InvoicepaymentsRowMutations} from './InvoicepaymentsRowMutations';
 import listInvoicepaymentsRowMutationsKeys from './InvoicepaymentsMutationKeys';
 
 //be gate keeper and auth 
-import { validateSelect } from '../../beMonitor';
+import { validateSelect , mosyMutateQuery, mutateInputArray } from '../../beMonitor';
 import { processAuthToken } from '../../../auth/authManager';
+
+import { AddInvoicepayments, UpdateInvoicepayments } from './InvoicepaymentsDbGateway';
 
 
 export async function GET(request) {
@@ -50,6 +52,11 @@ export async function GET(request) {
     if (!enhancedParams.q) delete enhancedParams.q;
     if (!enhancedParams.function_cols) enhancedParams.function_cols = '';
 
+    //append further queries to client query request , account filters order by group by  etc
+    const mutatedQparam = mosyMutateQuery('invoice_payments', searchParams, authData, 'primkey')
+
+    enhancedParams.q=mutatedQparam
+    
     let requestValid =validateSelect('invoice_payments', queryParams, authData)
 
     if(!requestValid)
@@ -119,34 +126,40 @@ export async function POST(InvoicepaymentsRequest) {
     
     const InvoicepaymentsFormAction = body.invoice_payments_mosy_action;
     const invoice_payments_uptoken_value = base64Decode(body.invoice_payments_uptoken);
-
-		//--- Begin  invoice_payments inputs array ---// 
-
-const InvoicepaymentsInputsArr = {
-  "invoice_id" : "?", 
-  "date_paid" : "?", 
-  "amount_paid" : "?", 
-  "balance" : "?", 
-  "ref_no" : "?", 
-  "payment_mode" : "?", 
-  "remark" : "?", 
-  "hive_site_id" : "?", 
-  "hive_site_name" : "?", 
-  "invoice_no" : "?", 
-
-};
-
-//--- End invoice_payments inputs array --//
-
     
+    const newId = magicRandomStr(7);
+
+
+		
+  
+  //--- Begin  invoice_payments inputs array ---// 
+  const InvoicepaymentsInputsArr = {
+
+    "invoice_id" : "?", 
+    "date_paid" : "?", 
+    "amount_paid" : "?", 
+    "balance" : "?", 
+    "ref_no" : "?", 
+    "payment_mode" : "?", 
+    "remark" : "?", 
+    "hive_site_id" : "?", 
+    "hive_site_name" : "?", 
+    "invoice_no" : "?", 
+
+  };
+
+  //--- End invoice_payments inputs array --//
+
+    //mutate requested values
+    const mutatedDataArray =mutateInputArray('invoice_payments',InvoicepaymentsInputsArr, InvoicepaymentsRequest, newId, authData)
+
     if (InvoicepaymentsFormAction === "add_invoice_payments") 
     {
       
-      const newId = magicRandomStr(7);
-      InvoicepaymentsInputsArr.record_id = newId;
+      mutatedDataArray.record_id = newId;
       
       // Insert into table Invoicepayments
-      const result = await mosySqlInsert("invoice_payments", InvoicepaymentsInputsArr, body);
+      const result = await AddInvoicepayments(newId, mutatedDataArray, body, authData);     
 
        
 
@@ -161,8 +174,7 @@ const InvoicepaymentsInputsArr = {
     if (InvoicepaymentsFormAction === "update_invoice_payments") {
       
       // update table Invoicepayments
-      const result = await mosySqlUpdate("invoice_payments", InvoicepaymentsInputsArr, body, `primkey='${invoice_payments_uptoken_value}'`);
-
+      const result = await UpdateInvoicepayments(newId, mutatedDataArray, body, authData, `primkey='${invoice_payments_uptoken_value}'`)
 
       
 

@@ -92,8 +92,9 @@ $additional_details_segment_title="";
   
 $col_size_def='col-md-12';
 
-$def_profile_container_class="col-md-11 rounded text-left p-2 mb-0  bg-white ";
-$def_profile_inner_container_class="col-md-12 p-2 pr-lg-4 pl-lg-4 m-0";  
+$def_profile_container_class="col-md-12 rounded text-left p-2 mb-0  bg-white ";
+$def_profile_inner_container_class='` profile_container col-md-12 m-0 p-0  ${showNavigationIsle &&("pr-lg-4 pl-lg-4 m-0")}`';  
+
 $override_justify_class="justify-content-center";
 $overide_img_section_class="col-md-6 mr-lg-5";
 $override_large_col_size="col-md-6 hive_data_cell";
@@ -230,6 +231,11 @@ import {
 //mini list 
 import  ".$camelcasetbl_prefix."List from './".$camelcasetbl_prefix."List';
 
+///invoice history 
+import InvoicelistList from '../../docs/uiControl/InvoicelistList';
+
+import { InteprateInvoicelistEvent } from '../../docs/dataControl/InvoicelistRequestHandler';
+     
 
 // export profile";
 
@@ -286,6 +292,7 @@ $mini_list_array=[
        //" invoice_id ='\${invoicesNode?.invoice_id}' order by primkey desc "=>'InvoiceitemsList:{`Invoice items`}:../snippets/list::hide:InteprateInvoiceitemsEvent', 
 
      //"tag ='\${infosnippetsNode?.tag}' order by primkey desc "=>''.$camelcasetbl_prefix.'List:{`Related ${infosnippetsNode?.tag} Notes`}:../snippets/list:::InteprateInfosnippetsEvent', 
+     "client_id ='\${clientsNode?.client_id}'"=>'InvoicelistList:{`Account history`}:../docs/invoices:../docs/invoiceprofile::InteprateInvoicelistEvent', 
      ""=>''.$camelcasetbl_prefix.'List:{`More Accounts`}:../clients/list:::InteprateClientlistEvent', 
      //"deposit_file_id='\${bankingNode?.record_id}' order by primkey desc "=>'DeposithistoryList:{`Deposits list`}:../inventory/fuel::hide:InteprateDeposithistoryEvent', 
     

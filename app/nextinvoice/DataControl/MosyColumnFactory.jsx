@@ -27,6 +27,12 @@ const MosyColumnFactory = {
    //-- invoices cols--//
   invoices: ["invoice_no", "date_created", "date_due", "paid_status", "created_by", "name", "invoice_stage", "remark", "client_id", "paid_on", "supplier_id", "invoice_type", "account_affect", "inv_no_int", "invoice_key", "client_name", "client_tel", "client_email", "invoice_amount", "hive_site_id", "hive_site_name", "vendor_headers", "client_headers", "vendor_name", "currency", "discount", "amount_paid", "date_paid", "ref_no", "quotation", "date_updated", "folder", "footnote"],
 
+   //-- message_templates cols--//
+  message_templates: ["template_name", "message_subject", "message_template", "template_code", "hive_site_id", "hive_site_name"],
+
+   //-- messaging cols--//
+  messaging: ["receiver_contacts", "reciver_names", "message_type", "site_id", "group_name", "message_date", "sent_state", "msg_read_state", "subject", "message_label", "message_details", "sms_cost", "page_count", "hive_site_id", "hive_site_name", "custom_dictionary", "message_signature", "ref_number"],
+
    //-- mosy_sql_roll_back cols--//
   mosy_sql_roll_back: ["table_name", "roll_type", "where_str", "roll_timestamp", "value_entries", "hive_site_id", "hive_site_name"],
 

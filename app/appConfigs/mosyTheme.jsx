@@ -32,7 +32,7 @@ const mosyThemeConfigs = {
   skinPlasma: "rgba(255, 255, 255, 0.0)",
   bodySkinCss: "#fff",
 
-  systemBorderRadius : "0px",
+  systemBorderRadius : "20px",
 
   // Gradient and Sidebar
   btnFirstColor: "#000000",

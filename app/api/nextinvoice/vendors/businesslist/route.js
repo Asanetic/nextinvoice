@@ -7,8 +7,10 @@ import {BusinesslistRowMutations} from './BusinesslistRowMutations';
 import listBusinesslistRowMutationsKeys from './BusinesslistMutationKeys';
 
 //be gate keeper and auth 
-import { validateSelect } from '../../beMonitor';
+import { validateSelect , mosyMutateQuery, mutateInputArray } from '../../beMonitor';
 import { processAuthToken } from '../../../auth/authManager';
+
+import { AddBusinesslist, UpdateBusinesslist } from './BusinesslistDbGateway';
 
 
 export async function GET(request) {
@@ -50,6 +52,11 @@ export async function GET(request) {
     if (!enhancedParams.q) delete enhancedParams.q;
     if (!enhancedParams.function_cols) enhancedParams.function_cols = '';
 
+    //append further queries to client query request , account filters order by group by  etc
+    const mutatedQparam = mosyMutateQuery('companies', searchParams, authData, 'primkey')
+
+    enhancedParams.q=mutatedQparam
+    
     let requestValid =validateSelect('companies', queryParams, authData)
 
     if(!requestValid)
@@ -119,39 +126,45 @@ export async function POST(BusinesslistRequest) {
     
     const BusinesslistFormAction = body.companies_mosy_action;
     const companies_uptoken_value = base64Decode(body.companies_uptoken);
-
-		//--- Begin  companies inputs array ---// 
-
-const BusinesslistInputsArr = {
-  "business_name" : "?", 
-  "mobile" : "?", 
-  "email" : "?", 
-  "location" : "?", 
-  "business_no" : "?", 
-  "name" : "?", 
-  "specialty" : "?", 
-  "remark" : "?", 
-  "logo" : "?", 
-  "bank_name" : "?", 
-  "account_no" : "?", 
-  "pin_no" : "?", 
-  "swort_code" : "?", 
-  "hive_site_id" : "?", 
-  "hive_site_name" : "?", 
-
-};
-
-//--- End companies inputs array --//
-
     
+    const newId = magicRandomStr(7);
+
+
+		
+  
+  //--- Begin  companies inputs array ---// 
+  const BusinesslistInputsArr = {
+
+    "business_name" : "?", 
+    "mobile" : "?", 
+    "email" : "?", 
+    "location" : "?", 
+    "business_no" : "?", 
+    "name" : "?", 
+    "specialty" : "?", 
+    "remark" : "?", 
+    "logo" : "?", 
+    "bank_name" : "?", 
+    "account_no" : "?", 
+    "pin_no" : "?", 
+    "swort_code" : "?", 
+    "hive_site_id" : "?", 
+    "hive_site_name" : "?", 
+
+  };
+
+  //--- End companies inputs array --//
+
+    //mutate requested values
+    const mutatedDataArray =mutateInputArray('companies',BusinesslistInputsArr, BusinesslistRequest, newId, authData)
+
     if (BusinesslistFormAction === "add_companies") 
     {
       
-      const newId = magicRandomStr(7);
-      BusinesslistInputsArr.company_id = newId;
+      mutatedDataArray.company_id = newId;
       
       // Insert into table Businesslist
-      const result = await mosySqlInsert("companies", BusinesslistInputsArr, body);
+      const result = await AddBusinesslist(newId, mutatedDataArray, body, authData);     
 
        
                 // Now handle the file upload for logo, if any
@@ -164,7 +177,8 @@ const BusinesslistInputsArr = {
                     BusinesslistInputsArr.logo = filePath; // Update file path in the database
 
                     // After file upload, update the database with the file path
-                    await mosySqlUpdate("companies", { logo: filePath }, body, `primkey='${result.record_id}'`);                    					                    
+                    await UpdateBusinesslist(newId, { logo: filePath }, body, authData,  `primkey='${result.record_id}'`)
+                    
                     let fileToDelete = body.media_companies_logo;
                       
                     //Delete file if need be
@@ -187,8 +201,7 @@ const BusinesslistInputsArr = {
     if (BusinesslistFormAction === "update_companies") {
       
       // update table Businesslist
-      const result = await mosySqlUpdate("companies", BusinesslistInputsArr, body, `primkey='${companies_uptoken_value}'`);
-
+      const result = await UpdateBusinesslist(newId, mutatedDataArray, body, authData, `primkey='${companies_uptoken_value}'`)
 
       
                 // Now handle the file upload for logo, if any
@@ -201,7 +214,8 @@ const BusinesslistInputsArr = {
                     BusinesslistInputsArr.logo = filePath; // Update file path in the database
 
                     // After file upload, update the database with the file path
-                    await mosySqlUpdate("companies", { logo: filePath }, body, `primkey='${companies_uptoken_value}'`);                    					                    
+                    await UpdateBusinesslist(newId, { logo: filePath }, body, authData,  `primkey='${companies_uptoken_value}'`)
+                    
                     let fileToDelete = body.media_companies_logo;
                       
                     //Delete old file

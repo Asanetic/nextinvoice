@@ -7,9 +7,10 @@ import {InvoiceitemsRowMutations} from './InvoiceitemsRowMutations';
 import listInvoiceitemsRowMutationsKeys from './InvoiceitemsMutationKeys';
 
 //be gate keeper and auth 
-import { validateSelect } from '../../beMonitor';
+import { validateSelect , mosyMutateQuery, mutateInputArray } from '../../beMonitor';
 import { processAuthToken } from '../../../auth/authManager';
-import { addInventoryItem } from '../../nextinvoice_functions';
+
+import { AddInvoiceitems, UpdateInvoiceitems } from './InvoiceitemsDbGateway';
 
 
 export async function GET(request) {
@@ -51,6 +52,11 @@ export async function GET(request) {
     if (!enhancedParams.q) delete enhancedParams.q;
     if (!enhancedParams.function_cols) enhancedParams.function_cols = '';
 
+    //append further queries to client query request , account filters order by group by  etc
+    const mutatedQparam = mosyMutateQuery('invoice_items', searchParams, authData, 'primkey')
+
+    enhancedParams.q=mutatedQparam
+    
     let requestValid =validateSelect('invoice_items', queryParams, authData)
 
     if(!requestValid)
@@ -120,55 +126,50 @@ export async function POST(InvoiceitemsRequest) {
     
     const InvoiceitemsFormAction = body.invoice_items_mosy_action;
     const invoice_items_uptoken_value = base64Decode(body.invoice_items_uptoken);
-
-		//--- Begin  invoice_items inputs array ---// 
-
-    const newItemId = magicRandomStr(10);
-
-    const inventoryItemId = body.txt_item_id
-
-    if(body.txt_item_id=="")
-    {
-      inventoryItemId = newItemId
-    }
-    //add item
-    await addInventoryItem(body, newItemId)
-
-    const InvoiceitemsInputsArr = {
-      "invoice_id" : "?", 
-      "item_name" : body.txt__inventory_item_name_item_id, 
-      "item_remark" : "?", 
-      "quantity" : "?", 
-      "rate" : "?", 
-      "date_created" : "?", 
-      "item_id" : inventoryItemId, 
-      "tax" : "?", 
-      "discount" : "?", 
-      "account_context" : "?", 
-      "account_name" : "?", 
-      "item_key" : "?", 
-      "stock_type" : "?", 
-      "invoice_edit_key" : "?", 
-      "selling_price" : "?", 
-      "sale_state" : "?", 
-      "remaining_qty" : "?", 
-      "add_to_stock" : "?", 
-      "hive_site_id" : "?", 
-      "hive_site_name" : "?", 
-
-    };
-
-    //--- End invoice_items inputs array --//
-
     
+    const newId = magicRandomStr(7);
+
+
+		
+  
+  //--- Begin  invoice_items inputs array ---// 
+  const InvoiceitemsInputsArr = {
+
+    "invoice_id" : "?", 
+    "item_id" : "?", 
+    "item_remark" : "?", 
+    "quantity" : "?", 
+    "rate" : "?", 
+    "date_created" : "?", 
+    "item_name" : "?", 
+    "tax" : "?", 
+    "discount" : "?", 
+    "account_context" : "?", 
+    "account_name" : "?", 
+    "item_key" : "?", 
+    "stock_type" : "?", 
+    "invoice_edit_key" : "?", 
+    "selling_price" : "?", 
+    "sale_state" : "?", 
+    "remaining_qty" : "?", 
+    "add_to_stock" : "?", 
+    "hive_site_id" : "?", 
+    "hive_site_name" : "?", 
+
+  };
+
+  //--- End invoice_items inputs array --//
+
+    //mutate requested values
+    const mutatedDataArray =mutateInputArray('invoice_items',InvoiceitemsInputsArr, InvoiceitemsRequest, newId, authData)
+
     if (InvoiceitemsFormAction === "add_invoice_items") 
     {
       
-      const newId = magicRandomStr(7);
-      InvoiceitemsInputsArr.record_id = newId;
+      mutatedDataArray.record_id = newId;
       
       // Insert into table Invoiceitems
-      const result = await mosySqlInsert("invoice_items", InvoiceitemsInputsArr, body);
+      const result = await AddInvoiceitems(newId, mutatedDataArray, body, authData);     
 
        
 
@@ -183,7 +184,9 @@ export async function POST(InvoiceitemsRequest) {
     if (InvoiceitemsFormAction === "update_invoice_items") {
       
       // update table Invoiceitems
-      const result = await mosySqlUpdate("invoice_items", InvoiceitemsInputsArr, body, `primkey='${invoice_items_uptoken_value}'`);
+      const result = await UpdateInvoiceitems(newId, mutatedDataArray, body, authData, `primkey='${invoice_items_uptoken_value}'`)
+
+      
 
       return Response.json({
         status: 'success',

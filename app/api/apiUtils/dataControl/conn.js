@@ -29,7 +29,7 @@ export async function connectDB() {
       database: dbSettings.DB_NAME,
     });
 
-    console.log(`✅ Connected to ${isLocal ? 'LOCAL' : 'PRODUCTION'} DB`);
+    //console.log(`✅ Connected to ${isLocal ? 'LOCAL' : 'PRODUCTION'} DB`);
     return conn;
 
   } catch (err) {

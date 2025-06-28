@@ -87,7 +87,7 @@ export async function mosyGetData({
       headers: mergedHeaders,
     });
 
-    console.log("mosygetttttt", res)
+    //console.log("mosygetttttt", res)
     if(res.status=="403"){
       destroyAppSession()
     }

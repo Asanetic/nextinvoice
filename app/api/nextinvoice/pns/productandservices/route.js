@@ -7,8 +7,10 @@ import {ProductandservicesRowMutations} from './ProductandservicesRowMutations';
 import listProductandservicesRowMutationsKeys from './ProductandservicesMutationKeys';
 
 //be gate keeper and auth 
-import { validateSelect } from '../../beMonitor';
+import { validateSelect , mosyMutateQuery, mutateInputArray } from '../../beMonitor';
 import { processAuthToken } from '../../../auth/authManager';
+
+import { AddProductandservices, UpdateProductandservices } from './ProductandservicesDbGateway';
 
 
 export async function GET(request) {
@@ -50,6 +52,11 @@ export async function GET(request) {
     if (!enhancedParams.q) delete enhancedParams.q;
     if (!enhancedParams.function_cols) enhancedParams.function_cols = '';
 
+    //append further queries to client query request , account filters order by group by  etc
+    const mutatedQparam = mosyMutateQuery('inventory', searchParams, authData, 'primkey')
+
+    enhancedParams.q=mutatedQparam
+    
     let requestValid =validateSelect('inventory', queryParams, authData)
 
     if(!requestValid)
@@ -119,33 +126,41 @@ export async function POST(ProductandservicesRequest) {
     
     const ProductandservicesFormAction = body.inventory_mosy_action;
     const inventory_uptoken_value = base64Decode(body.inventory_uptoken);
+    
+    const newId = magicRandomStr(7);
 
-		//--- Begin  inventory inputs array ---// 
 
-const ProductandservicesInputsArr = {
-  "item_name" : "?", 
-  "quantity" : "?", 
-  "rate" : "?", 
-  "tax" : "?", 
-  "discount" : "?", 
-  "date_created" : "?", 
-  "item_remark" : "?", 
-  "hive_site_id" : "?", 
-  "hive_site_name" : "?", 
-
-};
-
-//--- End inventory inputs array --//
-
+		
   
+  //--- Begin  inventory inputs array ---// 
+  const ProductandservicesInputsArr = {
+
+    "item_name" : "?", 
+    "quantity" : "?", 
+    "rate" : "?", 
+    "tax" : "?", 
+    "discount" : "?", 
+    "date_created" : "?", 
+    "item_remark" : "?", 
+    "hive_site_id" : "?", 
+    "hive_site_name" : "?", 
+
+  };
+
+  //--- End inventory inputs array --//
+
+    //mutate requested values
+    const mutatedDataArray =mutateInputArray('inventory',ProductandservicesInputsArr, ProductandservicesRequest, newId, authData)
+
     if (ProductandservicesFormAction === "add_inventory") 
     {
       
-      const newId = magicRandomStr(7);
-      ProductandservicesInputsArr.record_id = newId;
+      mutatedDataArray.record_id = newId;
       
       // Insert into table Productandservices
-      const result = await mosySqlInsert("inventory", ProductandservicesInputsArr, body); 
+      const result = await AddProductandservices(newId, mutatedDataArray, body, authData);     
+
+       
 
       return Response.json({
         status: 'success',
@@ -155,12 +170,13 @@ const ProductandservicesInputsArr = {
       
     }
     
-
     if (ProductandservicesFormAction === "update_inventory") {
       
       // update table Productandservices
-      const result = await mosySqlUpdate("inventory", ProductandservicesInputsArr, body, `primkey='${inventory_uptoken_value}'`);
+      const result = await UpdateProductandservices(newId, mutatedDataArray, body, authData, `primkey='${inventory_uptoken_value}'`)
+
       
+
       return Response.json({
         status: 'success',
         message: result.message,

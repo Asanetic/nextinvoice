@@ -2,13 +2,15 @@
 //utils 
 import { mosySqlInsert, mosySqlUpdate, base64Decode, mosyFlexSelect, mosyUploadFile, mosyDeleteFile, magicRandomStr } from '../../../apiUtils/dataControl/dataUtils';
 
-import {MycompaniesRowMutations} from './MycompaniesRowMutations';
+import {SmsremindersRowMutations} from './SmsremindersRowMutations';
 
-import listMycompaniesRowMutationsKeys from './MycompaniesMutationKeys';
+import listSmsremindersRowMutationsKeys from './SmsremindersMutationKeys';
 
 //be gate keeper and auth 
-import { validateSelect } from '../../beMonitor';
+import { validateSelect , mosyMutateQuery, mutateInputArray } from '../../beMonitor';
 import { processAuthToken } from '../../../auth/authManager';
+
+import { AddSmsreminders, UpdateSmsreminders } from './SmsremindersDbGateway';
 
 
 export async function GET(request) {
@@ -40,7 +42,7 @@ export async function GET(request) {
 
     // ✅ Provide default fallbacks
     const enhancedParams = {
-      tbl: 'companies',
+      tbl: 'messaging',
       colstr: queryParams.colstr || 'Kg==', // default to *
       ...queryParams 
     };
@@ -50,7 +52,12 @@ export async function GET(request) {
     if (!enhancedParams.q) delete enhancedParams.q;
     if (!enhancedParams.function_cols) enhancedParams.function_cols = '';
 
-    let requestValid =validateSelect('companies', queryParams, authData)
+    //append further queries to client query request , account filters order by group by  etc
+    const mutatedQparam = mosyMutateQuery('messaging', searchParams, authData, 'primkey')
+
+    enhancedParams.q=mutatedQparam
+    
+    let requestValid =validateSelect('messaging', queryParams, authData)
 
     if(!requestValid)
     {
@@ -62,21 +69,21 @@ export async function GET(request) {
     }
  
     const isEmpty = (obj) => !obj || Object.keys(obj).length === 0;
-    const mutationsObj = isEmpty(requestedMutationsObj) ? listMycompaniesRowMutationsKeys : requestedMutationsObj;
+    const mutationsObj = isEmpty(requestedMutationsObj) ? listSmsremindersRowMutationsKeys : requestedMutationsObj;
     
     if(requestValid){
     
-      const result = await mosyFlexSelect(enhancedParams, mutationsObj, MycompaniesRowMutations);
+      const result = await mosyFlexSelect(enhancedParams, mutationsObj, SmsremindersRowMutations);
 
       return Response.json({
         status: 'success',
-        message: 'Mycompanies data retrieved',
+        message: 'Smsreminders data retrieved',
         ...result,
       });
       
    }
   } catch (err) {
-    console.error('GET Mycompanies failed:', err);
+    console.error('GET Smsreminders failed:', err);
     return Response.json(
       { status: 'error', message: err.message },
       { status: 500 }
@@ -86,16 +93,16 @@ export async function GET(request) {
 
 
 
-export async function POST(MycompaniesRequest) {
+export async function POST(SmsremindersRequest) {
   try {
     let body;
     let isMultipart = false;
 
-    const contentType = MycompaniesRequest.headers.get("content-type") || "";
+    const contentType = SmsremindersRequest.headers.get("content-type") || "";
 
     if (contentType.includes("multipart/form-data")) {
       isMultipart = true;
-      const formData = await MycompaniesRequest.formData();
+      const formData = await SmsremindersRequest.formData();
 
       // Convert FormData to plain object
       body = {};
@@ -104,11 +111,11 @@ export async function POST(MycompaniesRequest) {
       }
 
     } else {
-      body = await MycompaniesRequest.json();
+      body = await SmsremindersRequest.json();
     }
     
     
-    const { valid: isTokenValid, reason: tokenError, data: authData } = processAuthToken(MycompaniesRequest);
+    const { valid: isTokenValid, reason: tokenError, data: authData } = processAuthToken(SmsremindersRequest);
      
     if (!isTokenValid) {
       return Response.json(
@@ -117,71 +124,79 @@ export async function POST(MycompaniesRequest) {
       );
     }
     
-    const MycompaniesFormAction = body.companies_mosy_action;
-    const companies_uptoken_value = base64Decode(body.companies_uptoken);
-
-		//--- Begin  companies inputs array ---// 
-
-const MycompaniesInputsArr = {
-  "business_no" : "?", 
-  "name" : "?", 
-  "mobile" : "?", 
-  "email" : "?", 
-  "business_name" : "?", 
-  "location" : "?", 
-  "specialty" : "?", 
-  "remark" : "?", 
-  "logo" : "?", 
-  "bank_name" : "?", 
-  "account_no" : "?", 
-  "pin_no" : "?", 
-  "swort_code" : "?", 
-  "hive_site_id" : "?", 
-  "hive_site_name" : "?", 
-
-};
-
-//--- End companies inputs array --//
-
+    const SmsremindersFormAction = body.messaging_mosy_action;
+    const messaging_uptoken_value = base64Decode(body.messaging_uptoken);
     
-    if (MycompaniesFormAction === "add_companies") 
+    const newId = magicRandomStr(7);
+
+
+		
+  
+  //--- Begin  messaging inputs array ---// 
+  const SmsremindersInputsArr = {
+
+    "ref_number" : "?", 
+    "subject" : "?", 
+    "receiver_contacts" : "?", 
+    "message_details" : "?", 
+    "reciver_names" : "?", 
+    "message_type" : "?", 
+    "site_id" : "?", 
+    "group_name" : "?", 
+    "message_date" : "?", 
+    "sent_state" : "?", 
+    "msg_read_state" : "?", 
+    "message_label" : "?", 
+    "sms_cost" : "?", 
+    "page_count" : "?", 
+    "hive_site_id" : "?", 
+    "hive_site_name" : "?", 
+    "custom_dictionary" : "?", 
+    "message_signature" : "?", 
+
+  };
+
+  //--- End messaging inputs array --//
+
+    //mutate requested values
+    const mutatedDataArray =mutateInputArray('messaging',SmsremindersInputsArr, SmsremindersRequest, newId, authData)
+
+    if (SmsremindersFormAction === "add_messaging") 
     {
       
-      const newId = magicRandomStr(7);
-      MycompaniesInputsArr.record_id = newId;
+      mutatedDataArray.messageid = newId;
       
-      // Insert into table Mycompanies
-      const result = await mosySqlInsert("companies", MycompaniesInputsArr, body);
+      // Insert into table Smsreminders
+      const result = await AddSmsreminders(newId, mutatedDataArray, body, authData);     
 
        
 
       return Response.json({
         status: 'success',
         message: result.message,
-        companies_uptoken: result.record_id
+        messaging_uptoken: result.record_id
       });
       
     }
     
-    if (MycompaniesFormAction === "update_companies") {
+    if (SmsremindersFormAction === "update_messaging") {
       
-      // update table Mycompanies
-      const result = await mosySqlUpdate("companies", MycompaniesInputsArr, body, `primkey='${companies_uptoken_value}'`);
-
+      // update table Smsreminders
+      const result = await UpdateSmsreminders(newId, mutatedDataArray, body, authData, `primkey='${messaging_uptoken_value}'`)
 
       
 
       return Response.json({
         status: 'success',
         message: result.message,
-        companies_uptoken: companies_uptoken_value
+        messaging_uptoken: messaging_uptoken_value
       });
     }    
 
     // Optional: catch unrecognized actions
     return Response.json({
       status: 'error',
-      message: `Invalid action: ${MycompaniesFormAction}`
+      message: `Invalid action: ${SmsremindersFormAction}`
     }, { status: 400 });
 
   } catch (err) {

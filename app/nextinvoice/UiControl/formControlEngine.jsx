@@ -4,6 +4,8 @@ const controlMap = {
      invoices: {
       date_created: {input: { readOnly: false, required: false}, cellClass: "d-none"},
       invoice_type: {input: { readOnly: false, required: false}, cellClass: "d-none"},
+      txt_vendor_name_create_new: {input: { readOnly: false, required: false}, cellClass: "d-none"},
+       
      },
 
      invoice_items: {
@@ -11,7 +13,7 @@ const controlMap = {
      },
 
      invoice_payments: {
-      txt_invoice_id: {input: { readOnly: false, required: false}, cellClass: "d-none"},
+      txt_invoice_id: {input: { readOnly: false, required: false}, cellClass: ""},
      }     
               
   };
@@ -30,12 +32,14 @@ function customCellControls(module, field, controlData = {}) {
 
 
   const hostParent = controlData?.hostParent
-  console.log(`customCellControls `, module , field , controlData , hostParent)
+  
+  //console.log(`customCellControls `, module , field , controlData , hostParent)
 
-  // Example: hide site_id for some context
-  if ((module==="site_list" && field === "txt_site_id") && hostParent==="SiteListProjectsMainProfilePage") {
-
+  //hive invoice id if not in the main page
+  if ((module==="invoice_payments" && field === "txt_invoice_id")) {
+   if(hostParent!=="InvoicepaymentsMainProfilePage"){
     return "d-none";
+   }
   }
 
   return null;

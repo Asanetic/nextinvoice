@@ -134,7 +134,9 @@ export async function initBusinesslistProfileData(rawQstr) {
       params: { 
       q: btoa(rawQstr),         
       mutations: encodedMutations,
-      fullQ : true
+      fullQ : true,
+      aw : btoa(``),
+      src : btoa(`initBusinesslistProfileData`)
       },
     });
 
@@ -203,7 +205,7 @@ export async function getBusinesslistListData(qstr = "") {
   if(qstr=='')
   {
    fullWhere = false 
-   qstr=btoa(' order by primkey desc')
+   qstr=btoa('')
   }
   
   //add the following data in response
@@ -224,7 +226,9 @@ export async function getBusinesslistListData(qstr = "") {
         q: qstr, 
         mutations: encodedMutations,
         fullQ : fullWhere,
-        pagination : `l:qcompanies_page:${recordsPerPage}:${pageNo}`
+        pagination : `l:qcompanies_page:${recordsPerPage}:${pageNo}`,
+        aw:btoa(`order by primkey desc`),
+        src : btoa(`getBusinesslistListData`)        
         },
     });
 

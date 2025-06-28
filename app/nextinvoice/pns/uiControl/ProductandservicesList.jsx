@@ -85,10 +85,10 @@ export default function ProductandservicesList({ dataIn = {}, dataOut = {} }) {
       
       {showDataControlSections && (<div className="row justify-content-end col-md-12 text-right pt-3 pb-3 data_list_section ml-0 mr-0 mb-3 border-bottom pr-0 pl-0" id="">
         <div className="col-md-6 p-0 text-left pt-3 hive_list_title">
-          <h6 className="text-muted"><b> Product and services </b></h6>
+          <h6 className="text-muted"><b> Product and Services </b></h6>
         </div>
         <div className="col-md-6 p-0 text-right hive_list_search_tray">
-          <input type="text" id="txt_inventory" name="txt_inventory" className="custom-search-input form-control" placeholder="Search in Product and services "
+          <input type="text" id="txt_inventory" name="txt_inventory" className="custom-search-input form-control" placeholder="Search in Product and Services "
           onChange={(e) => stateItemSetters.setProductandservicesQuerySearchStr(e.target.value)}
           />
           <button className="custom-search-botton" id="qinventory_btn" name="qinventory_btn" type="submit"><i className="fa fa-search mr-1"></i> Go </button>
@@ -127,7 +127,7 @@ export default function ProductandservicesList({ dataIn = {}, dataOut = {} }) {
               <tr>
                 <th scope="col">#</th>
                 <td colSpan="4" className="text-muted">
-                  <h5 className="col-md-12 text-center p-3 mb-5 text-muted"><i className="fa fa-spinner fa-spin"></i> Loading Product and services ...</h5>
+                  <h5 className="col-md-12 text-center p-3 mb-5 text-muted"><i className="fa fa-spinner fa-spin"></i> Loading Product and Services ...</h5>
                 </td>
               </tr>
             ) : stateItem.productandservicesListData?.length > 0 ? (

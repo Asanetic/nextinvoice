@@ -341,7 +341,7 @@ export default function InvoicepaymentsProfile({ dataIn = {}, dataOut = {} }) {
                 parentStateSetters : stateItemSetters,
                 parentUseEffectKey : localEventSignature,
                 showNavigationIsle:false,
-                customQueryStr : btoa(`where invoice_id ='${invoice_paymentsNode?.invoice_id}' order by primkey desc `),
+                customQueryStr : btoa(`where invoice_id ='${invoice_paymentsNode?.invoice_id}' `),
                 customProfilePath:""
                 
               }}

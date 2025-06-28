@@ -121,10 +121,10 @@ export async function initInvoiceitemsProfileData(rawQstr) {
   const rawMutations = {
                
     _invoices_invoice_no_invoice_id : [],
-    
-    totals : [],
           
     _inventory_item_name_item_id : [],
+    
+    totals : [],
 
   }
   
@@ -140,7 +140,9 @@ export async function initInvoiceitemsProfileData(rawQstr) {
       params: { 
       q: btoa(rawQstr),         
       mutations: encodedMutations,
-      fullQ : true
+      fullQ : true,
+      aw : btoa(``),
+      src : btoa(`initInvoiceitemsProfileData`)
       },
     });
 
@@ -209,17 +211,17 @@ export async function getInvoiceitemsListData(qstr = "") {
   if(qstr=='')
   {
    fullWhere = false 
-   qstr=btoa(' order by primkey desc')
+   qstr=btoa('')
   }
   
   //add the following data in response
   const rawMutations = {
                
     _invoices_invoice_no_invoice_id : [],
-    
-    totals : [],
           
     _inventory_item_name_item_id : [],
+    
+    totals : [],
 
   }
   
@@ -236,7 +238,9 @@ export async function getInvoiceitemsListData(qstr = "") {
         q: qstr, 
         mutations: encodedMutations,
         fullQ : fullWhere,
-        pagination : `l:qinvoice_items_page:${recordsPerPage}:${pageNo}`
+        pagination : `l:qinvoice_items_page:${recordsPerPage}:${pageNo}`,
+        aw:btoa(`order by primkey desc`),
+        src : btoa(`getInvoiceitemsListData`)        
         },
     });
 

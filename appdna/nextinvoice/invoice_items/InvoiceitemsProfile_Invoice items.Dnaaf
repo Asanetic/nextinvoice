@@ -92,8 +92,8 @@ $additional_details_segment_title="";
   
 $col_size_def='col-md-12';
 
-$def_profile_container_class="col-md-11 rounded text-left p-2 mb-0  bg-white ";
-$def_profile_inner_container_class="col-md-12 p-2 pr-lg-4 pl-lg-4 m-0";  
+$def_profile_container_class="col-md-12 rounded text-left p-2 mb-0  bg-white ";
+$def_profile_inner_container_class='` profile_container col-md-12 m-0 p-0  ${showNavigationIsle &&("pr-lg-4 pl-lg-4 m-0")}`';  
 $override_justify_class="justify-content-start";
 $overide_img_section_class="col-md-6 mr-lg-5";
 $override_large_col_size="col-md-12 hive_data_cell";
@@ -222,6 +222,8 @@ import {
          SmartDropdown,                  
        } from '../../UiControl/componentControl';
 
+import  ".$camelcasetbl_prefix."List from './".$camelcasetbl_prefix."List';
+
 // export profile";
 
 
@@ -277,7 +279,7 @@ $widget_and_ist_array=[
 /// mini list creator configs
 $mini_list_array=[
   
-     //" invoice_id ='\${invoice_itemsNode?.invoice_id}' order by primkey desc "=>''.$camelcasetbl_prefix.'List:{`Invoice items`}:../snippets/list::hide:InteprateInvoiceitemsEvent', 
+     " invoice_id ='\${invoice_itemsNode?.invoice_id}' "=>''.$camelcasetbl_prefix.'List:{`Document items`}:../snippets/list::hide:InteprateInvoiceitemsEvent', 
      //""=>''.$camelcasetbl_prefix.'List:{`More Notes`}:../snippets/list:::InteprateInfosnippetsEvent', 
      //"deposit_file_id='\${bankingNode?.record_id}' order by primkey desc "=>'DeposithistoryList:{`Deposits list`}:../inventory/fuel::hide:InteprateDeposithistoryEvent', 
     

@@ -12,6 +12,14 @@ export const InvoiceitemsRowMutations = {
 
   },
 
+  //dope  _inventory_item_name_item_id column to the response
+  _inventory_item_name_item_id : async (row)=>{
+
+    const data_res = await mosyQddata("inventory", "record_id", row.item_id);
+    return data_res?.item_name ?? row.item_id;
+
+  },
+
   
   //dope totals column to the response              
   totals: async (row) => {
@@ -19,14 +27,6 @@ export const InvoiceitemsRowMutations = {
     const data_res = row?.quantity*row?.rate;
 
     return data_res;
-
-  },
-
-  //dope  _inventory_item_name_item_id column to the response
-  _inventory_item_name_item_id : async (row)=>{
-
-    const data_res = await mosyQddata("inventory", "record_id", row.item_id);
-    return data_res?.item_name ?? row.item_id;
 
   }
 }
