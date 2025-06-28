@@ -108,7 +108,6 @@ export default function NavSidebar({
           </li>
         </ul>
       </div>
-
       <div className="sidebar" id="sidebar">
         <div className="sidebar-inner slimscroll">
           <div id="sidebar-menu" className="sidebar-menu">
