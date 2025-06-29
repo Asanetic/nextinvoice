@@ -5,7 +5,8 @@ import React from 'react';
 import Link from 'next/link';
 import { ProcessUserLogin } from '../../AuthUtils';
 import { closeMosyModal, MosyAlertCard, MosyNotify } from '../../../MosyUtils/ActionModals';
-import DynamicModal from '../../../components/DynamicModal';
+
+import DynamicModalProvider from '../../../components/DynamicModalProvider';
 
 function MainLoginInputs({
   appLogo,
@@ -75,7 +76,7 @@ function MainLoginInputs({
         </div>
 
         <input type="hidden" id="auth_mosy_action" name="auth_mosy_action" value="auth_login" />
-        <DynamicModal/>
+        <DynamicModalProvider/>
       </form>
 
       {showResetLink && (

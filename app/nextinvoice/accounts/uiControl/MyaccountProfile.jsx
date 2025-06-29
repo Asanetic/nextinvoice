@@ -139,7 +139,7 @@ export default function MyaccountProfile({ dataIn = {}, dataOut = {} }) {
               <>{showNavigationIsle && (<div className="row justify-content-end m-0 p-0 col-md-12  p-3 bg-white hive_profile_navigation " id="">
                 <div className="col-md-4 text-left p-0 hive_profile_nav_back_to_list_tray" id="">
                   
-                  <Link href="./list" className="text-info hive_profile_nav_back_to_list"><i className="fa fa-arrow-left"></i> Back to list</Link>
+                  <Link href="./list" className="d-none text-info hive_profile_nav_back_to_list"><i className="fa fa-arrow-left"></i> Back to list</Link>
                   
                 </div>
                 <div className="col-md-8 p-0 text-right hive_profile_nav_add_new_tray" id="">
@@ -155,18 +155,13 @@ export default function MyaccountProfile({ dataIn = {}, dataOut = {} }) {
                 {paramMyaccountUptoken && (
                   <button
                   type="button"
-                  className="medium_btn border border-danger text-danger p-2 ml-3 mb-3 hive_profile_nav_del_btn"
+                  className="d-none medium_btn border border-danger text-danger p-2 ml-3 mb-3 hive_profile_nav_del_btn"
                   onClick={() =>popDeleteDialog(paramMyaccountUptoken, {childStateSetters: stateItemSetters, parentStateSetters: parentStateSetters} , router)}
                   
                   >
                   <i className='fa fa-trash'></i> Delete
                 </button>)}
                 
-                {paramMyaccountUptoken && (
-                  
-                  <AddNewButton link="./profile" label=" Add new" icon="plus-circle" />
-                  
-                )}
                 
               </div>
             </div>)}</>
@@ -177,14 +172,14 @@ export default function MyaccountProfile({ dataIn = {}, dataOut = {} }) {
               <div className="col-md-12 pt-4 p-0 hive_profile_title_top d-lg-none" id=""></div>
               <h3 className="col-md-12 title_text text-left p-0 pt-3 hive_profile_title row justify-content-center m-0 ">
                 <div className="col m-0 p-0 pb-3">
-                  {system_usersNode?.primkey ? (  <span>My account Profile</span>) : (<span>Add System Users</span>)}
+                  {system_usersNode?.primkey ? (  <span>My account</span>) : (<span>Account details</span>)}
                 </div>
                 <>{!showNavigationIsle && (<div className="col m-0 p-0 text-right ">
                   
                   {paramMyaccountUptoken && (
                     <button
                     type="button"
-                    className="medium_btn border border-danger text-danger p-2 ml-3 mb-3 hive_profile_nav_del_btn"
+                    className="d-none medium_btn border border-danger text-danger p-2 ml-3 mb-3 hive_profile_nav_del_btn"
                     onClick={() =>popDeleteDialog(paramMyaccountUptoken, {childStateSetters: stateItemSetters, parentStateSetters: parentStateSetters} )}
                     
                     >
@@ -265,7 +260,7 @@ export default function MyaccountProfile({ dataIn = {}, dataOut = {} }) {
                       </div>
                       
                       <div className="col-md-12 text-center">
-                        <SubmitButtons tblName="system_users" extraClass="optional-custom-class" />
+                        <SubmitButtons tblName="system_users" extraClass="optional-custom-class d-none" />
                       </div>
                     </div></div>
                     {/*    Input cells section isle      */}

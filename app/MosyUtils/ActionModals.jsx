@@ -94,6 +94,7 @@ export function MosyNotify({
   id= "smartmodaldefaultId"
 }) {
   clearMosyTimer(); //  Stop old timer
+  console.log(` Notify DynamicModal `, id , message)
 
   MosyCard(
     <div className="row col-md-12 justify-content-center">

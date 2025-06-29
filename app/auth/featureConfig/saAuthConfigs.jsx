@@ -35,7 +35,7 @@ const saAuthConfigs = {
   resetPasswordUrl: "resetpassword",
   
   //Api endpoints
-  createUserApi : "/api/revuiov2/systemusers/users",
+  createUserApi : "/api/nextinvoice/accounts/createaccount",
 
   // Login page background + UI widget choice
   loginBgImage: bgimg.src,

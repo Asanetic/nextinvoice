@@ -7,13 +7,22 @@ function DynamicModal({ id = "smartmodaldefaultId", zIndex }) {
   const [modalProps, setModalProps] = useState(null);
   const modalRef = useRef();
 
+  console.log(`DynamicModal `, id , modalProps)
+  
   useEffect(() => {
     registerModal(
-      (props) => setModalProps(props),
+      (props) => {
+        try {
+          setModalProps(props);
+        } catch (err) {
+          console.error("Error setting modal props:", err, props);
+        }
+      },
       () => setModalProps(null),
-      id // Pass ID to registration
+      id
     );
   }, [id]);
+  
 
   useEffect(() => {
     if (modalProps) document.body.classList.add('modal-open');

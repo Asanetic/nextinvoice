@@ -8,6 +8,8 @@ import saAuthConfigs from '../../featureConfig/saAuthConfigs';
 import {mosyRightNow, magicRandomStr} from '../../../MosyUtils/hiveUtils';
 import { MosyAlertCard, MosyNotify } from '../../../MosyUtils/ActionModals';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { closeMosyCard } from '../../../components/MosyCard';
+import DynamicModalProvider from '../../../components/DynamicModalProvider';
 
 function LoginBox({ loginBgImg, appLogo, appName, loginUrl = '#' }) {
   const { usernameCol, emailCol, phoneCol, passwordCol, oauthTable } = saAuthConfigs;
@@ -33,15 +35,16 @@ function LoginBox({ loginBgImg, appLogo, appName, loginUrl = '#' }) {
   async function sendCreateAccount(e) {
     e.preventDefault();
 
-    MosyNotify({message :"Sending request..."})
+    MosyNotify({message :"Sending create request..." ,icon:"send",id:"modal1" })
     const registerResult =  await SAuthCreateAccount(e);
-  
+
+    closeMosyCard("modal1")
     console.log("registerinc", registerResult)
       if (registerResult.status=="success") {        
         // Maybe show a toast or do something UI-wise
-         
       MosyAlertCard({message : "Account created succesfully", 
-          yesLabel : "Click here to login", 
+          yesLabel : "Login", 
+          noLabel:"Close",
           icon : "check-circle",
           iconColor : "text-success",
           dismissable : false,
@@ -50,12 +53,19 @@ function LoginBox({ loginBgImg, appLogo, appName, loginUrl = '#' }) {
           
             router.push(`${saAuthConfigs.loginUrl}`)
           
-          }
-      })
+          },
+
+          onNo: () => {
+          
+            router.push(`${saAuthConfigs.loginUrl}`)
+          
+          }          
+
+      ,id:"modal2"})
         
         
       } else {
-        MosyNotify({message : `${registerResult.message}`,icon : "times-circle", iconColor : "text-danger", duration:20000})
+        MosyNotify({message : `${registerResult.message}`,icon : "times-circle", iconColor : "text-danger", addTimer:false, id:"topmost"})
         // Maybe show custom message
       }
 
@@ -149,6 +159,8 @@ function LoginBox({ loginBgImg, appLogo, appName, loginUrl = '#' }) {
                       <input type="hidden" id={`${oauthTable}_uptoken`} name={`${oauthTable}_uptoken`} value="" />
                       <input type="hidden" id={`${oauthTable}_mosy_action`} name={`${oauthTable}_mosy_action`} value={`add_${oauthTable}`} />
                       <div className="pt-3" id="alert_box"/>
+                      <DynamicModalProvider/>
+
                     </form>
 
                     <div className="col-md-12 pt-3 p-0" />
