@@ -7,8 +7,8 @@ function DynamicModal({ id = "smartmodaldefaultId", zIndex }) {
   const [modalProps, setModalProps] = useState(null);
   const modalRef = useRef();
 
-  console.log(`DynamicModal `, id , modalProps)
-  
+  //console.log(`DynamicModal `, id , modalProps)
+
   useEffect(() => {
     registerModal(
       (props) => {

@@ -1,6 +1,6 @@
 import AuthPage from "./auth/login/page";
 
-import mosyThemeConfigs from '../../appConfigs/mosyTheme';
+import mosyThemeConfigs from './appConfigs/mosyTheme';
 
 export async function generateMetadata() {
   const appName = mosyThemeConfigs.mosyAppName || 'Mosy';
