@@ -28,13 +28,26 @@ export async function GET(request) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
   const logoUrl = `${baseUrl}/api/mediaroom?media=${btoa(vendorDetails?.logo || 'logo.png')}`;
-  const badgeUrl = `${baseUrl}/api/mediaroom?media=${btoa('unpaid_badge.jpg')}`;
-
-  console.log(`---base url--- ${badgeUrl} ${baseUrl}`)
+  let badgeUrl = `${baseUrl}/api/mediaroom?media=${btoa('unpaid_badge.jpg')}`;
   
   const grandTotal = Number(invoiceSubTotal) - Number(invoiceDetails?.discount);
 
   const invoiceBal = Number(grandTotal)-Number(totalAmountPaid)
+
+  let imgwidth = "300px";
+
+  if(Number(totalAmountPaid)>=Number(grandTotal))
+  {
+      badgeUrl = `${baseUrl}/api/mediaroom?media=${btoa('paid_png_min.png')}`;
+      imgwidth= "200px;"
+  }
+      
+  if(Number(totalAmountPaid)>0 && (Number(totalAmountPaid)<Number(grandTotal)))
+  {
+    badgeUrl = `${baseUrl}/api/mediaroom?media=${btoa('partiallypaid_badge.jpg')}`;
+  }  
+
+  console.log(`---base url--- ${badgeUrl} ${baseUrl}`)
 
   const invoiceItemsRows = invoiceItemList.map(item => `
     <tr>
@@ -116,7 +129,7 @@ export async function GET(request) {
             </div>
           </td>
           <td style="width: 30%; text-align: center;">
-            <img src="${badgeUrl}" style="opacity: 0.4; width:300px" />
+            <img src="${badgeUrl}" style="opacity: 0.4; width:${imgwidth}" />
           </td>
           <td style="width: 40%; text-align: right;">
             <h3>RECEIPT</h3>
@@ -187,7 +200,7 @@ export async function GET(request) {
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
 
-    console.log('Chromium path:', puppeteer.executablePath());
+   /// console.log('Chromium path:', puppeteer.executablePath());
 
     const page = await browser.newPage();
 
@@ -211,7 +224,7 @@ export async function GET(request) {
   } catch (err) {
     const puppeteer = require('puppeteer');
 
-    console.log('Chromium path:', puppeteer.executablePath());
+   /// console.log('Chromium path:', puppeteer.executablePath());
 
     console.error('PDF generation error:', err);
     return new Response(`Failed to generate PDF ${err}`, { status: 500 });

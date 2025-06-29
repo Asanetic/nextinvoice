@@ -23,13 +23,31 @@ export async function GET(request) {
     discountNode = `<p><b>Discount:</b> ${invoiceDetails?.currency} ${toNum(invoiceDetails?.discount)}</p>`;
   }
 
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
   const logoUrl = `${baseUrl}/api/mediaroom?media=${btoa(vendorDetails?.logo || 'logo.png')}`;
-  const badgeUrl = `${baseUrl}/api/mediaroom?media=${btoa('unpaid_badge.jpg')}`;
-
+  let badgeUrl = `${baseUrl}/api/mediaroom?media=${btoa('unpaid_badge.jpg')}`;
   
   const grandTotal = Number(invoiceSubTotal) - Number(invoiceDetails?.discount);
+
+  const totalAmountPaid = await mosySumRows("invoice_payments", "amount_paid", `where invoice_id='${invoiceDetails?.invoice_id}'`);
+
+  const invoiceBal = Number(grandTotal)-Number(totalAmountPaid)
+  let imgwidth = "300px";
+
+  if(Number(totalAmountPaid)>=Number(grandTotal))
+  {
+      badgeUrl = `${baseUrl}/api/mediaroom?media=${btoa('paid_png_min.png')}`;
+      imgwidth= "200px;"
+  }
+      
+  if(Number(totalAmountPaid)>0 && (Number(totalAmountPaid)<Number(grandTotal)))
+  {
+    badgeUrl = `${baseUrl}/api/mediaroom?media=${btoa('partiallypaid_badge.jpg')}`;
+  }   
+
+  console.log(`---base url--- ${badgeUrl} ${baseUrl}`)
 
   const invoiceItemsRows = invoiceItemList.map(item => `
     <tr>

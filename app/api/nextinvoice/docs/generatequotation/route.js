@@ -25,7 +25,6 @@ export async function GET(request) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
   const logoUrl = `${baseUrl}/api/mediaroom?media=${btoa(vendorDetails?.logo || 'logo.png')}`;
-  const badgeUrl = `${baseUrl}/api/mediaroom?media=${btoa('unpaid_badge.jpg')}`;
 
   
   const grandTotal = Number(invoiceSubTotal) - Number(invoiceDetails?.discount);
@@ -96,7 +95,6 @@ export async function GET(request) {
             </div>
           </td>
           <td style="width: 30%; text-align: center;">
-            <img src="${badgeUrl}" style="opacity: 0.4; width:300px" />
           </td>
           <td style="width: 40%; text-align: right;">
             <h3>QUOTATION</h3>
