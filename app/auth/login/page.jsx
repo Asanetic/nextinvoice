@@ -25,7 +25,7 @@ export async function generateMetadata() {
 }
 
 
-export default function AuthPage() {
+export default function AuthPage({baseRoot=""}) {
   const loginBgImg =saAuthConfigs.loginBgImage;
   const appLogo = mosyThemeConfigs.mosyAppLogo;
   const appName = mosyThemeConfigs.mosyAppName;
@@ -40,9 +40,9 @@ export default function AuthPage() {
       appLogo={appLogo}
       appName={appName}
       showResetLink={showResetLink}
-      changePasswordUrl={changePasswordUrl}
-      showCreateAccount={showCreateAccount}
-      registerUrl={registerUrl}
+      changePasswordUrl={`${baseRoot}${changePasswordUrl}`}
+      showCreateAccount={`${baseRoot}${showCreateAccount}`}
+      registerUrl={`${baseRoot}${registerUrl}`}
     />
   );
 }

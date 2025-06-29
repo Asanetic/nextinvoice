@@ -21,7 +21,7 @@ export async function generateMetadata() {
   export default function Home() {
    return(
     <>
-    <AuthPage/>
+    <AuthPage baseRoot="auth/"/>
     </>
    )
   }
