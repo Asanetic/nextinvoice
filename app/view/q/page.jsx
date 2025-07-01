@@ -37,9 +37,11 @@ export default function InvoicePrintPage() {
   
 
   return (
-    <div className="invoice-loader">
-      <h1>Generating your invoice…</h1>
+    <Suspense fallback={<div className="col-md-12 p-5 text-center h3">Loading...</div>}>
+      <div style={{padding : "30px"}}>
+      <h1>Generating your Quotation</h1>
       <p>Please wait while we prepare your receipt. This window will close automatically.</p>
     </div>
+    </Suspense>
   );
 }
