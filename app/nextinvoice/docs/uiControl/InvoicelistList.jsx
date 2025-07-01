@@ -13,7 +13,7 @@ import { mosyPrintToPdf } from '../../../MosyUtils/hiveUtils';
 
 
 //custom utils
-import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime} from '../../../MosyUtils/hiveUtils';
+import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime, mosyTonum} from '../../../MosyUtils/hiveUtils';
 
 import { mosyFilterUrl } from '../../DataControl/MosyFilterEngine';
 
@@ -34,6 +34,7 @@ import { loadInvoicelistListData, popDeleteDialog, InteprateInvoicelistEvent  } 
 //state management
 import { useInvoicelistState } from '../dataControl/InvoicelistStateManager';
 
+import { MosyLiveSearch } from '../../UiControl/customUI';
 
 
 //export list
@@ -102,6 +103,22 @@ export default function InvoicelistList({ dataIn = {}, dataOut = {} }) {
           <div className="col-md-12 p-0 hive_list_nav_right_ribbon" id="">
             {/*--<navgation_buttons/>--*/}
             
+            <MosyActionButton
+            label=" Search client"
+            icon="user"
+            onClick={()=>{
+              MosyLiveSearch({
+                api:'/api/nextinvoice/clients/clientlist',
+                displayField:'client_name',
+                tableName:'clients',
+                actionName : 'mosyfilter',
+                title:'Search client',
+                actionData : {path: 'invoices', router : router , qstr : `client_id='{{client_id}}'`, stateSetters : stateItemSetters, parentTable:'invoices'}
+              })
+              
+            }}
+            />
+            
             <a href="invoices" className="medium_btn border border_set btn-white hive_list_nav_refresh ml-3"><i className="fa fa-refresh mr-1 "></i> Refresh </a>
             
             <AddNewButton link={customProfilePath} label="Create invoice " icon="plus-circle" />
@@ -134,13 +151,13 @@ export default function InvoicelistList({ dataIn = {}, dataOut = {} }) {
             <th scope="col"><b>Invoice No</b></th>
             <th scope="col"><b>Date Due</b></th>
             <th scope="col"><b>Client name</b></th>
-            <th scope="col"><b>Invoice Amount</b></th>
-            <th scope="col"><b>Amount Paid</b></th>
-            <th scope="col"><b>Remark</b></th>
-            <th scope="col"><b>Date Created</b></th>
-            <th scope="col"><b>Currency</b></th>
+            <th scope="col"><b>Subtotal</b></th>
             <th scope="col"><b>Discount</b></th>
-            <th scope="col"><b>Folder</b></th>
+            <th scope="col"><b>Grand Total</b></th>
+            <th scope="col"><b>Amount Paid</b></th>
+            <th scope="col"><b>Balance</b></th>
+            <th scope="col"><b>Remark</b></th>
+            <th scope="col"><b>Currency</b></th>
             
           </tr>
           
@@ -182,13 +199,13 @@ export default function InvoicelistList({ dataIn = {}, dataOut = {} }) {
                   <td scope="col"><span title={listinvoices_result.invoice_no}>{magicTrimText(listinvoices_result.invoice_no, 30)}</span></td>
                   <td scope="col"><span title={listinvoices_result.date_due}>{mosyFormatDateOnly(listinvoices_result.date_due)}</span></td>
                   <td scope="col"><span title={listinvoices_result.client_id}>{magicTrimText(listinvoices_result._clients_client_name_client_id, 30)}</span></td>
-                  <td scope="col"><span title={listinvoices_result.invoice_amount}>{magicTrimText(listinvoices_result.invoice_amount, 30)}</span></td>
-                  <td scope="col"><span title={listinvoices_result.amount_paid}>{magicTrimText(listinvoices_result.amount_paid, 30)}</span></td>
+                  <td scope="col"><span>{mosyTonum(listinvoices_result.subtotal)}</span></td>
+                  <td scope="col"><span>{mosyTonum(listinvoices_result.discount)}</span></td>
+                  <td scope="col"><span>{mosyTonum(listinvoices_result.grand_total)}</span></td>
+                  <td scope="col"><span>{mosyTonum(listinvoices_result.amount_paid)}</span></td>
+                  <td scope="col"><span>{mosyTonum(listinvoices_result.invoice_balance)}</span></td>
                   <td scope="col"><span title={listinvoices_result.remark}>{magicTrimText(listinvoices_result.remark, 30)}</span></td>
-                  <td scope="col"><span title={listinvoices_result.date_created}>{mosyFormatDateOnly(listinvoices_result.date_created)}</span></td>
                   <td scope="col"><span title={listinvoices_result.currency}>{magicTrimText(listinvoices_result.currency, 30)}</span></td>
-                  <td scope="col"><span title={listinvoices_result.discount}>{magicTrimText(listinvoices_result.discount, 30)}</span></td>
-                  <td scope="col"><span title={listinvoices_result.folder}>{magicTrimText(listinvoices_result.folder, 30)}</span></td>
                   
                 </tr>
                 

@@ -188,6 +188,15 @@ body.modal-open {
   justify-content: center;
 }
 
+.hide_livesearch_add_new{
+ display:none;
+}
+
+.show_livesearch_add_new{
+ display : block!important;
+}
+
+
 .fancy-gradient-spinner::before {
   content: '';
   position: absolute;

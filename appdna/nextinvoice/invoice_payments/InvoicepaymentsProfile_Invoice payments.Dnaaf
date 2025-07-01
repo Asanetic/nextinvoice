@@ -220,7 +220,8 @@ import {
          LiveSearchDropdown,
          MosySmartField,
          MosyActionButton,
-         SmartDropdown,                  
+         SmartDropdown,   
+         DeleteButton
        } from '../../UiControl/componentControl';
 
 //".$appname." custom functions
@@ -234,7 +235,7 @@ import  ".$camelcasetbl_prefix."List from './".$camelcasetbl_prefix."List';
 
 
 $additional_list_imports="//custom utils
-import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime} from '../../../MosyUtils/hiveUtils';
+import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime, mosyTonum} from '../../../MosyUtils/hiveUtils';
 
 import { mosyFilterUrl } from '../../DataControl/MosyFilterEngine';
 

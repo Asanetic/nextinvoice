@@ -25,6 +25,35 @@ function isComponentEnabled(tblName, actionType = 'cu') {
   return true;
 }
 
+
+export  function DeleteButton({ uptoken, stateItemSetters, parentStateSetters, router = null, onDelete}) {
+  if (!uptoken) return null;
+
+  const handleClick = () => {
+    // You can override delete logic if needed
+    if (typeof onDelete === "function") {
+      onDelete(uptoken, { childStateSetters: stateItemSetters, parentStateSetters}, router);
+    } else {
+      // Fallback to global dialog handler
+      popDeleteDialog(uptoken, {
+        childStateSetters: stateItemSetters,
+        parentStateSetters: parentStateSetters,
+      });
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      className="medium_btn border border-danger text-danger p-2 mr-3 ml-1 mb-3 hive_profile_nav_del_btn"
+      onClick={handleClick}
+    >
+      <i className="fa fa-trash"></i> Delete
+    </button>
+  );
+}
+
+
 // Submit/Proceed/Clone Buttons
 export function SubmitButtons({ tblName, extraClass = '' }) {
   const searchParams = useSearchParams();
@@ -78,7 +107,7 @@ export function SubmitButtons({ tblName, extraClass = '' }) {
 
 
 // Add New Button
-export function AddNewButton({ link, label, icon = 'plus', className = 'medium_btn btn-primary border border_set hive_profile_add_new_btn p-2 mb-3 ml-3' }) {
+export function AddNewButton({ link, label, icon = 'plus', className = 'medium_btn btn-primary border border_set hive_profile_add_new_btn p-2 mb-3 ml-1 mr-1 ' }) {
   return (
     <a href={link} className={className}>
       <i className={`fa fa-${icon}`}></i> {label}
@@ -676,7 +705,7 @@ export function LiveSearchDropdown({
 
             {/* Always show Add New when focused */}
             <li
-              className={`list-group-item list-group-item-action text-primary ${createNewCellClass}`}
+              className={`list-group-item list-group-item-action text-primary ${createNewCellClass} hide_livesearch_add_new`}
               style={{ cursor: 'pointer', fontWeight: 'bold' }}
               onClick={() => {
                 setTimeout(() => setIsFocused(false), 50);
@@ -737,7 +766,7 @@ export function MosySmartField({
 
   return (
     <div className={`form-group hive_data_cell ${cellClass}`}>
-      {label && <label htmlFor={inputId}>{label}</label>}
+      {label && <label htmlFor={inputId} id={`label_${module}_${inputId}`} name={`label_${module}_${inputId}`}>{label}</label>}
 
       {type === "textarea" ? (
         <textarea
@@ -1067,7 +1096,7 @@ export function MosyRangeSlider({
 export function MosyActionButton({ source = "" , label, icon, onClick, className = '' }) {
   return (
     <a
-      className={`medium_btn border border_set btn-white mr-2 mb-3 d-inline-block cpointer ${className}`}
+      className={`medium_btn border border_set btn-white ml-1 mr-1 mb-3 d-inline-block cpointer ${className}`}
       onClick={onClick}
     >
       {icon && <i className={`fa fa-${icon} mr-1`}></i>}

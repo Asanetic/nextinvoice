@@ -35,6 +35,7 @@ import {
 //import {  } from '../../nextinvoice_custom_functions';
 
 import  MessagetemplatesList from './MessagetemplatesList';
+import { PlaceHolderButtons } from '../../nextinvoice_custom_functions';
 
 
 // export profile
@@ -143,7 +144,7 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
                 {paramMessagetemplatesUptoken && (
                   <button
                   type="button"
-                  className="medium_btn border border-danger text-danger p-2 ml-3 mb-3 hive_profile_nav_del_btn"
+                  className="medium_btn border border-danger text-danger p-2 ml-3 mb-3  hive_profile_nav_del_btn"
                   onClick={() =>popDeleteDialog(paramMessagetemplatesUptoken, {childStateSetters: stateItemSetters, parentStateSetters: parentStateSetters} )}
                   
                   >
@@ -234,6 +235,10 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
                     />
                     
                     
+                    <PlaceHolderButtons
+                        textareaId="txt_message_template"
+                        insertAfterId="label_message_templates_txt_message_template"
+                      />                     
                     <MosySmartField
                     module="message_templates"
                     field="message_template"

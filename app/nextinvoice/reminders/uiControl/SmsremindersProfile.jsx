@@ -32,7 +32,7 @@ import {
 } from '../../UiControl/componentControl';
 
 //nextinvoice custom functions
-import { grabMessage, sendMessage } from '../../nextinvoice_custom_functions';
+import { sendMessage } from '../../nextinvoice_custom_functions';
 
 import  SmsremindersList from './SmsremindersList';
 
@@ -142,43 +142,6 @@ export default function SmsremindersProfile({ dataIn = {}, dataOut = {} }) {
               <>{!showNavigationIsle && (<div className="col m-0 p-0 text-right ">
                 
                 {paramSmsremindersUptoken && (
-
-                    <>
-                                      
-                    <MosyActionButton
-                    label=" Load templates"
-                    icon="file-text"
-                    onClick={()=>{
-                      MosyLiveSearch({
-                        api:'/api/nextinvoice/messagetemplates/messagetemplates',
-                        displayField:'template_name',
-                        tableName:'message_templates',
-                        actionName : 'loadTemplate',
-                        title:' Search templates',
-                        actionData : {stateSetters : stateItemSetters},
-                        onSelectFull : (dataRes) => {
-                          
-                          handleInputChange('txt_message_details', dataRes?.message_template)
-                          closeMosyModal()
-                          
-                        },
-                        
-                      })
-                      
-                    }}
-                    />
-
-                    <MosyActionButton
-                    label=" Copy message"
-                    icon="copy"
-                    onClick={()=>{grabMessage("txt_message_details")}}
-                    />
-
-                  <MosyActionButton
-                    label=" Send message"
-                    icon="send"
-                    onClick={()=>{sendMessage()}}
-                    />                  
                   <button
                   type="button"
                   className="medium_btn border border-danger text-danger p-2 ml-3 mb-3 hive_profile_nav_del_btn"
@@ -186,8 +149,7 @@ export default function SmsremindersProfile({ dataIn = {}, dataOut = {} }) {
                   
                   >
                   <i className='fa fa-trash'></i> Delete
-                </button></>
-              )}
+                </button>)}
                 
               </div>)}</>
             </h3>
@@ -236,12 +198,7 @@ export default function SmsremindersProfile({ dataIn = {}, dataOut = {} }) {
                   icon="send"
                   onClick={()=>{sendMessage()}}
                   />
-                  <MosyActionButton
-                    label=" Copy message"
-                    icon="copy"
-                    onClick={()=>{grabMessage("txt_message_details")}}
-                  />
-
+                  
                 </>
               )}
               
@@ -291,7 +248,7 @@ export default function SmsremindersProfile({ dataIn = {}, dataOut = {} }) {
                     label="Document no"
                     defaultValue={{ invoice_no: messagingNode?.ref_number || "", invoice_no: messagingNode?._invoices_invoice_no_ref_number || "" }}
                     onSelect={(id) => console.log("Just the ID:", id)}
-                    onSelectFull={(dataRes) =>  console.log("Data seleted")}
+                    onSelectFull={(dataRes) => handleInputChange('txt_message_details', loadDocMessage(dataRes))}
                     onInputChange={handleInputChange}
                     defaultColSize="col-md-4 hive_data_cell "
                     context={{hostParent : hostParent}}

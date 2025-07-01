@@ -3,7 +3,7 @@
 //custom columns to display / additional column not in the table 
 $custom_tbl_cols=[
   
-  "acc_renewals"=>["activation_date"],
+  "invoices"=>["subtotal","grand_total","amount_paid","invoice_balance"],
   
 ];
 
@@ -72,15 +72,26 @@ $custom_profile_default_data_=[
 
 
 $custom_next_js_query_line_cols=[
-  "nozzles"=>[
-    "function" => 'await mosyCountRows("fuel_pump_nozzles", `where pump_id =\'${row?.record_id}\'`)',
-    "args"=>[],
-    "return"=>"data_res?.total"],
   
-    "deposit_list"=>[
-    "function" => 'await mosyFlexQuickSel("deposits_by_mode", "amount_deposited,ref_number,payment_mode", `where deposit_file_id =\'${row?.record_id}\'`)',
+   "grand_total"=>[
+    "function" => 'await mosySumRows("invoice_items", `(rate*quantity)-${row?.discount}`, `where invoice_id =\'${row?.invoice_id}\'`)',
     "args"=>[],
     "return"=>"data_res"],
+  
+   "subtotal"=>[
+    "function" => 'await mosySumRows("invoice_items", `(rate*quantity)`, `where invoice_id =\'${row?.invoice_id}\'`)',
+    "args"=>[],
+    "return"=>"data_res"],  
+  
+    "amount_paid"=>[
+    "function" => 'await mosySumRows("invoice_payments", "amount_paid", `where invoice_id =\'${row?.invoice_id}\'`)',
+    "args"=>[],
+    "return"=>"data_res"],
+  
+    "invoice_balance"=>[
+    "function" => 'await (Number(row?.grand_total) - Number(row?.amount_paid))',
+    "args"=>[],
+    "return"=>"data_res"],  
 
 ];
 
@@ -109,7 +120,7 @@ $novanest_module_ui_blueprint_=[
     //how do you want the inputs to be arranged in the ui list & profile 
     "desired_column_order"=>[
 
-        'invoices' => ['primkey','invoice_id', "invoice_no","date_due", 'client_id','invoice_amount','amount_paid',"remark","date_created","balance"],
+        'invoices' => ['primkey','invoice_id', "invoice_no","date_due", 'client_id','subtotal',"discount","grand_total",'amount_paid',"invoice_balance","remark","date_created"],
 
     ],
     
@@ -138,10 +149,10 @@ $novanest_module_ui_blueprint_=[
     "print_tables"=>["invoices"],
     
     //==============================================   ///skip  these columns on the profile page 
-    "skip_cols_profile"=>["paid_status" , "created_by" , "name" , "invoice_stage"   , "paid_on" , "supplier_id" , "account_affect" , "inv_no_int" , "invoice_key" , "client_name"  , "invoice_amount" , "hive_site_id" , "hive_site_name" , "amount_paid" , "date_paid" , "ref_no" , "quotation" , "date_updated"],
+    "skip_cols_profile"=>["paid_status" , "created_by" , "name" , "invoice_stage"   , "paid_on" , "supplier_id" , "account_affect" , "inv_no_int" , "invoice_key" , "client_name"  , "invoice_amount" , "hive_site_id" , "hive_site_name" , "date_paid" , "ref_no" , "quotation" , "date_updated"],
         
     ///=============================================   skip  these columns on the list page 
-    "skip_cols_list"=>["paid_status" , "created_by" , "name" , "invoice_stage"   , "paid_on" , "supplier_id" , "account_affect" , "inv_no_int" , "invoice_key" , "client_name"  , "hive_site_id" , "hive_site_name"  , "date_paid" , "ref_no" , "quotation" , "date_updated","vendor_headers","client_headers" , "vendor_name", "footnote","client_tel","client_email", "invoice_type" ],
+    "skip_cols_list"=>["paid_status" , "created_by" , "name" , "invoice_stage"   , "paid_on" , "supplier_id" , "account_affect" , "inv_no_int" , "invoice_key" , "client_name"  , "hive_site_id" , "hive_site_name"  , "date_paid" , "ref_no" , "quotation" , "date_updated","vendor_headers","client_headers" , "vendor_name", "footnote","client_tel","client_email", "invoice_type","invoice_amount" , "folder", "date_created"],
         
     ///=============================================   these columns diplays running balance amount 
     "running_bal_col_tbl"=>[],    
@@ -159,7 +170,7 @@ $novanest_module_ui_blueprint_=[
     "view_tbl_only"=>[],
     
     //============================================    these columns have values to be summed 
-    "sum_cols_list"=>['paid_amount'],
+    "sum_cols_list"=>["subtotal","grand_total","invoice_balance","discount","amount_paid"],
     
     //============================================    on the profile page for these columns use textarea component
     "textarea_array"=>['vendor_headers',"client_headers"],
@@ -188,7 +199,7 @@ $novanest_module_ui_blueprint_=[
     "datetime_columns"=>['regdate','datke_booked'],
     
     //============================================        on the ui , rename these column lables to the new names indicated ...
-    "rename_cols_array"=>['client_id'=>'Client name',"footnote"=>"Footer remark:col-md-12"],
+    "rename_cols_array"=>['client_id'=>'Client name',"footnote"=>"Foot notes:col-md-12", "invoice_balance"=>"Balance"],
 
     //rename the following tables with the indicated alises on the ui 
     "rename_tables_array"=>['allowances'=>'Staff Allowances:plus'],
@@ -214,7 +225,7 @@ $novanest_module_ui_blueprint_=[
     "custom_multi_grid_rows"=>[],
         
     //additional column values on the profile ui
-    "custom_profile_col_data"=>["national_id"=>"?"],
+    "custom_profile_col_data"=>["subtotal"=>"?","grand_total"=>"?","invoice_balance"=>"?","amount_paid"=>"?"],
     
     "custom_profile_default_data"=>["invoice_type"=>'{`invoice`}', "invoice_no"=>'{(invoicesNode?.invoice_no || `INV/${magicRandomStr(5)}/${genDocNo()}`)}'],
     

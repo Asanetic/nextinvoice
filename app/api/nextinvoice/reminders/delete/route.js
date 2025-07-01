@@ -1,7 +1,7 @@
 
 import { mosySqlDelete , base64Decode , mosyQddata , mosyDeleteFile } from '../../../apiUtils/dataControl/dataUtils';
 
-import { DeleteSmsreminders } from '../smsreminders/SmsremindersDbGateway';
+import { DeleteMessageoutbox } from '../messageoutbox/MessageoutboxDbGateway';
 
 export async function GET(request) {
 
@@ -18,7 +18,7 @@ export async function GET(request) {
     
     const whereStr = `WHERE primkey = '${deleteTokenDecode}'`;
 
-    const res = await DeleteSmsreminders(deleteTokenDecode, whereStr);
+    const res = await DeleteMessageoutbox(deleteTokenDecode, whereStr);
 
     if (res.status === 'success') {
       return Response.json({ status: 'success', rowsAffected: res.affectedRows });

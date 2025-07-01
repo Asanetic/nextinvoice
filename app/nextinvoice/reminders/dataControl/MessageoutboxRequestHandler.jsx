@@ -12,24 +12,24 @@ import { MosyFilterEngine } from '../../DataControl/MosyFilterEngine';
 //custom event manager 
 import { customEventHandler } from '../../DataControl/customDataFunction';
 
-export async function insertInvoicelist() {
- //console.log(`Form invoices insert sent `)
+export async function insertMessageoutbox() {
+ //console.log(`Form messaging insert sent `)
 
   return await mosyPostFormData({
-    formId: 'invoices_profile_form',
-    url: '/api/nextinvoice/docs/invoicelist',
+    formId: 'messaging_profile_form',
+    url: '/api/nextinvoice/reminders/messageoutbox',
     method: 'POST',
     isMultipart: true,
   });
 }
 
-export async function updateInvoicelist() {
+export async function updateMessageoutbox() {
 
-  //console.log(`Form invoices update sent `)
+  //console.log(`Form messaging update sent `)
 
   return await mosyPostFormData({
-    formId: 'invoices_profile_form',
-    url: '/api/nextinvoice/docs/invoicelist',
+    formId: 'messaging_profile_form',
+    url: '/api/nextinvoice/reminders/messageoutbox',
     method: 'POST',
     isMultipart: true,
   });
@@ -37,53 +37,53 @@ export async function updateInvoicelist() {
 
 
  
-export async function inteprateInvoicelistFormAction(e, setters) {
+export async function inteprateMessageoutboxFormAction(e, setters) {
   e.preventDefault();
 
   const form = e.target;
   const formDataObj = new FormData(form);
-  const actionType = formDataObj.get('invoices_mosy_action');
+  const actionType = formDataObj.get('messaging_mosy_action');
  
- //console.log(`Form invoices submission received action : ${actionType}`)
+ //console.log(`Form messaging submission received action : ${actionType}`)
 
   try {
     let result = null;
     let actionMessage ='Record added succesfully!';
 
-    if (actionType === 'add_invoices') {
+    if (actionType === 'add_messaging') {
 
       actionMessage ='Record added succesfully!';
 
-      result = await insertInvoicelist();
+      result = await insertMessageoutbox();
     }
 
-    if (actionType === 'update_invoices') {
+    if (actionType === 'update_messaging') {
 
       actionMessage ='Record updated succesfully!';
 
-      result = await updateInvoicelist();
+      result = await updateMessageoutbox();
     }
 
     if (result?.status === 'success') {
       
-      const invoicesUptoken = btoa(result.invoices_uptoken || '');
+      const messagingUptoken = btoa(result.messaging_uptoken || '');
 
       //set id key
-      setters.setInvoicelistUptoken(invoicesUptoken);
+      setters.setMessageoutboxUptoken(messagingUptoken);
       
-      //update url with new invoicesUptoken
-      mosyUpdateUrlParam('invoices_uptoken', invoicesUptoken)
+      //update url with new messagingUptoken
+      mosyUpdateUrlParam('messaging_uptoken', messagingUptoken)
 
-      setters.setInvoicelistActionStatus('update_invoices')
+      setters.setMessageoutboxActionStatus('update_messaging')
     
       setters.setSnackMessage(actionMessage);
 
       return {
         status: 'success',
         message: actionMessage,
-        newToken: invoicesUptoken,
+        newToken: messagingUptoken,
         actionName : actionType,
-        actionType : 'invoices_form_submission'
+        actionType : 'messaging_form_submission'
       };
             
       
@@ -115,46 +115,36 @@ export async function inteprateInvoicelistFormAction(e, setters) {
 }
 
 
-export async function initInvoicelistProfileData(rawQstr) {
+export async function initMessageoutboxProfileData(rawQstr) {
 
   //add the following data in response
   const rawMutations = {
                
-    _clients_client_name_client_id : [],
-    
-    subtotal : [],
-    
-    grand_total : [],
-    
-    amount_paid : [],
-    
-    invoice_balance : [],
-          
-    _companies_business_name_vendor_name : [],
+    _invoices_invoice_no_ref_number : [],
 
   }
   
 
-  MosyNotify({message : 'Refreshing Invoice list' , icon:'refresh', addTimer:false})
+  MosyNotify({message : 'Refreshing Message OutBox' , icon:'refresh', addTimer:false})
 
   const encodedMutations = btoa(JSON.stringify(rawMutations));
 
   try {
     // Fetch the  data with the given key
     const response = await mosyGetData({
-      endpoint: '/api/nextinvoice/docs/invoicelist',
+      endpoint: '/api/nextinvoice/reminders/messageoutbox',
       params: { 
       q: btoa(rawQstr),         
       mutations: encodedMutations,
       fullQ : true,
       aw : btoa(``),
-      src : btoa(`initInvoicelistProfileData`)
+      src : btoa(`initMessageoutboxProfileData`)
       },
     });
 
     // Handle the successful response
     if (response.status === 'success') {
-      //console.log('docs Data:', response.data);  // Process the data
+      //console.log('reminders Data:', response.data);  // Process the data
 
        closeMosyModal()
 
@@ -162,7 +152,7 @@ export async function initInvoicelistProfileData(rawQstr) {
 
     } else {
           
-      console.log('Error fetching docs data:', response.message);  // Handle error
+      console.log('Error fetching reminders data:', response.message);  // Handle error
 
       closeMosyModal()
 
@@ -178,19 +168,19 @@ export async function initInvoicelistProfileData(rawQstr) {
 }
 
 
-export async function DeleteInvoicelist(token = '') {
+export async function DeleteMessageoutbox(token = '') {
 
     try {
       MosyNotify({message:"Sending delete request",icon:"send", addTimer : false})
     
       const response = await mosyGetData({
-        endpoint: '/api/nextinvoice/docs/delete',
+        endpoint: '/api/nextinvoice/reminders/delete',
         params: { 
-          _invoices_delete_record: (token), 
+          _messaging_delete_record: (token), 
           },
       });
 
-      console.log('Token DeleteInvoicelist '+token)
+      console.log('Token DeleteMessageoutbox '+token)
       if (response.status === 'success') {
 
         closeMosyModal();
@@ -212,7 +202,7 @@ export async function DeleteInvoicelist(token = '') {
 }
 
 
-export async function getInvoicelistListData(qstr = "") {
+export async function getMessageoutboxListData(qstr = "") {
    let fullWhere = true
   if(qstr=='')
   {
@@ -223,44 +213,34 @@ export async function getInvoicelistListData(qstr = "") {
   //add the following data in response
   const rawMutations = {
                
-    _clients_client_name_client_id : [],
-    
-    subtotal : [],
-    
-    grand_total : [],
-    
-    amount_paid : [],
-    
-    invoice_balance : [],
-          
-    _companies_business_name_vendor_name : [],
+    _invoices_invoice_no_ref_number : [],
 
   }
   
   const encodedMutations = btoa(JSON.stringify(rawMutations));
 
   //manage pagination 
-  const pageNo = mosyUrlParam('qinvoices_page','0')
+  const pageNo = mosyUrlParam('qmessaging_page','0')
   const recordsPerPage = mosyGetLSData('systemDataLimit', '11')
 
   try {
     const response = await mosyGetData({
-      endpoint: '/api/nextinvoice/docs/invoicelist',
+      endpoint: '/api/nextinvoice/reminders/messageoutbox',
       params: { 
         q: qstr, 
         mutations: encodedMutations,
         fullQ : fullWhere,
-        pagination : `l:qinvoices_page:${recordsPerPage}:${pageNo}`,
+        pagination : `l:qmessaging_page:${recordsPerPage}:${pageNo}`,
         aw:btoa(`order by primkey desc`),
-        src : btoa(`getInvoicelistListData`)        
+        src : btoa(`getMessageoutboxListData`)        
         },
     });
 
     if (response.status === 'success') {
-      //console.log('docs Data:', response.data);
+      //console.log('reminders Data:', response.data);
       return response; // ✅ Return the data
     } else {
-      console.log('Error fetching docs data:', response);
+      console.log('Error fetching reminders data:', response);
       return []; // Safe fallback
     }
   } catch (err) {
@@ -270,58 +250,58 @@ export async function getInvoicelistListData(qstr = "") {
 }
 
 
-export async function loadInvoicelistListData(customQueryStr, setters) {
+export async function loadMessageoutboxListData(customQueryStr, setters) {
 
-    const gftInvoicelist = MosyFilterEngine('invoices', true);
-    let finalFilterStr = btoa(gftInvoicelist);    
+    const gftMessageoutbox = MosyFilterEngine('messaging', true);
+    let finalFilterStr = btoa(gftMessageoutbox);    
 
     if(customQueryStr!='')
     {
       finalFilterStr = customQueryStr;
     }
 
-    setters.setInvoicelistLoading(true);
+    setters.setMessageoutboxLoading(true);
     
-    const invoicelistListData = await getInvoicelistListData(finalFilterStr);
+    const messageoutboxListData = await getMessageoutboxListData(finalFilterStr);
     
-    setters.setInvoicelistLoading(false)
-    setters.setInvoicelistListData(invoicelistListData?.data)
+    setters.setMessageoutboxLoading(false)
+    setters.setMessageoutboxListData(messageoutboxListData?.data)
 
-    setters.setInvoicelistListPageCount(invoicelistListData?.page_count)
+    setters.setMessageoutboxListPageCount(messageoutboxListData?.page_count)
 
 
-    return invoicelistListData
+    return messageoutboxListData
 
 }
   
   
-export async function invoicelistProfileData(customQueryStr, setters, router, customProfileData={}) {
+export async function messageoutboxProfileData(customQueryStr, setters, router, customProfileData={}) {
 
-    const invoicelistTokenId = mosyUrlParam('invoices_uptoken');
+    const messageoutboxTokenId = mosyUrlParam('messaging_uptoken');
     
-    const deleteParam = mosyUrlParam('invoices_delete');
+    const deleteParam = mosyUrlParam('messaging_delete');
 
     //manage  the staff_uptoken value  basically detect primkey
-    let decodedInvoicelistToken = '0';
-    if (invoicelistTokenId) {
+    let decodedMessageoutboxToken = '0';
+    if (messageoutboxTokenId) {
       
-      decodedInvoicelistToken = atob(invoicelistTokenId); // Decode the record_id
-      setters.setInvoicelistUptoken(invoicelistTokenId);
-      setters.setInvoicelistActionStatus('update_invoices');
+      decodedMessageoutboxToken = atob(messageoutboxTokenId); // Decode the record_id
+      setters.setMessageoutboxUptoken(messageoutboxTokenId);
+      setters.setMessageoutboxActionStatus('update_messaging');
       
     }
     
     //override customQueryStr if there is an active staff_uptoken else use customQueryStr if any
-    let rawInvoicelistQueryStr =`where primkey ='${decodedInvoicelistToken}'`
+    let rawMessageoutboxQueryStr =`where primkey ='${decodedMessageoutboxToken}'`
     if(customQueryStr!='')
     {
-      rawInvoicelistQueryStr = customQueryStr
+      rawMessageoutboxQueryStr = customQueryStr
     }
 
-    const profileDataRecord = await initInvoicelistProfileData(rawInvoicelistQueryStr)
+    const profileDataRecord = await initMessageoutboxProfileData(rawMessageoutboxQueryStr)
 
     if(deleteParam){
-      popDeleteDialog(invoicelistTokenId, setters, router)
+      popDeleteDialog(messageoutboxTokenId, setters, router)
     }
     
     // Merge with custom injected values (custom wins)
@@ -331,7 +311,7 @@ export async function invoicelistProfileData(customQueryStr, setters, router, cu
     };
       
 
-    setters.setInvoicelistNode(finalProfileData)
+    setters.setMessageoutboxNode(finalProfileData)
     
     
 
@@ -340,15 +320,15 @@ export async function invoicelistProfileData(customQueryStr, setters, router, cu
   
   
 
-export function InteprateInvoicelistEvent(data) {
+export function InteprateMessageoutboxEvent(data) {
      
-  //console.log('🎯 Invoicelist Child gave us:', data);
+  //console.log('🎯 Messageoutbox Child gave us:', data);
 
   const actionName = data?.actionName
 
   const childActionName = { [actionName]: true };
 
-  if(childActionName.select_invoices){
+  if(childActionName.select_messaging){
 
     if(data?.profile)
     {
@@ -364,22 +344,22 @@ export function InteprateInvoicelistEvent(data) {
 
     const parentSetter = data?.setters.parentStateSetters 
 
-    parentSetter?.setInvoicelistCustomProfileQuery(data?.qstr)
+    parentSetter?.setMessageoutboxCustomProfileQuery(data?.qstr)
 
     parentSetter?.setLocalEventSignature(magicRandomStr())
     parentSetter?.setParentUseEffectKey(magicRandomStr())
     
-    mosyUpdateUrlParam('invoices_uptoken', btoa(data?.token))
+    mosyUpdateUrlParam('messaging_uptoken', btoa(data?.token))
     
     }
   }
 
-  if(childActionName.add_invoices){
+  if(childActionName.add_messaging){
 
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`add invoices `, data?.setters)
+    console.log(`add messaging `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -393,11 +373,11 @@ export function InteprateInvoicelistEvent(data) {
      
   }
 
-  if(childActionName.update_invoices){
+  if(childActionName.update_messaging){
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`update invoices `, data?.setters)
+    console.log(`update messaging `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -410,7 +390,7 @@ export function InteprateInvoicelistEvent(data) {
     }
   }
 
-  if(childActionName.delete_invoices){
+  if(childActionName.delete_messaging){
 
     popDeleteDialog(btoa(data?.token), data?.setters)
 
@@ -422,10 +402,10 @@ export function InteprateInvoicelistEvent(data) {
 }
 
 
-export function popDeleteDialog(deleteToken, setters, router, afterDeleteUrl='../docs/invoices')
+export function popDeleteDialog(deleteToken, setters, router, afterDeleteUrl='../reminders/messages')
 {     
 
-  console.log(`popDeleteDialog`, setters)
+  console.log(`popDeleteDialog`, setters, router)
   const childSetters = setters?.childStateSetters
   
   MosyAlertCard({
@@ -438,7 +418,7 @@ export function popDeleteDialog(deleteToken, setters, router, afterDeleteUrl='..
   
     onYes: () => {
   
-      DeleteInvoicelist(deleteToken).then(data=>{
+      DeleteMessageoutbox(deleteToken).then(data=>{
   
         childSetters?.setSnackMessage("Record deleted succesfully!")
         childSetters?.setParentUseEffectKey(magicRandomStr());
@@ -456,7 +436,7 @@ export function popDeleteDialog(deleteToken, setters, router, afterDeleteUrl='..
   
       // Remove the param from the URL
        closeMosyModal()
-       deleteUrlParam('invoices_delete');
+       deleteUrlParam('messaging_delete');
         
     }
   

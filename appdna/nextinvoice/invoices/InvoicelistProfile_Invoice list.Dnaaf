@@ -206,7 +206,7 @@ import { MosyAlertCard, MosyNotify ,closeMosyModal } from  '../../../MosyUtils/A
 import MosySnackWidget from '../../../MosyUtils/MosySnackWidget';
 
 //basic utils
-import { mosyScrollTo , deleteUrlParam, mosyFormInputHandler,mosyUrlParam , magicRandomStr } from '../../../MosyUtils/hiveUtils';
+import { mosyScrollTo , deleteUrlParam, mosyFormInputHandler,mosyUrlParam , magicRandomStr , mosyGetElemVal} from '../../../MosyUtils/hiveUtils';
 
 //data control and processors
 import { inteprate".$camelcasetbl_prefix."FormAction, ".$camelcasetbl."ProfileData , popDeleteDialog, Inteprate".$camelcasetbl_prefix."Event } from '../dataControl/".$camelcasetbl_prefix."RequestHandler';
@@ -221,11 +221,12 @@ import {
          LiveSearchDropdown,
          MosySmartField,
          MosyActionButton,
-         SmartDropdown,                  
+         SmartDropdown, 
+         DeleteButton
        } from '../../UiControl/componentControl';
 
 //nextinvoice custom functions
-import { loadVendorHeaders, loadClientHeaders, downloadInvoice , genDocNo , sendReminder } from '../../nextinvoice_custom_functions';
+import { loadVendorHeaders, loadClientHeaders, downloadInvoice , genDocNo , sendReminder} from '../../nextinvoice_custom_functions';
 
 //inv items
 import  InvoiceitemsProfile from '../../docitems/uiControl/InvoiceitemsProfile';
@@ -250,7 +251,7 @@ import ReactMarkdown from 'react-markdown';
 
 
 $additional_list_imports="//custom utils
-import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime} from '../../../MosyUtils/hiveUtils';
+import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime, mosyTonum} from '../../../MosyUtils/hiveUtils';
 
 import { mosyFilterUrl } from '../../DataControl/MosyFilterEngine';
 
@@ -260,7 +261,7 @@ import {
          AddNewButton, 
          MosyActionButton, 
          MosyGridRowOptions,
-         MosyPaginationUi
+         MosyPaginationUi         
        } from '../../UiControl/componentControl';
          
 import MosySnackWidget from '../../../MosyUtils/MosySnackWidget';
@@ -271,6 +272,7 @@ import { load".$camelcasetbl_prefix."ListData, popDeleteDialog, Inteprate".$came
 //state management
 import { use".$camelcasetbl_prefix."State } from '../dataControl/".$camelcasetbl_prefix."StateManager';
 
+import { MosyLiveSearch } from '../../UiControl/customUI';
 
 
 //export list";
@@ -317,19 +319,19 @@ $list_btn_table_array=[
   
   $primary_table__=>[
           
-    /*"tag: Search by tag"=>"
+    "user: Search client"=>"
       MosyLiveSearch({
-        api:' /api/infowell/snippets/infosnippets', 
-        displayField:'tag', 
-        tableName:'infosnippets',
+        api:'/api/nextinvoice/clients/clientlist', 
+        displayField:'client_name', 
+        tableName:'clients',
         actionName : 'mosyfilter',
-        title:'Search by tag',
-        actionData : {path: '../snippets/list', router : router , qstr : `tag='{{tag}}'`, stateSetters : stateItemSetters}        
+        title:'Search client',
+        actionData : {path: 'invoices', router : router , qstr : `client_id='{{client_id}}'`, stateSetters : stateItemSetters, parentTable:'invoices'}        
         })
         
         ",
     
-    "bolt: Search by title"=>"
+    /*"bolt: Search by title"=>"
       MosyLiveSearch({
         api:' /api/infowell/snippets/infosnippets', 
         displayField:'title', 
@@ -365,7 +367,7 @@ $profile_btn_table_array=[
         ",  */ 
     
       "print: Print invoice"=>"downloadInvoice({invoiceId:(invoicesNode?.primkey || '')})",
-      "send: Send reminder"=>"sendReminder()",
+      "send: Messages "=>"sendReminder()",
       //"search: Search users"=>"console.log(`first next js button users test....`)",
       //"refresh: sync work schedule"=>"syncWorkSchedule()"
   ],

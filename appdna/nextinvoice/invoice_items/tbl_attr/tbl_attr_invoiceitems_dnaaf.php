@@ -142,7 +142,7 @@ $novanest_module_ui_blueprint_=[
     "skip_cols_profile"=>["tax" , "discount" , "date_created" , "account_context" , "account_name" , "item_key" , "stock_type" , "invoice_edit_key" , "selling_price" , "sale_state" , "remaining_qty" , "add_to_stock" , "hive_site_id" , "hive_site_name" ],
         
     ///=============================================   skip  these columns on the list page 
-    "skip_cols_list"=>["tax" , "discount" , "date_created" , "account_context" , "account_name" , "item_key" , "stock_type" , "invoice_edit_key" , "selling_price" , "sale_state" , "remaining_qty" , "add_to_stock" , "hive_site_id" , "hive_site_name","item_name"],
+    "skip_cols_list"=>["invoice_id","tax" , "discount" , "date_created" , "account_context" , "account_name" , "item_key" , "stock_type" , "invoice_edit_key" , "selling_price" , "sale_state" , "remaining_qty" , "add_to_stock" , "hive_site_id" , "hive_site_name","item_name"],
         
     ///=============================================   these columns diplays running balance amount 
     "running_bal_col_tbl"=>[],    
@@ -160,7 +160,7 @@ $novanest_module_ui_blueprint_=[
     "view_tbl_only"=>[],
     
     //============================================    these columns have values to be summed 
-    "sum_cols_list"=>['paid_amount'],
+    "sum_cols_list"=>['totals',"rate","quantity"],
     
     //============================================    on the profile page for these columns use textarea component
     "textarea_array"=>["item_remark","footnote"],
@@ -180,7 +180,7 @@ $novanest_module_ui_blueprint_=[
     "password_columns"=>['login_password',"column_name2..."],
 
     //==============================================      | on the profile page, these columns are titles they have a input with class col-md-12
-    "title_columns"=>['item_id','column_name2...'],
+    "title_columns"=>['column_name2...'],
 
     //==============================================      | on the profile page, these columns are dates Y-m-d
     "date_columns"=>['date_created',"date_due"],
@@ -189,7 +189,7 @@ $novanest_module_ui_blueprint_=[
     "datetime_columns"=>['regdate','datke_booked'],
     
     //============================================        on the ui , rename these column lables to the new names indicated ...
-    "rename_cols_array"=>["totals"=>"Row totals:col-md-4","rate"=>"Rate:col-md-4","quantity"=>"Qty:col-md-4",'item_remark'=>'Description',"item_id"=>"Item name:col-md-12","invoice_id"=>"Invoice No."],
+    "rename_cols_array"=>["totals"=>"Row totals:col-md-3","rate"=>"Rate:col-md-3","quantity"=>"Quantity:col-md-3",'item_remark'=>'Description',"item_id"=>"Item name:col-md-3","invoice_id"=>"Invoice No."],
 
     //rename the following tables with the indicated alises on the ui 
     "rename_tables_array"=>['allowances'=>'Staff Allowances:plus'],
@@ -198,7 +198,7 @@ $novanest_module_ui_blueprint_=[
     //$rename_tables_array=['table'=>'New name:fafa icon eg plus, plus-circle, copy etc'];
 
     //on these tables let the add new button lable have the following icons and label 
-    "new_label_buttons_arr"=>['invoice_items'=>'plus-circle:Add item : Item / {{item_name}}'],
+    "new_label_buttons_arr"=>['invoice_items'=>'plus-circle:Add item : Item / {{_inventory_item_name_item_id}}'],
     //sample 
     //$new_label_buttons_arr=['table_name'=>'plus-circle:New Project:Project profile - {{project_name}}'];    
     

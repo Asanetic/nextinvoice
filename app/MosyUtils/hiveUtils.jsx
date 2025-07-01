@@ -484,10 +484,63 @@ export function printElem(printDivId, docTitle = "", headerLayout = "", printFoo
           .table thead th,
           .table tbody td {
             white-space: nowrap;
-            padding: 1px;
+            padding: 3px;
             vertical-align: top;
             font-size: 14px;
+            border:1px solid #ccc!important;
           }
+
+          @media print {
+            .table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-bottom: 1rem;
+              font-family: "Arial", sans-serif;
+            }
+
+            .table thead th {
+              background-color: #f0f0f0; /* Soft gray header */
+              color: #333;
+              font-weight: bold;
+              font-size: 13px;
+              text-align: left;
+              border: 1px solid #aaa !important;
+              padding: 6px 8px;
+            }
+
+            .table tbody td {
+              font-size: 12.5px;
+              padding: 6px 8px;
+              border: 1px solid #ccc !important;
+              color: #000;
+              vertical-align: top;
+            }
+
+            /* Optional: zebra striping for better readability on paper */
+            .table tbody tr:nth-child(even) {
+              background-color: #f9f9f9;
+            }
+
+            /* Optional: Add a thin colored corner border on table wrapper (for style points) */
+            .print-container {
+              border: 3px solid #00b894; /* light green-ish (like M-Pesa vibe) */
+              padding: 10px;
+              border-radius: 6px;
+              page-break-inside: avoid;
+            }
+
+            /* Prevent table from breaking mid-row */
+            .table tr, .table td, .table th {
+              page-break-inside: avoid;
+            }
+
+            /* Optional: Remove scrollbars or overflow for paper clean look */
+            body {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+          }
+            
           a { color: #000; }
           .table_cell_dropdown:hover .table_cell_dropdown-content,
           tr:hover .table_cell_dropdown-content {
@@ -606,3 +659,26 @@ export function mosyNl2br(text) {
     </Fragment>
   ));
 }
+
+export function mosyGetElemVal(id, defaultVal = "") {
+  const el = document.getElementById(id);
+  if (!el) return defaultVal;
+
+  const tag = el.tagName.toLowerCase();
+
+  if (tag === "input" || tag === "textarea" || tag === "select") {
+    return el.value?.trim() || defaultVal;
+  }
+
+  if (tag === "a") {
+    return el.href?.trim() || defaultVal;
+  }
+
+  if (tag === "img") {
+    return el.src?.trim() || defaultVal;
+  }
+
+  // For any other element (div, span, p, etc.)
+  return el.textContent?.trim() || defaultVal;
+}
+

@@ -22,9 +22,11 @@ export function MosyLiveSearch({
     onSelectFull = () => {},
   }) {
     let finalValeField = valueField || displayField;
-  
+    const parentTable = actionData?.parentTable || tableName
+
     function handleOnSelect(dataRes) {
       // Call full payload regardless
+
 
       console.log(`Live search `, actionData , dataRes , actionName)
       onSelectFull(dataRes);
@@ -44,7 +46,7 @@ export function MosyLiveSearch({
         // 🌐 Redirect with updated query string
         if (router && newQstr) {
             //router.push(`${actionData?.path}?${tableName}_mosyfilter=${btoa(newQstr)}`);
-            window.location=`${actionData?.path}?${tableName}_mosyfilter=${btoa(newQstr)}`;
+            window.location=`${actionData?.path}?${parentTable}_mosyfilter=${btoa(newQstr)}`;
             stateSetters.setLocalEventSignature(magicRandomStr())
           closeMosyCard()
         }
@@ -85,7 +87,8 @@ export function MosyLiveSearch({
         <LiveSearchDropdown
           apiEndpoint={api}
           tblName={tableName}
-          inputName="qdata"
+          parentTable={parentTable}
+          inputName="liveSearchModal"
           hiddenInputName="qdataInput"
           valueField={finalValeField}
           displayField={displayField}

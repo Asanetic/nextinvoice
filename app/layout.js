@@ -1,6 +1,6 @@
 // app/layout.js
 
-import appConfigs from './appConfigs/mosyTheme'; // Theme config
+import appConfigs from './appConfigs/mosyTheme.jsx'; // Theme config
 import './css/designer.css';
 import MosyUiTheme from './css/mosyUi.js';
 import './css/fonts.css';
@@ -8,7 +8,7 @@ import './assets/css/font-awesome.min.css';
 import './assets/css/feathericon.min.css';
 import './assets/plugins/morris/morris.css';
 import './assets/css/style.css';
-import TopLoader from './components/TopLoader';
+import TopLoader from './components/TopLoader.jsx';
 
 export default function RootLayout({ children }) {
   return (

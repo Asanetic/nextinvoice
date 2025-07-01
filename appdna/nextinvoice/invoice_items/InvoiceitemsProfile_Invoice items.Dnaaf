@@ -78,7 +78,7 @@ if (!file_exists($features_app_folder)) mkdir($features_app_folder);
 
 ///=================================== basic template setup 
 
-$override_def_col_size="col-md-6 hive_data_cell ";
+$override_def_col_size="col-md-3 hive_data_cell ";
 
 $skip_hive_sites=["hive_site_id","hive_site_name"];
 
@@ -219,7 +219,8 @@ import {
          LiveSearchDropdown,
          MosySmartField,
          MosyActionButton,
-         SmartDropdown,                  
+         SmartDropdown, 
+         DeleteButton
        } from '../../UiControl/componentControl';
 
 import  ".$camelcasetbl_prefix."List from './".$camelcasetbl_prefix."List';
@@ -228,7 +229,7 @@ import  ".$camelcasetbl_prefix."List from './".$camelcasetbl_prefix."List';
 
 
 $additional_list_imports="//custom utils
-import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime} from '../../../MosyUtils/hiveUtils';
+import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime, mosyTonum} from '../../../MosyUtils/hiveUtils';
 
 import { mosyFilterUrl } from '../../DataControl/MosyFilterEngine';
 

@@ -2,22 +2,22 @@ eval(find_snippet('986'));
 eval(find_snippet("1171")); // camel case 
 
 $custom_col_main_file__="../appdna/custom_colums.php";
-$table_config_file__="../appdna/nextinvoice/system_users/tbl_attr/tbl_attr_templates_dnaaf.php";
+$table_config_file__="../appdna/nextinvoice/invoices/tbl_attr/tbl_attr_invoices_dnaaf.php";
 
 if(file_exists($custom_col_main_file__))
 {
   include($custom_col_main_file__);
 }
 
-$primary_table__="system_users";
+$primary_table__="invoices";
 $tbl_id_column_name="primkey";
-$record_id_col_name="user_id";
+$record_id_col_name="invoice_id";
 
 
-$nextjs_tbl_alias="accounts";
+$nextjs_tbl_alias="docs";
 
 // Report configurations
-$main_report_title_="My account";
+$main_report_title_="Invoice list";
 $api_endpoint_name="manage";
 
 $multigrid_col_span="9";
@@ -25,15 +25,15 @@ $enable_multigrid_view_more_link ="";
   
 $last_file_name=str_replace(" ","", strtolower($main_report_title_));//$api_endpoint_name;
 
-$profile_file_name="profile";
-$list_file_name="list";
+$profile_file_name="invoiceprofile";
+$list_file_name="invoices";
 
 $back_to_list_ = "./$list_file_name";
 
 $photo_component_placeholders=["profilePic","photoNode"];
 
 $next_js_custom_profile_card=[
-"system_users"=>[
+"infoqqsnippets"=>[
   'card_name'=>"UserProfileCard", 
  "layout_tag"=>'
  <UserProfileCard
@@ -47,14 +47,14 @@ $next_js_custom_profile_card=[
 
 
 $next_js_custom_List_card=[
-"system_users"=>[
-  'card_name'=>"UserListCard",   
+"infoqqsnippets"=>[
+  'card_name'=>"BlogCard",   
    "replacements"=>[
     "editLink"=>"editlink",
-    "photoNode"=>"user_pic",
-    "node1"=>"name",
-    "node4"=>"tel",
-    "node3"=>"email"
+    "photoNode"=>"media",
+    "node1"=>"title",
+    "node2"=>"tag",
+    "node3"=>"date_created"
     ]
   
   ]
@@ -206,7 +206,7 @@ import { MosyAlertCard, MosyNotify ,closeMosyModal } from  '../../../MosyUtils/A
 import MosySnackWidget from '../../../MosyUtils/MosySnackWidget';
 
 //basic utils
-import { mosyScrollTo , deleteUrlParam, mosyFormInputHandler,mosyUrlParam  } from '../../../MosyUtils/hiveUtils';
+import { mosyScrollTo , deleteUrlParam, mosyFormInputHandler,mosyUrlParam , magicRandomStr , mosyGetElemVal} from '../../../MosyUtils/hiveUtils';
 
 //data control and processors
 import { inteprate".$camelcasetbl_prefix."FormAction, ".$camelcasetbl."ProfileData , popDeleteDialog, Inteprate".$camelcasetbl_prefix."Event } from '../dataControl/".$camelcasetbl_prefix."RequestHandler';
@@ -221,19 +221,37 @@ import {
          LiveSearchDropdown,
          MosySmartField,
          MosyActionButton,
-         MosyFileUploadButton 
+         SmartDropdown, 
+         DeleteButton
        } from '../../UiControl/componentControl';
 
-//".$appname." custom functions
-//import {  } from '../../".$appname."_custom_functions';
+//nextinvoice custom functions
+import { loadVendorHeaders, loadClientHeaders, downloadInvoice , genDocNo , sendReminder} from '../../nextinvoice_custom_functions';
 
-import { UserProfileCard } from '../../../components/ProfileLayout'
+//inv items
+import  InvoiceitemsProfile from '../../docitems/uiControl/InvoiceitemsProfile';
+
+import  InvoiceitemsList from '../../docitems/uiControl/InvoiceitemsList';
+
+import {InteprateInvoiceitemsEvent} from '../../docitems/dataControl/InvoiceitemsRequestHandler';
+
+
+//invoice payments
+import  InvoicepaymentsProfile from '../../payments/uiControl/InvoicepaymentsProfile';
+
+import {InteprateInvoicepaymentsEvent} from '../../payments/dataControl/InvoicepaymentsRequestHandler';
+
+
+//large text manager
+import MosyHtmlEditor from '../../../MosyUtils/htmlEditor'
+import ReactMarkdown from 'react-markdown';
+
 
 // export profile";
 
 
 $additional_list_imports="//custom utils
-import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime} from '../../../MosyUtils/hiveUtils';
+import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime, mosyTonum} from '../../../MosyUtils/hiveUtils';
 
 import { mosyFilterUrl } from '../../DataControl/MosyFilterEngine';
 
@@ -243,7 +261,7 @@ import {
          AddNewButton, 
          MosyActionButton, 
          MosyGridRowOptions,
-         MosyPaginationUi
+         MosyPaginationUi         
        } from '../../UiControl/componentControl';
          
 import MosySnackWidget from '../../../MosyUtils/MosySnackWidget';
@@ -254,16 +272,13 @@ import { load".$camelcasetbl_prefix."ListData, popDeleteDialog, Inteprate".$came
 //state management
 import { use".$camelcasetbl_prefix."State } from '../dataControl/".$camelcasetbl_prefix."StateManager';
 
-//".$appname." custom functions
-//import {  } from '../../".$appname."_custom_functions';
-
-import { UserListCard } from '../../../components/ListLayout'
+import { MosyLiveSearch } from '../../UiControl/customUI';
 
 
 //export list";
 
 $customProfileData="{}";
-/*$customProfileData='
+$customProfileData='
 //invoice data 
 {
     invoice_id : (invoicesNode?.invoice_id || ""),
@@ -271,7 +286,7 @@ $customProfileData="{}";
 }
 
 ';
- */
+ 
 
 //main widget configs
 $widget_and_ist_array=[
@@ -282,7 +297,7 @@ $widget_and_ist_array=[
 
 /// mini list creator configs
 $mini_list_array=[
-       //" invoice_id ='\${invoicesNode?.invoice_id}' order by primkey desc "=>'InvoiceitemsList:{`Invoice items`}:../snippets/list::hide:InteprateInvoiceitemsEvent', 
+      // " invoice_id ='\${invoicesNode?.invoice_id}'  "=>'InvoiceitemsList:{`Invoice items`}:../snippets/list::hide:InteprateInvoiceitemsEvent', 
 
      //"tag ='\${infosnippetsNode?.tag}' order by primkey desc "=>''.$camelcasetbl_prefix.'List:{`Related ${infosnippetsNode?.tag} Notes`}:../snippets/list:::InteprateInfosnippetsEvent', 
      //""=>''.$camelcasetbl_prefix.'List:{`More Notes`}:../snippets/list:::InteprateInfosnippetsEvent', 
@@ -292,8 +307,10 @@ $mini_list_array=[
 
 /// mini list creator configs
 $subprofile_list_array=[
-    //"where invoice_id ='\${invoicesNode?.invoice_id}' order by primkey desc  "=>'InvoiceitemsProfile:{`Manage Items`}:_:_:hide:InteprateInvoiceitemsEvent:setInvoiceitemsCustomProfileQuery:invoice_items', 
+    "where invoice_id ='\${invoicesNode?.invoice_id}'  "=>'InvoiceitemsProfile:{`Manage Items`}:_:_:hide:InteprateInvoiceitemsEvent:setInvoiceitemsCustomProfileQuery:invoice_items', 
 
+    "  where invoice_id ='\${invoicesNode?.invoice_id}'   "=>'InvoicepaymentsProfile:{`Manage payments`}:_:_:hide:InteprateInvoicepaymentsEvent:setInvoicepaymentsCustomProfileQuery:invoice_payments', 
+  
   ];
 
 
@@ -302,19 +319,19 @@ $list_btn_table_array=[
   
   $primary_table__=>[
           
-    /*"tag: Search by tag"=>"
+    "user: Search client"=>"
       MosyLiveSearch({
-        api:' /api/infowell/snippets/infosnippets', 
-        displayField:'tag', 
-        tableName:'infosnippets',
+        api:'/api/nextinvoice/clients/clientlist', 
+        displayField:'client_name', 
+        tableName:'clients',
         actionName : 'mosyfilter',
-        title:'Search by tag',
-        actionData : {path: '../snippets/list', router : router , qstr : `tag='{{tag}}'`, stateSetters : stateItemSetters}        
+        title:'Search client',
+        actionData : {path: 'invoices', router : router , qstr : `client_id='{{client_id}}'`, stateSetters : stateItemSetters, parentTable:'invoices'}        
         })
         
         ",
     
-    "bolt: Search by title"=>"
+    /*"bolt: Search by title"=>"
       MosyLiveSearch({
         api:' /api/infowell/snippets/infosnippets', 
         displayField:'title', 
@@ -349,7 +366,8 @@ $profile_btn_table_array=[
         
         ",  */ 
     
-      //"print: Print invoice"=>"console.log(`first next js button....`)",
+      "print: Print invoice"=>"downloadInvoice({invoiceId:(invoicesNode?.primkey || '')})",
+      "send: Messages "=>"sendReminder()",
       //"search: Search users"=>"console.log(`first next js button users test....`)",
       //"refresh: sync work schedule"=>"syncWorkSchedule()"
   ],

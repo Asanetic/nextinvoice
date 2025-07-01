@@ -1,29 +1,60 @@
 // app/api/sendMail/route.js
+
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
-export async function GET(request) {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'jereasanya@gmail.com',
-      pass: 'uyaa jrms kodc bljw', // Looks like a valid app password 👌
-    },
-  });
-
+export async function POST(request) {
   try {
+    const contentType = request.headers.get("content-type") || "";
+
+    let body;
+    let isMultipart = false;
+    
+    if (contentType.includes("multipart/form-data")) {
+      isMultipart = true;
+      const formData = await request.formData();
+
+      // Convert FormData to plain object
+      body = {};
+      for (let [key, value] of formData.entries()) {
+        body[key] = value;
+      }
+
+    } else {
+      body = await request.json();
+    }
+    const {
+      txt_message_details: message,
+      txt_receiver_email: recipient,
+      txt_subject: subject,
+    } = body;
+
+    if (!recipient || !subject || !message) {
+      return NextResponse.json({ success: false, message: 'Missing email, subject, or message.' }, { status: 400 });
+    }
+
+    // Configure Gmail transport
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'jereasanya@gmail.com',
+        pass: 'uyaa jrms kodc bljw', // ✅ Gmail App Password
+      },
+    });
+
+    // Send the actual email
     const info = await transporter.sendMail({
       from: '"Jeremiah Asanya" <jereasanya@gmail.com>',
-      to: 'clearphrases@gmail.com',
-      subject: 'Invoice Ready',
-      text: 'Hi! Your invoice is ready.',
-      html: `<p>Here’s your invoice. <a href="https://example.com/invoice/123">View it here</a>.</p>`,
+      to: recipient,
+      subject,
+      text: message, // plain text
+      html: `<p>${message.replace(/\n/g, '<br/>')}</p>`, // basic HTML
     });
 
     console.log('📨 Email sent:', info.messageId);
-    return NextResponse.json({ success: true, message: 'Email sent!' });
+    return NextResponse.json({ success: true, message: 'Email sent successfully!' });
   } catch (err) {
     console.error('❌ Email send failed:', err);
-    return NextResponse.json({ success: false, message: 'Email failed to send.', error: err.message });
+    return NextResponse.json({ success: false, message: 'Email failed to send.', error: err.message }, { status: 500 });
   }
 }

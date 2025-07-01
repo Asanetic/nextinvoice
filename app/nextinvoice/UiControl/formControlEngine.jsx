@@ -4,18 +4,24 @@ const controlMap = {
      invoices: {
       date_created: {input: { readOnly: false, required: false}, cellClass: "d-none"},
       invoice_type: {input: { readOnly: false, required: false}, cellClass: "d-none"},
-      txt_vendor_name_create_new: {input: { readOnly: false, required: false}, cellClass: "d-none"},
-       
+      txt_vendor_name_create_new: {input: { readOnly: false, required: false}, cellClass: "show_livesearch_add_new"},
+      txt_client_id_create_new : {input: { readOnly: false, required: false}, cellClass: "show_livesearch_add_new"},              
      },
 
      invoice_items: {
       txt_invoice_id: {input: { readOnly: false, required: false}, cellClass: "d-none"},
+      txt_item_id_create_new : {input: { readOnly: false, required: false}, cellClass: "show_livesearch_add_new"},       
+
      },
 
      invoice_payments: {
       txt_invoice_id: {input: { readOnly: false, required: false}, cellClass: ""},
-     }     
-              
+     },
+     
+     message_templates: {
+      qdataInput_create_new : {input: { readOnly: false, required: false}, cellClass: "show_livesearch_add_new"},
+     }      
+        
   };
 
 // --- Custom override functions --- //

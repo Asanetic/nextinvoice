@@ -12,6 +12,46 @@ export const InvoicelistRowMutations = {
 
   },
 
+  
+  //dope subtotal column to the response              
+  subtotal: async (row) => {
+
+    const data_res = await mosySumRows("invoice_items", `(rate*quantity)`, `where invoice_id ='${row?.invoice_id}'`);
+
+    return data_res;
+
+  },
+
+  
+  //dope grand_total column to the response              
+  grand_total: async (row) => {
+
+    const data_res = await mosySumRows("invoice_items", `(rate*quantity)-${row?.discount}`, `where invoice_id ='${row?.invoice_id}'`);
+
+    return data_res;
+
+  },
+
+  
+  //dope amount_paid column to the response              
+  amount_paid: async (row) => {
+
+    const data_res = await mosySumRows("invoice_payments", "amount_paid", `where invoice_id ='${row?.invoice_id}'`);
+
+    return data_res;
+
+  },
+
+  
+  //dope invoice_balance column to the response              
+  invoice_balance: async (row) => {
+
+    const data_res = await (Number(row?.grand_total) - Number(row?.amount_paid));
+
+    return data_res;
+
+  },
+
   //dope  _companies_business_name_vendor_name column to the response
   _companies_business_name_vendor_name : async (row)=>{
 

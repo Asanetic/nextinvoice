@@ -174,8 +174,8 @@ export default function NavSidebar({
                <li className="submenu">
                 <a href="#"><i className="fa fa-envelope"></i> <span> Notifications </span> <span className="menu-arrow"></span></a>
                 <ul style={{display: "none"}} >
-                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/reminders/sms`}>Send message</a></li>
-                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/reminders/smslist`}>Manage messages</a></li>
+                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/reminders/message`}>Send message</a></li>
+                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/reminders/messages`}>Manage messages</a></li>
                 <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/messagetemplates/list`}>Message templates</a></li>                
                 </ul>
                </li>

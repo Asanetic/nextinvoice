@@ -13,7 +13,7 @@ import { MosyAlertCard, MosyNotify ,closeMosyModal } from  '../../../MosyUtils/A
 import MosySnackWidget from '../../../MosyUtils/MosySnackWidget';
 
 //basic utils
-import { mosyScrollTo , deleteUrlParam, mosyFormInputHandler,mosyUrlParam , magicRandomStr } from '../../../MosyUtils/hiveUtils';
+import { mosyScrollTo , deleteUrlParam, mosyFormInputHandler,mosyUrlParam , magicRandomStr , mosyGetElemVal} from '../../../MosyUtils/hiveUtils';
 
 //data control and processors
 import { inteprateInvoicelistFormAction, invoicelistProfileData , popDeleteDialog, InteprateInvoicelistEvent } from '../dataControl/InvoicelistRequestHandler';
@@ -29,10 +29,11 @@ import {
   MosySmartField,
   MosyActionButton,
   SmartDropdown,
+  DeleteButton
 } from '../../UiControl/componentControl';
 
 //nextinvoice custom functions
-import { loadVendorHeaders, loadClientHeaders, downloadInvoice , genDocNo , sendReminder } from '../../nextinvoice_custom_functions';
+import { loadVendorHeaders, loadClientHeaders, downloadInvoice , genDocNo , sendReminder} from '../../nextinvoice_custom_functions';
 
 //inv items
 import  InvoiceitemsProfile from '../../docitems/uiControl/InvoiceitemsProfile';
@@ -193,17 +194,15 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
                 {invoicesNode?.primkey ? (  <span> Invoice | {invoicesNode?.invoice_no || ""} </span> ) :(<span> Create invoice </span>)}
               </div>
               <>{!showNavigationIsle && (<div className="col m-0 p-0 text-right ">
-                
                 {paramInvoicelistUptoken && (
-                  <button
-                  type="button"
-                  className="medium_btn border border-danger text-danger p-2 ml-3 mb-3 hive_profile_nav_del_btn"
-                  onClick={() =>popDeleteDialog(paramInvoicelistUptoken, {childStateSetters: stateItemSetters, parentStateSetters: parentStateSetters} )}
+                  <DeleteButton
+                  uptoken={paramInvoicelistUptoken}
+                  stateItemSetters={stateItemSetters}
+                  parentStateSetters={parentStateSetters}
                   
-                  >
-                  <i className='fa fa-trash'></i> Delete
-                </button>)}
-                
+                  onDelete={popDeleteDialog}
+                  />
+                )}
               </div>)}</>
             </h3>
             {/*    Title isle      */}
@@ -211,13 +210,14 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
             
             
             {/*    Navigation isle      */}
-            <>{showNavigationIsle && (<div className="row justify-content-end m-0 p-0 col-md-12  p-3 bg-white hive_profile_navigation " id="">
+            <><div className="row justify-content-end m-0 p-0 col-md-12  p-3 bg-white hive_profile_navigation " id="">
               <div className="col-md-4 text-left p-0 hive_profile_nav_back_to_list_tray" id="">
                 
-                <Link href="./invoices" className="text-info hive_profile_nav_back_to_list"><i className="fa fa-arrow-left"></i> Back to list</Link>
+                {showNavigationIsle && ( <Link href="./invoices" className="text-info hive_profile_nav_back_to_list"><i className="fa fa-arrow-left"></i> Back to list</Link>)}
                 
               </div>
               <div className="col-md-8 p-0 text-right hive_profile_nav_add_new_tray" id="">
+                
                 
                 
                 {paramInvoicelistUptoken && (
@@ -230,7 +230,7 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
                   />
                   
                   <MosyActionButton
-                  label=" Send reminder"
+                  label=" Messages "
                   icon="send"
                   onClick={()=>{sendReminder()}}
                   />
@@ -238,401 +238,424 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
                 </>
               )}
               
-              
-              {paramInvoicelistUptoken && (
-                <button
-                type="button"
-                className="medium_btn border border-danger text-danger p-2 ml-3 mb-3 hive_profile_nav_del_btn"
-                onClick={() =>popDeleteDialog(paramInvoicelistUptoken, {childStateSetters: stateItemSetters, parentStateSetters: parentStateSetters} , router)}
+              {paramInvoicelistUptoken && showNavigationIsle && (
+                <>
                 
-                >
-                <i className='fa fa-trash'></i> Delete
-              </button>)}
-              
-              {paramInvoicelistUptoken && (
+                <DeleteButton
+                uptoken={paramInvoicelistUptoken}
+                stateItemSetters={stateItemSetters}
+                parentStateSetters={parentStateSetters}
+                router={router}
+                onDelete={popDeleteDialog}
+                />
+                
                 
                 <AddNewButton link="./invoiceprofile" label="Create invoice " icon="plus-circle" />
-                
-              )}
-              
-            </div>
-          </div>)}</>
-          <div className="col-md-12 pt-4 p-0 hive_profile_navigation_divider d-lg-none" id=""></div>
-          {/*    Navigation isle      */}
-          <div className="row justify-content-center m-0 p-0 col-md-12" id="">
-            {/*    Image section isle      */}
-            
-            {/*    Image section isle      */}
-            
-            {/*  //-------------    main content starts here  ------------------------------ */}
-            
-            
-            
-            <div className="col-md-12 row justify-content-center m-0  p-0">
-              {/*    Input cells section isle      */}
-              <div className="col-md-12 row p-0 justify-content-center p-0 m-0">
-                <div className="col-md-12 bg-white border border_set shadow-md p-4 mb-4 hive_form_section  ">
-                  <h5 className="col-md-12 row p-2 justify-content-center p-0 m-0">
-                    <div className="col-md-3 bg-dark mb-3 mb-lg-0 mt-lg-3" style={{height: "1px"}}></div>
-                    <div className="col-md-5 text-center">Invoice Headers</div>
-                    <div className="col-md-4 bg-dark mt-3" style={{height: "1px"}}></div>
-                  </h5>
-                  
-                  <div className="col-md-12 pt-3 p-0" id=""></div>
-                  
-                  <div className="row justify-content-center col-md-12 p-0 m-0 ">
-                    <LiveSearchDropdown
-                    apiEndpoint="/api/nextinvoice/clients/clientlist"
-                    tblName="clients"
-                    parentTable="invoices"
-                    inputName="txt__clients_client_name_client_id"
-                    hiddenInputName="txt_client_id"
-                    valueField="client_id"
-                    displayField="client_name"
-                    label="Client name"
-                    defaultValue={{ client_id: invoicesNode?.client_id || "", client_name: invoicesNode?._clients_client_name_client_id || "" }}
-                    onSelect={(id) => console.log("Just the ID:", id)}
-                    onSelectFull={(dataRes) =>
-                    {
-                      
-                      handleInputChange('txt_client_headers',loadClientHeaders(dataRes));
-                      handleInputChange('txt_client_tel',(dataRes?.client_tel));
-                      handleInputChange('txt_client_email',(dataRes?.client_email));
-                      
-                    }}
-                    onInputChange={handleInputChange}
-                    defaultColSize="col-md-6 hive_data_cell "
-                    context={{hostParent : hostParent}}
-                    />
-                    <LiveSearchDropdown
-                    apiEndpoint="/api/nextinvoice/vendors/businesslist"
-                    tblName="companies"
-                    parentTable="invoices"
-                    inputName="txt__companies_business_name_vendor_name"
-                    hiddenInputName="txt_vendor_name"
-                    valueField="company_id"
-                    displayField="business_name"
-                    label="Vendor Name"
-                    defaultValue={{ company_id: invoicesNode?.vendor_name || "", business_name: invoicesNode?._companies_business_name_vendor_name || "" }}
-                    onSelect={(id) => console.log("Just the ID:", id)}
-                    onSelectFull={(dataRes) =>  {handleInputChange('txt_vendor_headers',loadVendorHeaders(dataRes))}}
-                    onInputChange={handleInputChange}
-                    defaultColSize="col-md-6 hive_data_cell "
-                    context={{hostParent : hostParent}}
-                    />
-                    
-                    <MosySmartField
-                    module="invoices"
-                    field="client_headers"
-                    label="Client Headers"
-                    value={invoicesNode?.client_headers || ""}
-                    onChange={handleInputChange}
-                    context={{ hostParent: hostParent  }}
-                    inputOverrides={{}}
-                    type="textarea"
-                    cellOverrides={{additionalClass: "col-md-6 hive_data_cell"}}
-                    />
-                    
-                    
-                    <MosySmartField
-                    module="invoices"
-                    field="vendor_headers"
-                    label="Vendor Headers"
-                    value={invoicesNode?.vendor_headers || ""}
-                    onChange={handleInputChange}
-                    context={{ hostParent: hostParent  }}
-                    inputOverrides={{}}
-                    type="textarea"
-                    cellOverrides={{additionalClass: "col-md-6 hive_data_cell"}}
-                    />
-                    
-                  </div>
-                  
-                </div>
-                
-                <div className="col-md-12 bg-white border border_set shadow-md p-4 mb-4 hive_form_section  ">
-                  <h5 className="col-md-12 row p-2 justify-content-center p-0 m-0">
-                    <div className="col-md-3 bg-dark mb-3 mb-lg-0 mt-lg-3" style={{height: "1px"}}></div>
-                    <div className="col-md-5 text-center">Document Settings</div>
-                    <div className="col-md-4 bg-dark mt-3" style={{height: "1px"}}></div>
-                  </h5>
-                  
-                  <div className="col-md-12 pt-3 p-0" id=""></div>
-                  
-                  <div className="row justify-content-center col-md-12 p-0 m-0 ">
-                    
-                    <MosySmartField
-                    module="invoices"
-                    field="invoice_no"
-                    label="Invoice No"
-                    value={(invoicesNode?.invoice_no || `INV/${magicRandomStr(5)}/${genDocNo()}`)}
-                    onChange={handleInputChange}
-                    context={{ hostParent: hostParent  }}
-                    inputOverrides={{}}
-                    type="text"
-                    cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
-                    />
-                    
-                    
-                    <MosySmartField
-                    module="invoices"
-                    field="remark"
-                    label="Remark"
-                    value={invoicesNode?.remark || ""}
-                    onChange={handleInputChange}
-                    context={{ hostParent: hostParent  }}
-                    inputOverrides={{}}
-                    type="text"
-                    cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
-                    />
-                    
-                    
-                    <div className="form-group col-md-6 hive_data_cell ">
-                      <label className="d-none">Currency</label>
-                      
-                      <SmartDropdown
-                      apiEndpoint="/api/nextinvoice/docs/invoicelist"
-                      idField="primkey"
-                      labelField="currency"
-                      inputName="txt_currency"
-                      label="Currency"
-                      onSelect={(val) => console.log('Selected:', val)}
-                      defaultValue={invoicesNode?.currency || ""}
-                      />
-                    </div>
-                    
-                    
-                    <MosySmartField
-                    module="invoices"
-                    field="discount"
-                    label="Discount"
-                    value={invoicesNode?.discount || ""}
-                    onChange={handleInputChange}
-                    context={{ hostParent: hostParent  }}
-                    inputOverrides={{}}
-                    type="text"
-                    cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
-                    />
-                    
-                    
-                    <div className="form-group col-md-6 hive_data_cell ">
-                      <label className="d-none">Folder</label>
-                      
-                      <SmartDropdown
-                      apiEndpoint="/api/nextinvoice/docs/invoicelist"
-                      idField="primkey"
-                      labelField="folder"
-                      inputName="txt_folder"
-                      label="Folder"
-                      onSelect={(val) => console.log('Selected:', val)}
-                      defaultValue={invoicesNode?.folder || ""}
-                      />
-                    </div>
-                    
-                    
-                    <MosySmartField
-                    module="invoices"
-                    field="date_due"
-                    label="Date Due"
-                    value={invoicesNode?.date_due || ""}
-                    onChange={handleInputChange}
-                    context={{ hostParent: hostParent  }}
-                    inputOverrides={{}}
-                    type="date"
-                    cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
-                    />
-                    
-                    
-                    <MosySmartField
-                    module="invoices"
-                    field="client_tel"
-                    label="Client Tel"
-                    value={invoicesNode?.client_tel || ""}
-                    onChange={handleInputChange}
-                    context={{ hostParent: hostParent  }}
-                    inputOverrides={{}}
-                    type="text"
-                    cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
-                    />
-                    
-                    
-                    <MosySmartField
-                    module="invoices"
-                    field="client_email"
-                    label="Client Email"
-                    value={invoicesNode?.client_email || ""}
-                    onChange={handleInputChange}
-                    context={{ hostParent: hostParent  }}
-                    inputOverrides={{}}
-                    type="text"
-                    cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
-                    />
-                    
-                    
-                    <MosySmartField
-                    module="invoices"
-                    field="invoice_type"
-                    label="Invoice Type"
-                    value={`invoice`}
-                    onChange={handleInputChange}
-                    context={{ hostParent: hostParent  }}
-                    inputOverrides={{}}
-                    type="text"
-                    cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
-                    />
-                    
-                    
-                    <div className="form-group col-md-12">
-                      <label >Footer remark</label>
-                      <MosyHtmlEditor
-                      key={`reload - ${invoicesNode?.primkey}`}
-                      module="invoices"
-                      field="txt_footnote"
-                      label="Footer remark"
-                      value={invoicesNode?.footnote || ""}
-                      onChange={handleInputChange}
-                      context={{ hostParent: hostParent  }}
-                      inputOverrides={{}}
-                      type="content_editable"
-                      cellOverrides={{additionalClass: "d-none"}}
-                      
-                      />
-                      <div className="col-md-12  p-0 m-0 ck_raw_content d-none"  id="footnote_toprint">{invoicesNode?.footnote || ""}</div>
-                      
-                    </div>
-                    
-                  </div>
-                  
-                </div>
-                
-                <div className="col-md-12 bg-white border border_set shadow-md p-4 mb-4 hive_form_section  ">
-                  <h5 className="col-md-12 row p-2 justify-content-center p-0 m-0">
-                    <div className="col-md-3 bg-dark mb-3 mb-lg-0 mt-lg-3" style={{height: "1px"}}></div>
-                    <div className="col-md-5 text-center"></div>
-                    <div className="col-md-4 bg-dark mt-3" style={{height: "1px"}}></div>
-                  </h5>
-                  
-                  <div className="col-md-12 pt-3 p-0" id=""></div>
-                  
-                  <div className="row justify-content-center col-md-12 p-0 m-0 ">
-                    
-                    <input className="form-control" id="txt_date_created" name="txt_date_created" value={invoicesNode?.date_created || ""} placeholder="Date Created" type="hidden"/>
-                    
-                  </div>
-                  
-                  <div className="col-md-12 text-center">
-                    <SubmitButtons tblName="invoices" extraClass="optional-custom-class" />
-                  </div>
-                </div></div>
-                {/*    Input cells section isle      */}
-              </div>
-              
-              <section className="hive_control">
-                <input type="hidden" id="invoices_uptoken" name="invoices_uptoken" value={paramInvoicelistUptoken}/>
-                <input type="hidden" id="invoices_mosy_action" name="invoices_mosy_action" value={invoicelistActionStatus}/>
-              </section>
-              
-              
-            </div>
-            
-          </form>
-          
-          
-          <div className="row justify-content-center m-0 pr-lg-1 pl-lg-1 pt-0 col-md-12" id="">
-            {/*<hive_mini_list/>*/}
-            
-            {invoicesNode?.primkey && (
-              <section className="col-md-12 m-0 bg-white pt-5 p-0 ">
-                <h5 className="col-md-12 text-left  border-bottom pl-lg-1 text-muted mb-3"> {`Manage Items`} </h5>
-                <InvoiceitemsProfile
-                key={`${ invoiceitemsCustomProfileQuery}-${localEventSignature}`}
-                dataIn={{
-                  
-                  parentStateSetters : stateItemSetters,
-                  parentUseEffectKey : localEventSignature,
-                  showNavigationIsle:false,
-                  customQueryStr : invoiceitemsCustomProfileQuery,
-                  hostParent : "InvoicelistProfile",
-                  customProfileData :
-                  //invoice data
-                  {
-                    invoice_id : (invoicesNode?.invoice_id || ""),
-                    
-                  }
-                  
-                  
-                  
-                }}
-                
-                dataOut={{
-                  
-                  setChildDataOut: InteprateInvoiceitemsEvent,
-                  setChildDataOutSignature: (sig) => console.log("Signature changed:", sig),
-                  
-                }}
-                />
-                
-              </section>
-            )}
-            {invoicesNode?.primkey && (
-              <section className="col-md-12 m-0 bg-white pt-5 p-0 ">
-                <h5 className="col-md-12 text-left  border-bottom pl-lg-1 text-muted mb-3"> {`Manage payments`} </h5>
-                <InvoicepaymentsProfile
-                key={`${ invoicepaymentsCustomProfileQuery}-${localEventSignature}`}
-                dataIn={{
-                  
-                  parentStateSetters : stateItemSetters,
-                  parentUseEffectKey : localEventSignature,
-                  showNavigationIsle:false,
-                  customQueryStr : invoicepaymentsCustomProfileQuery,
-                  hostParent : "InvoicelistProfile",
-                  customProfileData :
-                  //invoice data
-                  {
-                    invoice_id : (invoicesNode?.invoice_id || ""),
-                    
-                  }
-                  
-                  
-                  
-                }}
-                
-                dataOut={{
-                  
-                  setChildDataOut: InteprateInvoicepaymentsEvent,
-                  setChildDataOutSignature: (sig) => console.log("Signature changed:", sig),
-                  
-                }}
-                />
-                
-              </section>
+              </>
             )}
             
           </div>
-        </div>
-      </div>
-      
-      
-      {/* snack notifications -- */}
-      {snackMessage &&(
-        <MosySnackWidget
-        content={snackMessage}
-        duration={5000}
-        type="custom"
-        onDone={() => {
-          stateItemSetters.setSnackMessage("");
-          stateItem.snackOnDone(); // Run whats inside onDone
-          deleteUrlParam("snack_alert")
-        }}
+        </div></>
+        <div className="col-md-12 pt-4 p-0 hive_profile_navigation_divider d-lg-none" id=""></div>
+        {/*    Navigation isle      */}
+        <div className="row justify-content-center m-0 p-0 col-md-12" id="">
+          {/*    Image section isle      */}
+          
+          {/*    Image section isle      */}
+          
+          {/*  //-------------    main content starts here  ------------------------------ */}
+          
+          
+          
+          <div className="col-md-12 row justify-content-center m-0  p-0">
+            {/*    Input cells section isle      */}
+            <div className="col-md-12 row p-0 justify-content-center p-0 m-0">
+              <div className="col-md-12 bg-white border border_set shadow-md p-4 mb-4 hive_form_section  ">
+                <h5 className="col-md-12 row p-2 justify-content-center p-0 m-0">
+                  <div className="col-md-3 bg-dark mb-3 mb-lg-0 mt-lg-3" style={{height: "1px"}}></div>
+                  <div className="col-md-5 text-center">Invoice Headers</div>
+                  <div className="col-md-4 bg-dark mt-3" style={{height: "1px"}}></div>
+                </h5>
+                
+                <div className="col-md-12 pt-3 p-0" id=""></div>
+                
+                <div className="row justify-content-center col-md-12 p-0 m-0 ">
+                  <LiveSearchDropdown
+                  apiEndpoint="/api/nextinvoice/clients/clientlist"
+                  tblName="clients"
+                  parentTable="invoices"
+                  inputName="txt__clients_client_name_client_id"
+                  hiddenInputName="txt_client_id"
+                  valueField="client_id"
+                  displayField="client_name"
+                  label="Client name"
+                  defaultValue={{ client_id: invoicesNode?.client_id || "", client_name: invoicesNode?._clients_client_name_client_id || "" }}
+                  onSelect={(id) => console.log("Just the ID:", id)}
+                  onSelectFull={(dataRes) =>
+                  {
+                    
+                    handleInputChange('txt_client_headers',loadClientHeaders(dataRes));
+                    handleInputChange('txt_client_tel',(dataRes?.client_tel));
+                    handleInputChange('txt_client_email',(dataRes?.client_email));
+                    
+                  }}
+                  onInputChange={handleInputChange}
+                  defaultColSize="col-md-6 hive_data_cell "
+                  context={{hostParent : hostParent}}
+                  />
+                  <LiveSearchDropdown
+                  apiEndpoint="/api/nextinvoice/vendors/businesslist"
+                  tblName="companies"
+                  parentTable="invoices"
+                  inputName="txt__companies_business_name_vendor_name"
+                  hiddenInputName="txt_vendor_name"
+                  valueField="company_id"
+                  displayField="business_name"
+                  label="Vendor Name"
+                  defaultValue={{ company_id: invoicesNode?.vendor_name || "", business_name: invoicesNode?._companies_business_name_vendor_name || "" }}
+                  onSelect={(id) => console.log("Just the ID:", id)}
+                  onSelectFull={(dataRes) =>  {handleInputChange('txt_vendor_headers',loadVendorHeaders(dataRes))}}
+                  onInputChange={handleInputChange}
+                  defaultColSize="col-md-6 hive_data_cell "
+                  context={{hostParent : hostParent}}
+                  />
+                  
+                  <MosySmartField
+                  module="invoices"
+                  field="client_headers"
+                  label="Client Headers"
+                  value={invoicesNode?.client_headers || ""}
+                  onChange={handleInputChange}
+                  context={{ hostParent: hostParent  }}
+                  inputOverrides={{}}
+                  type="textarea"
+                  cellOverrides={{additionalClass: "col-md-6 hive_data_cell"}}
+                  />
+                  
+                  
+                  <MosySmartField
+                  module="invoices"
+                  field="vendor_headers"
+                  label="Vendor Headers"
+                  value={invoicesNode?.vendor_headers || ""}
+                  onChange={handleInputChange}
+                  context={{ hostParent: hostParent  }}
+                  inputOverrides={{}}
+                  type="textarea"
+                  cellOverrides={{additionalClass: "col-md-6 hive_data_cell"}}
+                  />
+                  
+                </div>
+                
+              </div>
+              
+              <div className="col-md-12 bg-white border border_set shadow-md p-4 mb-4 hive_form_section  ">
+                <h5 className="col-md-12 row p-2 justify-content-center p-0 m-0">
+                  <div className="col-md-3 bg-dark mb-3 mb-lg-0 mt-lg-3" style={{height: "1px"}}></div>
+                  <div className="col-md-5 text-center">Document Settings</div>
+                  <div className="col-md-4 bg-dark mt-3" style={{height: "1px"}}></div>
+                </h5>
+                
+                <div className="col-md-12 pt-3 p-0" id=""></div>
+                
+                <div className="row justify-content-center col-md-12 p-0 m-0 ">
+                  
+                  <MosySmartField
+                  module="invoices"
+                  field="invoice_no"
+                  label="Invoice No"
+                  value={(invoicesNode?.invoice_no || `INV/${magicRandomStr(5)}/${genDocNo()}`)}
+                  onChange={handleInputChange}
+                  context={{ hostParent: hostParent  }}
+                  inputOverrides={{}}
+                  type="text"
+                  cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
+                  />
+                  
+                  
+                  <MosySmartField
+                  module="invoices"
+                  field="remark"
+                  label="Remark"
+                  value={invoicesNode?.remark || ""}
+                  onChange={handleInputChange}
+                  context={{ hostParent: hostParent  }}
+                  inputOverrides={{}}
+                  type="text"
+                  cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
+                  />
+                  
+                  
+                  <div className="form-group col-md-6 hive_data_cell ">
+                    <label className="d-none">Currency</label>
+                    
+                    <SmartDropdown
+                    apiEndpoint="/api/nextinvoice/docs/invoicelist"
+                    idField="primkey"
+                    labelField="currency"
+                    inputName="txt_currency"
+                    label="Currency"
+                    onSelect={(val) => console.log('Selected:', val)}
+                    defaultValue={invoicesNode?.currency || ""}
+                    />
+                  </div>
+                  
+                  
+                  <MosySmartField
+                  module="invoices"
+                  field="discount"
+                  label="Discount"
+                  value={invoicesNode?.discount || ""}
+                  onChange={handleInputChange}
+                  context={{ hostParent: hostParent  }}
+                  inputOverrides={{}}
+                  type="text"
+                  cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
+                  />
+                  
+                  
+                  <div className="form-group col-md-6 hive_data_cell ">
+                    <label className="d-none">Folder</label>
+                    
+                    <SmartDropdown
+                    apiEndpoint="/api/nextinvoice/docs/invoicelist"
+                    idField="primkey"
+                    labelField="folder"
+                    inputName="txt_folder"
+                    label="Folder"
+                    onSelect={(val) => console.log('Selected:', val)}
+                    defaultValue={invoicesNode?.folder || ""}
+                    />
+                  </div>
+                  
+                  
+                  <MosySmartField
+                  module="invoices"
+                  field="date_due"
+                  label="Date Due"
+                  value={invoicesNode?.date_due || ""}
+                  onChange={handleInputChange}
+                  context={{ hostParent: hostParent  }}
+                  inputOverrides={{}}
+                  type="date"
+                  cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
+                  />
+                  
+                  
+                  <MosySmartField
+                  module="invoices"
+                  field="client_tel"
+                  label="Client Tel"
+                  value={invoicesNode?.client_tel || ""}
+                  onChange={handleInputChange}
+                  context={{ hostParent: hostParent  }}
+                  inputOverrides={{}}
+                  type="text"
+                  cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
+                  />
+                  
+                  
+                  <MosySmartField
+                  module="invoices"
+                  field="client_email"
+                  label="Client Email"
+                  value={invoicesNode?.client_email || ""}
+                  onChange={handleInputChange}
+                  context={{ hostParent: hostParent  }}
+                  inputOverrides={{}}
+                  type="text"
+                  cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
+                  />
+                  
+                  
+                  <MosySmartField
+                  module="invoices"
+                  field="invoice_type"
+                  label="Invoice Type"
+                  value={`invoice`}
+                  onChange={handleInputChange}
+                  context={{ hostParent: hostParent  }}
+                  inputOverrides={{}}
+                  type="text"
+                  cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
+                  />
+                  
+                  
+                  <div className="form-group col-md-12">
+                    <label >Foot notes</label>
+                    <MosyHtmlEditor
+                    key={`reload - ${invoicesNode?.primkey}`}
+                    module="invoices"
+                    field="txt_footnote"
+                    label="Foot notes"
+                    value={invoicesNode?.footnote || ""}
+                    onChange={handleInputChange}
+                    context={{ hostParent: hostParent  }}
+                    inputOverrides={{}}
+                    type="content_editable"
+                    cellOverrides={{additionalClass: "d-none"}}
+                    
+                    />
+                    <div className="col-md-12  p-0 m-0 ck_raw_content d-none"  id="footnote_toprint">{invoicesNode?.footnote || ""}</div>
+                    
+                  </div>
+                  
+                </div>
+                
+              </div>
+              
+              <div className="col-md-12 bg-white border border_set shadow-md p-4 mb-4 hive_form_section  ">
+                <h5 className="col-md-12 row p-2 justify-content-center p-0 m-0">
+                  <div className="col-md-3 bg-dark mb-3 mb-lg-0 mt-lg-3" style={{height: "1px"}}></div>
+                  <div className="col-md-5 text-center"></div>
+                  <div className="col-md-4 bg-dark mt-3" style={{height: "1px"}}></div>
+                </h5>
+                
+                <div className="col-md-12 pt-3 p-0" id=""></div>
+                
+                <div className="row justify-content-center col-md-12 p-0 m-0 ">
+                  
+                  {invoicesNode?.primkey && (
+                    <div className="form-group col-md-6 hive_data_cell  ">
+                      <label >Subtotal</label>
+                      <div className="border border_set p-2 rounded_medium form-control pt-3" id="div_subtotal" name="div_subtotal" placeholder="Subtotal">{invoicesNode?.subtotal || ""}</div>
+                    </div>)}
+                    
+                    {invoicesNode?.primkey && (
+                      <div className="form-group col-md-6 hive_data_cell  ">
+                        <label >Grand Total</label>
+                        <div className="border border_set p-2 rounded_medium form-control pt-3" id="div_grand_total" name="div_grand_total" placeholder="Grand Total">{invoicesNode?.grand_total || ""}</div>
+                      </div>)}
+                      
+                      {invoicesNode?.primkey && (
+                        <div className="form-group col-md-6 hive_data_cell  ">
+                          <label >Amount Paid</label>
+                          <div className="border border_set p-2 rounded_medium form-control pt-3" id="div_amount_paid" name="div_amount_paid" placeholder="Amount Paid">{invoicesNode?.amount_paid || ""}</div>
+                        </div>)}
+                        
+                        {invoicesNode?.primkey && (
+                          <div className="form-group col-md-6 hive_data_cell  ">
+                            <label >Balance</label>
+                            <div className="border border_set p-2 rounded_medium form-control pt-3" id="div_invoice_balance" name="div_invoice_balance" placeholder="Balance">{invoicesNode?.invoice_balance || ""}</div>
+                          </div>)}
+                          
+                          <input className="form-control" id="txt_date_created" name="txt_date_created" value={invoicesNode?.date_created || ""} placeholder="Date Created" type="hidden"/>
+                          
+                        </div>
+                        
+                        <div className="col-md-12 text-center">
+                          <SubmitButtons tblName="invoices" extraClass="optional-custom-class" />
+                        </div>
+                      </div></div>
+                      {/*    Input cells section isle      */}
+                    </div>
+                    
+                    <section className="hive_control">
+                      <input type="hidden" id="invoices_uptoken" name="invoices_uptoken" value={paramInvoicelistUptoken}/>
+                      <input type="hidden" id="invoices_mosy_action" name="invoices_mosy_action" value={invoicelistActionStatus}/>
+                    </section>
+                    
+                    
+                  </div>
+                  
+                </form>
+                
+                
+                <div className="row justify-content-center m-0 pr-lg-1 pl-lg-1 pt-0 col-md-12" id="">
+                  {/*<hive_mini_list/>*/}
+                  
+                  {invoicesNode?.primkey && (
+                    <section className="col-md-12 m-0 bg-white pt-5 p-0 ">
+                      <h5 className="col-md-12 text-left  border-bottom pl-lg-1 text-muted mb-3"> {`Manage Items`} </h5>
+                      <InvoiceitemsProfile
+                      key={`${ invoiceitemsCustomProfileQuery}-${localEventSignature}`}
+                      dataIn={{
+                        
+                        parentStateSetters : stateItemSetters,
+                        parentUseEffectKey : localEventSignature,
+                        showNavigationIsle:false,
+                        customQueryStr : invoiceitemsCustomProfileQuery,
+                        hostParent : "InvoicelistProfile",
+                        customProfileData :
+                        //invoice data
+                        {
+                          invoice_id : (invoicesNode?.invoice_id || ""),
+                          
+                        }
+                        
+                        
+                        
+                      }}
+                      
+                      dataOut={{
+                        
+                        setChildDataOut: InteprateInvoiceitemsEvent,
+                        setChildDataOutSignature: (sig) => console.log("Signature changed:", sig),
+                        
+                      }}
+                      />
+                      
+                    </section>
+                  )}
+                  {invoicesNode?.primkey && (
+                    <section className="col-md-12 m-0 bg-white pt-5 p-0 ">
+                      <h5 className="col-md-12 text-left  border-bottom pl-lg-1 text-muted mb-3"> {`Manage payments`} </h5>
+                      <InvoicepaymentsProfile
+                      key={`${ invoicepaymentsCustomProfileQuery}-${localEventSignature}`}
+                      dataIn={{
+                        
+                        parentStateSetters : stateItemSetters,
+                        parentUseEffectKey : localEventSignature,
+                        showNavigationIsle:false,
+                        customQueryStr : invoicepaymentsCustomProfileQuery,
+                        hostParent : "InvoicelistProfile",
+                        customProfileData :
+                        //invoice data
+                        {
+                          invoice_id : (invoicesNode?.invoice_id || ""),
+                          
+                        }
+                        
+                        
+                        
+                      }}
+                      
+                      dataOut={{
+                        
+                        setChildDataOut: InteprateInvoicepaymentsEvent,
+                        setChildDataOutSignature: (sig) => console.log("Signature changed:", sig),
+                        
+                      }}
+                      />
+                      
+                    </section>
+                  )}
+                  
+                </div>
+              </div>
+            </div>
+            
+            
+            {/* snack notifications -- */}
+            {snackMessage &&(
+              <MosySnackWidget
+              content={snackMessage}
+              duration={5000}
+              type="custom"
+              onDone={() => {
+                stateItemSetters.setSnackMessage("");
+                stateItem.snackOnDone(); // Run whats inside onDone
+                deleteUrlParam("snack_alert")
+              }}
+              
+              />)}
+              {/* snack notifications -- */}
+              
+              
+              {/* ================== End Feature Section========================== ------*/}
+            </div>
+            
+          );
+          
+        }
         
-        />)}
-        {/* snack notifications -- */}
-        
-        
-        {/* ================== End Feature Section========================== ------*/}
-      </div>
-      
-    );
-    
-  }
-  

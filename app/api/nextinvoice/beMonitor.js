@@ -85,6 +85,7 @@ export function mosyMutateQuery(tblName, searchParams, authData, tablePrimKey)
       additionalQ =" and  invoice_type='Invoice'"
     }
 
+    
     const combinedParam = base64Encode(`${whereStr}${gftFilterType} ${mutatedFilterStr}  ${additionalQ} ${finalAfterwhereStr}`)
 
     console.log(`combinedParam ${base64Decode(combinedParam)} ${filterFull}`)

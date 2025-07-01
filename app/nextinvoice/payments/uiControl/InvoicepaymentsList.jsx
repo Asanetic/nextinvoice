@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 
 
 //custom utils
-import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime} from '../../../MosyUtils/hiveUtils';
+import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime, mosyTonum} from '../../../MosyUtils/hiveUtils';
 
 import { mosyFilterUrl } from '../../DataControl/MosyFilterEngine';
 
@@ -163,7 +163,7 @@ export default function InvoicepaymentsList({ dataIn = {}, dataOut = {} }) {
                     
                     <td scope="col"><span title={listinvoice_payments_result.invoice_id}>{magicTrimText(listinvoice_payments_result._invoices_invoice_no_invoice_id, 70)}</span></td>
                     <td scope="col"><span title={listinvoice_payments_result.date_paid}>{mosyFormatDateOnly(listinvoice_payments_result.date_paid)}</span></td>
-                    <td scope="col"><span title={listinvoice_payments_result.amount_paid}>{magicTrimText(listinvoice_payments_result.amount_paid, 70)}</span></td>
+                    <td scope="col"><span>{mosyTonum(listinvoice_payments_result.amount_paid)}</span></td>
                     <td scope="col"><span title={listinvoice_payments_result.ref_no}>{magicTrimText(listinvoice_payments_result.ref_no, 70)}</span></td>
                     <td scope="col"><span title={listinvoice_payments_result.payment_mode}>{magicTrimText(listinvoice_payments_result.payment_mode, 70)}</span></td>
                     <td scope="col"><span>

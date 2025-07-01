@@ -109,7 +109,7 @@ $novanest_module_ui_blueprint_=[
     //how do you want the inputs to be arranged in the ui list & profile 
     "desired_column_order"=>[
 
-        'messaging' => ['primkey','messageid', "ref_number","subject",'receiver_contacts', 'message_details','date_booked'],
+        'messaging' => ['primkey','messageid', "ref_number","receiver_tel","receiver_email","subject", 'message_details','date_booked'],
 
     ],
     
@@ -131,7 +131,7 @@ $novanest_module_ui_blueprint_=[
     "default_col_class"=>"col-md-6",
     
     //==============================================   hidden_inputs on profile arr    
-    "hidden_inputs"=>["reciver_names","message_date","custom_dictionary","sent_state"],
+    "hidden_inputs"=>["reciver_names","message_date","custom_dictionary","sent_state","receiver_contacts"],
     
     //==============================================   print_tables tables with print buttons
     "print_tables"=>["clients"],
@@ -178,7 +178,7 @@ $novanest_module_ui_blueprint_=[
     "password_columns"=>['login_password',"column_name2..."],
 
     //==============================================      | on the profile page, these columns are titles they have a input with class col-md-12
-    "title_columns"=>['client_name','column_name2...'],
+    "title_columns"=>['client_name','subject'],
 
     //==============================================      | on the profile page, these columns are dates Y-m-d
     "date_columns"=>['date_booked',"column_name2..."],
@@ -219,7 +219,14 @@ $novanest_module_ui_blueprint_=[
     
     //=============================================        on the ui , these columns connect values from other tables
     "connection_cols"=>[
-          "ref_number"=>"invoices:invoice_no:invoice_no:/api/nextinvoice/docs/invoicelist"
+          "ref_number"=>"invoices:invoice_no:invoice_no:/api/nextinvoice/docs/invoicelist:
+          {
+           handleInputChange('txt_message_details', loadDocMessage(dataRes));
+           handleInputChange('txt_receiver_contacts', `\${dataRes?.client_tel} / \${dataRes?.client_email}`);
+           handleInputChange('txt_receiver_tel', `\${dataRes?.client_tel}`);
+           handleInputChange('txt_receiver_email', `\${dataRes?.client_email}`);
+          }"
+         
     ],
     
     //sample

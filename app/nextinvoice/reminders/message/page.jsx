@@ -1,16 +1,16 @@
 import { Suspense } from 'react';
 
-import SmsremindersProfile from '../uiControl/SmsremindersProfile';
+import MessageoutboxProfile from '../uiControl/MessageoutboxProfile';
 
-import { InteprateSmsremindersEvent } from '../dataControl/SmsremindersRequestHandler';
+import { InteprateMessageoutboxEvent } from '../dataControl/MessageoutboxRequestHandler';
 
     
 export async function generateMetadata({ searchParams }) {
-  const mosyTitle = "Sms Reminders profile"//searchParams?.mosyTitle || "Sms Reminders";
+  const mosyTitle = "Message OutBox profile"//searchParams?.mosyTitle || "Message OutBox";
 
   return {
-    title: mosyTitle ? decodeURIComponent(mosyTitle) : `Sms Reminders profile`,
-    description: 'nextinvoice Sms Reminders',
+    title: mosyTitle ? decodeURIComponent(mosyTitle) : `Message OutBox profile`,
+    description: 'nextinvoice Message OutBox',
     
     icons: {
       icon: "/logo.png"
@@ -19,7 +19,7 @@ export async function generateMetadata({ searchParams }) {
 }
                       
 
-export default function SmsremindersMainProfilePage() {
+export default function MessageoutboxMainProfilePage() {
 
    return (
      <>
@@ -27,11 +27,11 @@ export default function SmsremindersMainProfilePage() {
           <div className="page-wrapper">
              <div className="content container-fluid p-0 m-0 ">
                <Suspense fallback={<div className="col-md-12 p-5 text-center h3">Loading...</div>}>
-                 <SmsremindersProfile 
-                    dataIn={{ parentUseEffectKey: "initSmsremindersProfile" }} 
+                 <MessageoutboxProfile 
+                    dataIn={{ parentUseEffectKey: "initMessageoutboxProfile" }} 
                                            
                     dataOut={{
-                       setChildDataOut: InteprateSmsremindersEvent
+                       setChildDataOut: InteprateMessageoutboxEvent
                     }}   
                     
                  />

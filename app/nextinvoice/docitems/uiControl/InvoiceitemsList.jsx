@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 
 
 //custom utils
-import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime} from '../../../MosyUtils/hiveUtils';
+import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime, mosyTonum} from '../../../MosyUtils/hiveUtils';
 
 import { mosyFilterUrl } from '../../DataControl/MosyFilterEngine';
 
@@ -115,10 +115,9 @@ export default function InvoiceitemsList({ dataIn = {}, dataOut = {} }) {
             <tr>
               <th scope="col">#</th>
               
-              <th scope="col"><b>Invoice No.</b></th>
               <th scope="col"><b>Item name</b></th>
               <th scope="col"><b>Description</b></th>
-              <th scope="col"><b>Qty</b></th>
+              <th scope="col"><b>Quantity</b></th>
               <th scope="col"><b>Rate</b></th>
               <th scope="col"><b>Row totals</b></th>
               
@@ -129,7 +128,7 @@ export default function InvoiceitemsList({ dataIn = {}, dataOut = {} }) {
             {stateItem.invoiceitemsLoading ? (
               <tr>
                 <th scope="col">#</th>
-                <td colSpan="7" className="text-muted">
+                <td colSpan="6" className="text-muted">
                   <h5 className="col-md-12 text-center p-3 mb-5 text-muted"><i className="fa fa-spinner fa-spin"></i> Loading Invoice items ...</h5>
                 </td>
               </tr>
@@ -159,7 +158,6 @@ export default function InvoiceitemsList({ dataIn = {}, dataOut = {} }) {
                       </div>
                     </td>
                     
-                    <td scope="col"><span title={listinvoice_items_result.invoice_id}>{magicTrimText(listinvoice_items_result._invoices_invoice_no_invoice_id, 7000)}</span></td>
                     <td scope="col"><span title={listinvoice_items_result.item_id}>{magicTrimText(listinvoice_items_result._inventory_item_name_item_id, 7000)}</span></td>
                     <td scope="col"><span>
                       <ReactMarkdown>
@@ -168,9 +166,9 @@ export default function InvoiceitemsList({ dataIn = {}, dataOut = {} }) {
                         
                       </ReactMarkdown>
                     </span></td>
-                    <td scope="col"><span title={listinvoice_items_result.quantity}>{magicTrimText(listinvoice_items_result.quantity, 7000)}</span></td>
-                    <td scope="col"><span title={listinvoice_items_result.rate}>{magicTrimText(listinvoice_items_result.rate, 7000)}</span></td>
-                    <td scope="col"><span title={listinvoice_items_result.totals}>{magicTrimText(listinvoice_items_result.totals, 7000)}</span></td>
+                    <td scope="col"><span>{mosyTonum(listinvoice_items_result.quantity)}</span></td>
+                    <td scope="col"><span>{mosyTonum(listinvoice_items_result.rate)}</span></td>
+                    <td scope="col"><span>{mosyTonum(listinvoice_items_result.totals)}</span></td>
                     
                   </tr>
                   
@@ -180,7 +178,7 @@ export default function InvoiceitemsList({ dataIn = {}, dataOut = {} }) {
               
             ) : (
               
-              <tr><td colSpan="7" className="text-muted">
+              <tr><td colSpan="6" className="text-muted">
                 
                 
                 <div className="col-md-12 text-center mt-4">

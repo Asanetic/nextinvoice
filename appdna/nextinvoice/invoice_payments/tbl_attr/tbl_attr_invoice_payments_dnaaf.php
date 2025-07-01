@@ -157,7 +157,7 @@ $novanest_module_ui_blueprint_=[
     "view_tbl_only"=>[],
     
     //============================================    these columns have values to be summed 
-    "sum_cols_list"=>['paid_amount'],
+    "sum_cols_list"=>['amount_paid'],
     
     //============================================    on the profile page for these columns use textarea component
     "textarea_array"=>['remark',"column_name2..."],

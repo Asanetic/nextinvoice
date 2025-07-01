@@ -2,15 +2,15 @@
 //utils 
 import { mosySqlInsert, mosySqlUpdate, base64Decode, mosyFlexSelect, mosyUploadFile, mosyDeleteFile, magicRandomStr } from '../../../apiUtils/dataControl/dataUtils';
 
-import {InvoicelistRowMutations} from './InvoicelistRowMutations';
+import {MessageoutboxRowMutations} from './MessageoutboxRowMutations';
 
-import listInvoicelistRowMutationsKeys from './InvoicelistMutationKeys';
+import listMessageoutboxRowMutationsKeys from './MessageoutboxMutationKeys';
 
 //be gate keeper and auth 
 import { validateSelect , mosyMutateQuery, mutateInputArray } from '../../beMonitor';
 import { processAuthToken } from '../../../auth/authManager';
 
-import { AddInvoicelist, UpdateInvoicelist } from './InvoicelistDbGateway';
+import { AddMessageoutbox, UpdateMessageoutbox } from './MessageoutboxDbGateway';
 
 
 export async function GET(request) {
@@ -42,7 +42,7 @@ export async function GET(request) {
 
     // ✅ Provide default fallbacks
     const enhancedParams = {
-      tbl: 'invoices',
+      tbl: 'messaging',
       colstr: queryParams.colstr || 'Kg==', // default to *
       ...queryParams 
     };
@@ -53,11 +53,11 @@ export async function GET(request) {
     if (!enhancedParams.function_cols) enhancedParams.function_cols = '';
 
     //append further queries to client query request , account filters order by group by  etc
-    const mutatedQparam = mosyMutateQuery('invoices', searchParams, authData, 'primkey')
+    const mutatedQparam = mosyMutateQuery('messaging', searchParams, authData, 'primkey')
 
     enhancedParams.q=mutatedQparam
     
-    let requestValid =validateSelect('invoices', queryParams, authData)
+    let requestValid =validateSelect('messaging', queryParams, authData)
 
     if(!requestValid)
     {
@@ -69,21 +69,21 @@ export async function GET(request) {
     }
  
     const isEmpty = (obj) => !obj || Object.keys(obj).length === 0;
-    const mutationsObj = isEmpty(requestedMutationsObj) ? listInvoicelistRowMutationsKeys : requestedMutationsObj;
+    const mutationsObj = isEmpty(requestedMutationsObj) ? listMessageoutboxRowMutationsKeys : requestedMutationsObj;
     
     if(requestValid){
     
-      const result = await mosyFlexSelect(enhancedParams, mutationsObj, InvoicelistRowMutations);
+      const result = await mosyFlexSelect(enhancedParams, mutationsObj, MessageoutboxRowMutations);
 
       return Response.json({
         status: 'success',
-        message: 'Invoicelist data retrieved',
+        message: 'Messageoutbox data retrieved',
         ...result,
       });
       
    }
   } catch (err) {
-    console.error('GET Invoicelist failed:', err);
+    console.error('GET Messageoutbox failed:', err);
     return Response.json(
       { status: 'error', message: err.message },
       { status: 500 }
@@ -93,16 +93,16 @@ export async function GET(request) {
 
 
 
-export async function POST(InvoicelistRequest) {
+export async function POST(MessageoutboxRequest) {
   try {
     let body;
     let isMultipart = false;
 
-    const contentType = InvoicelistRequest.headers.get("content-type") || "";
+    const contentType = MessageoutboxRequest.headers.get("content-type") || "";
 
     if (contentType.includes("multipart/form-data")) {
       isMultipart = true;
-      const formData = await InvoicelistRequest.formData();
+      const formData = await MessageoutboxRequest.formData();
 
       // Convert FormData to plain object
       body = {};
@@ -111,11 +111,11 @@ export async function POST(InvoicelistRequest) {
       }
 
     } else {
-      body = await InvoicelistRequest.json();
+      body = await MessageoutboxRequest.json();
     }
     
     
-    const { valid: isTokenValid, reason: tokenError, data: authData } = processAuthToken(InvoicelistRequest);
+    const { valid: isTokenValid, reason: tokenError, data: authData } = processAuthToken(MessageoutboxRequest);
      
     if (!isTokenValid) {
       return Response.json(
@@ -124,93 +124,81 @@ export async function POST(InvoicelistRequest) {
       );
     }
     
-    const InvoicelistFormAction = body.invoices_mosy_action;
-    const invoices_uptoken_value = base64Decode(body.invoices_uptoken);
+    const MessageoutboxFormAction = body.messaging_mosy_action;
+    const messaging_uptoken_value = base64Decode(body.messaging_uptoken);
     
     const newId = magicRandomStr(7);
 
 
 		
   
-  //--- Begin  invoices inputs array ---// 
-  const InvoicelistInputsArr = {
+  //--- Begin  messaging inputs array ---// 
+  const MessageoutboxInputsArr = {
 
-    "invoice_no" : "?", 
-    "date_due" : "?", 
-    "client_id" : "?", 
-    "discount" : "?", 
-    "remark" : "?", 
-    "date_created" : "?", 
-    "paid_status" : "?", 
-    "created_by" : "?", 
-    "name" : "?", 
-    "invoice_stage" : "?", 
-    "paid_on" : "?", 
-    "supplier_id" : "?", 
-    "invoice_type" : "?", 
-    "account_affect" : "?", 
-    "inv_no_int" : "?", 
-    "invoice_key" : "?", 
-    "client_name" : "?", 
-    "client_tel" : "?", 
-    "client_email" : "?", 
-    "invoice_amount" : "?", 
+    "ref_number" : "?", 
+    "receiver_tel" : "?", 
+    "receiver_email" : "?", 
+    "subject" : "?", 
+    "message_details" : "?", 
+    "receiver_contacts" : "?", 
+    "reciver_names" : "?", 
+    "message_type" : "?", 
+    "site_id" : "?", 
+    "group_name" : "?", 
+    "message_date" : "?", 
+    "sent_state" : "?", 
+    "msg_read_state" : "?", 
+    "message_label" : "?", 
+    "sms_cost" : "?", 
+    "page_count" : "?", 
     "hive_site_id" : "?", 
     "hive_site_name" : "?", 
-    "vendor_headers" : "?", 
-    "client_headers" : "?", 
-    "vendor_name" : "?", 
-    "currency" : "?", 
-    "date_paid" : "?", 
-    "ref_no" : "?", 
-    "quotation" : "?", 
-    "date_updated" : "?", 
-    "folder" : "?", 
-    "footnote" : "?", 
+    "custom_dictionary" : "?", 
+    "message_signature" : "?", 
 
   };
 
-  //--- End invoices inputs array --//
+  //--- End messaging inputs array --//
 
     //mutate requested values
-    const mutatedDataArray =mutateInputArray('invoices',InvoicelistInputsArr, InvoicelistRequest, newId, authData)
+    const mutatedDataArray =mutateInputArray('messaging',MessageoutboxInputsArr, MessageoutboxRequest, newId, authData)
 
-    if (InvoicelistFormAction === "add_invoices") 
+    if (MessageoutboxFormAction === "add_messaging") 
     {
       
-      mutatedDataArray.invoice_id = newId;
+      mutatedDataArray.messageid = newId;
       
-      // Insert into table Invoicelist
-      const result = await AddInvoicelist(newId, mutatedDataArray, body, authData);     
+      // Insert into table Messageoutbox
+      const result = await AddMessageoutbox(newId, mutatedDataArray, body, authData);     
 
        
 
       return Response.json({
         status: 'success',
         message: result.message,
-        invoices_uptoken: result.record_id
+        messaging_uptoken: result.record_id
       });
       
     }
     
-    if (InvoicelistFormAction === "update_invoices") {
+    if (MessageoutboxFormAction === "update_messaging") {
       
-      // update table Invoicelist
-      const result = await UpdateInvoicelist(newId, mutatedDataArray, body, authData, `primkey='${invoices_uptoken_value}'`)
+      // update table Messageoutbox
+      const result = await UpdateMessageoutbox(newId, mutatedDataArray, body, authData, `primkey='${messaging_uptoken_value}'`)
 
       
 
       return Response.json({
         status: 'success',
         message: result.message,
-        invoices_uptoken: invoices_uptoken_value
+        messaging_uptoken: messaging_uptoken_value
       });
     }    
 
     // Optional: catch unrecognized actions
     return Response.json({
       status: 'error',
-      message: `Invalid action: ${InvoicelistFormAction}`
+      message: `Invalid action: ${MessageoutboxFormAction}`
     }, { status: 400 });
 
   } catch (err) {

@@ -29,6 +29,7 @@ import {
   MosySmartField,
   MosyActionButton,
   SmartDropdown,
+  DeleteButton
 } from '../../UiControl/componentControl';
 
 //nextinvoice custom functions
@@ -140,17 +141,15 @@ export default function InvoicepaymentsProfile({ dataIn = {}, dataOut = {} }) {
                 {invoice_paymentsNode?.primkey ? (  <span> Payment {invoice_paymentsNode?.ref_no || ""}</span> ) :(<span>  Add payments </span>)}
               </div>
               <>{!showNavigationIsle && (<div className="col m-0 p-0 text-right ">
-                
                 {paramInvoicepaymentsUptoken && (
-                  <button
-                  type="button"
-                  className="medium_btn border border-danger text-danger p-2 ml-3 mb-3 hive_profile_nav_del_btn"
-                  onClick={() =>popDeleteDialog(paramInvoicepaymentsUptoken, {childStateSetters: stateItemSetters, parentStateSetters: parentStateSetters} )}
+                  <DeleteButton
+                  uptoken={paramInvoicepaymentsUptoken}
+                  stateItemSetters={stateItemSetters}
+                  parentStateSetters={parentStateSetters}
                   
-                  >
-                  <i className='fa fa-trash'></i> Delete
-                </button>)}
-                
+                  onDelete={popDeleteDialog}
+                  />
+                )}
               </div>)}</>
             </h3>
             {/*    Title isle      */}
@@ -158,13 +157,14 @@ export default function InvoicepaymentsProfile({ dataIn = {}, dataOut = {} }) {
             
             
             {/*    Navigation isle      */}
-            <>{showNavigationIsle && (<div className="row justify-content-end m-0 p-0 col-md-12  p-3 bg-white hive_profile_navigation " id="">
+            <><div className="row justify-content-end m-0 p-0 col-md-12  p-3 bg-white hive_profile_navigation " id="">
               <div className="col-md-4 text-left p-0 hive_profile_nav_back_to_list_tray" id="">
                 
-                <Link href="./list" className="text-info hive_profile_nav_back_to_list"><i className="fa fa-arrow-left"></i> Back to list</Link>
+                {showNavigationIsle && ( <Link href="./list" className="text-info hive_profile_nav_back_to_list"><i className="fa fa-arrow-left"></i> Back to list</Link>)}
                 
               </div>
               <div className="col-md-8 p-0 text-right hive_profile_nav_add_new_tray" id="">
+                
                 
                 
                 {paramInvoicepaymentsUptoken && (
@@ -179,205 +179,204 @@ export default function InvoicepaymentsProfile({ dataIn = {}, dataOut = {} }) {
                 </>
               )}
               
-              
-              {paramInvoicepaymentsUptoken && (
-                <button
-                type="button"
-                className="medium_btn border border-danger text-danger p-2 ml-3 mb-3 hive_profile_nav_del_btn"
-                onClick={() =>popDeleteDialog(paramInvoicepaymentsUptoken, {childStateSetters: stateItemSetters, parentStateSetters: parentStateSetters} , router)}
+              {paramInvoicepaymentsUptoken && showNavigationIsle && (
+                <>
                 
-                >
-                <i className='fa fa-trash'></i> Delete
-              </button>)}
-              
-              {paramInvoicepaymentsUptoken && (
+                <DeleteButton
+                uptoken={paramInvoicepaymentsUptoken}
+                stateItemSetters={stateItemSetters}
+                parentStateSetters={parentStateSetters}
+                router={router}
+                onDelete={popDeleteDialog}
+                />
+                
                 
                 <AddNewButton link="./profile" label=" Add payments " icon="plus-circle" />
-                
-              )}
-              
-            </div>
-          </div>)}</>
-          <div className="col-md-12 pt-4 p-0 hive_profile_navigation_divider d-lg-none" id=""></div>
-          {/*    Navigation isle      */}
-          <div className="row justify-content-center m-0 p-0 col-md-12" id="">
-            {/*    Image section isle      */}
+              </>
+            )}
             
-            {/*    Image section isle      */}
-            
-            {/*  //-------------    main content starts here  ------------------------------ */}
-            
-            
-            
-            <div className="col-md-12 row justify-content-center m-0  p-0">
-              {/*    Input cells section isle      */}
-              <div className="col-md-12 row p-0 justify-content-start p-0 m-0">
-                <div className="col-md-12 row justify-content-center p-0 m-0">
-                  <div className="col-md-12 row p-0 justify-content-start p-0 m-0">
-                    <LiveSearchDropdown
-                    apiEndpoint="/api/nextinvoice/docs/invoicelist"
-                    tblName="invoices"
-                    parentTable="invoice_payments"
-                    inputName="txt__invoices_invoice_no_invoice_id"
-                    hiddenInputName="txt_invoice_id"
-                    valueField="invoice_id"
-                    displayField="invoice_no"
-                    label="Invoice number "
-                    defaultValue={{ invoice_id: invoice_paymentsNode?.invoice_id || "", invoice_no: invoice_paymentsNode?._invoices_invoice_no_invoice_id || "" }}
-                    onSelect={(id) => console.log("Just the ID:", id)}
-                    onSelectFull={(dataRes) =>  console.log("Data seleted")}
-                    onInputChange={handleInputChange}
-                    defaultColSize="col-md-3 hive_data_cell "
-                    context={{hostParent : hostParent}}
+          </div>
+        </div></>
+        <div className="col-md-12 pt-4 p-0 hive_profile_navigation_divider d-lg-none" id=""></div>
+        {/*    Navigation isle      */}
+        <div className="row justify-content-center m-0 p-0 col-md-12" id="">
+          {/*    Image section isle      */}
+          
+          {/*    Image section isle      */}
+          
+          {/*  //-------------    main content starts here  ------------------------------ */}
+          
+          
+          
+          <div className="col-md-12 row justify-content-center m-0  p-0">
+            {/*    Input cells section isle      */}
+            <div className="col-md-12 row p-0 justify-content-start p-0 m-0">
+              <div className="col-md-12 row justify-content-center p-0 m-0">
+                <div className="col-md-12 row p-0 justify-content-start p-0 m-0">
+                  <LiveSearchDropdown
+                  apiEndpoint="/api/nextinvoice/docs/invoicelist"
+                  tblName="invoices"
+                  parentTable="invoice_payments"
+                  inputName="txt__invoices_invoice_no_invoice_id"
+                  hiddenInputName="txt_invoice_id"
+                  valueField="invoice_id"
+                  displayField="invoice_no"
+                  label="Invoice number "
+                  defaultValue={{ invoice_id: invoice_paymentsNode?.invoice_id || "", invoice_no: invoice_paymentsNode?._invoices_invoice_no_invoice_id || "" }}
+                  onSelect={(id) => console.log("Just the ID:", id)}
+                  onSelectFull={(dataRes) =>  console.log("Data seleted")}
+                  onInputChange={handleInputChange}
+                  defaultColSize="col-md-3 hive_data_cell "
+                  context={{hostParent : hostParent}}
+                  />
+                  
+                  <MosySmartField
+                  module="invoice_payments"
+                  field="date_paid"
+                  label="Date Paid"
+                  value={invoice_paymentsNode?.date_paid || ""}
+                  onChange={handleInputChange}
+                  context={{ hostParent: hostParent  }}
+                  inputOverrides={{}}
+                  type="date"
+                  cellOverrides={{additionalClass: "col-md-3 hive_data_cell "}}
+                  />
+                  
+                  
+                  <MosySmartField
+                  module="invoice_payments"
+                  field="amount_paid"
+                  label="Amount Paid"
+                  value={invoice_paymentsNode?.amount_paid || ""}
+                  onChange={handleInputChange}
+                  context={{ hostParent: hostParent  }}
+                  inputOverrides={{}}
+                  type="text"
+                  cellOverrides={{additionalClass: "col-md-3 hive_data_cell "}}
+                  />
+                  
+                  
+                  <MosySmartField
+                  module="invoice_payments"
+                  field="ref_no"
+                  label="Ref No"
+                  value={invoice_paymentsNode?.ref_no || ""}
+                  onChange={handleInputChange}
+                  context={{ hostParent: hostParent  }}
+                  inputOverrides={{}}
+                  type="text"
+                  cellOverrides={{additionalClass: "col-md-3 hive_data_cell "}}
+                  />
+                  
+                  
+                  <div className="form-group col-md-3 hive_data_cell ">
+                    <label className="d-none">Payment Mode</label>
+                    
+                    <SmartDropdown
+                    apiEndpoint="/api/nextinvoice/payments/invoicepayments"
+                    idField="primkey"
+                    labelField="payment_mode"
+                    inputName="txt_payment_mode"
+                    label="Payment Mode"
+                    onSelect={(val) => console.log('Selected:', val)}
+                    defaultValue={invoice_paymentsNode?.payment_mode || ""}
                     />
-                    
-                    <MosySmartField
-                    module="invoice_payments"
-                    field="date_paid"
-                    label="Date Paid"
-                    value={invoice_paymentsNode?.date_paid || ""}
-                    onChange={handleInputChange}
-                    context={{ hostParent: hostParent  }}
-                    inputOverrides={{}}
-                    type="date"
-                    cellOverrides={{additionalClass: "col-md-3 hive_data_cell "}}
-                    />
-                    
-                    
-                    <MosySmartField
-                    module="invoice_payments"
-                    field="amount_paid"
-                    label="Amount Paid"
-                    value={invoice_paymentsNode?.amount_paid || ""}
-                    onChange={handleInputChange}
-                    context={{ hostParent: hostParent  }}
-                    inputOverrides={{}}
-                    type="text"
-                    cellOverrides={{additionalClass: "col-md-3 hive_data_cell "}}
-                    />
-                    
-                    
-                    <MosySmartField
-                    module="invoice_payments"
-                    field="ref_no"
-                    label="Ref No"
-                    value={invoice_paymentsNode?.ref_no || ""}
-                    onChange={handleInputChange}
-                    context={{ hostParent: hostParent  }}
-                    inputOverrides={{}}
-                    type="text"
-                    cellOverrides={{additionalClass: "col-md-3 hive_data_cell "}}
-                    />
-                    
-                    
-                    <div className="form-group col-md-3 hive_data_cell ">
-                      <label className="d-none">Payment Mode</label>
-                      
-                      <SmartDropdown
-                      apiEndpoint="/api/nextinvoice/payments/invoicepayments"
-                      idField="primkey"
-                      labelField="payment_mode"
-                      inputName="txt_payment_mode"
-                      label="Payment Mode"
-                      onSelect={(val) => console.log('Selected:', val)}
-                      defaultValue={invoice_paymentsNode?.payment_mode || ""}
-                      />
-                    </div>
-                    
-                    
-                    <MosySmartField
-                    module="invoice_payments"
-                    field="remark"
-                    label="Remark"
-                    value={invoice_paymentsNode?.remark || ""}
-                    onChange={handleInputChange}
-                    context={{ hostParent: hostParent  }}
-                    inputOverrides={{}}
-                    type="textarea"
-                    cellOverrides={{additionalClass: "col-md-12 hive_data_cell"}}
-                    />
-                    
                   </div>
                   
-                  <div className="col-md-12 text-center">
-                    <SubmitButtons tblName="invoice_payments" extraClass="optional-custom-class" />
-                  </div>
-                </div></div>
-                {/*    Input cells section isle      */}
-              </div>
-              
-              <section className="hive_control">
-                <input type="hidden" id="invoice_payments_uptoken" name="invoice_payments_uptoken" value={paramInvoicepaymentsUptoken}/>
-                <input type="hidden" id="invoice_payments_mosy_action" name="invoice_payments_mosy_action" value={invoicepaymentsActionStatus}/>
-              </section>
-              
-              
+                  
+                  <MosySmartField
+                  module="invoice_payments"
+                  field="remark"
+                  label="Remark"
+                  value={invoice_paymentsNode?.remark || ""}
+                  onChange={handleInputChange}
+                  context={{ hostParent: hostParent  }}
+                  inputOverrides={{}}
+                  type="textarea"
+                  cellOverrides={{additionalClass: "col-md-12 hive_data_cell"}}
+                  />
+                  
+                </div>
+                
+                <div className="col-md-12 text-center">
+                  <SubmitButtons tblName="invoice_payments" extraClass="optional-custom-class" />
+                </div>
+              </div></div>
+              {/*    Input cells section isle      */}
             </div>
             
-          </form>
-          
-          
-          <div className="row justify-content-center m-0 pr-lg-1 pl-lg-1 pt-0 col-md-12" id="">
-            {/*<hive_mini_list/>*/}
-            
-            
-            
-            <style jsx global>{`
-            .data_list_section {
-              display: none;
-            }
-            .bottom_tbl_handler{
-              padding-bottom:70px!important;
-            }
-            `}
-          </style>
-          {invoice_paymentsNode?.primkey && (
-            <section className="col-md-12 m-0 bg-white pt-5 p-0 ">
-              <h5 className="col-md-12 text-left  border-bottom pl-lg-1 text-muted mb-3"> {`Invoice Payment history`} </h5>
-              
-              <InvoicepaymentsList
-              key={`${customQueryStr}-${localEventSignature}`}
-              dataIn={{
-                parentStateSetters : stateItemSetters,
-                parentUseEffectKey : localEventSignature,
-                showNavigationIsle:false,
-                customQueryStr : btoa(`where invoice_id ='${invoice_paymentsNode?.invoice_id}' `),
-                customProfilePath:""
-                
-              }}
-              
-              dataOut={{
-                setChildDataOut: InteprateInvoicepaymentsEvent,
-                setChildDataOutSignature: (sig) => console.log("Signature changed:", sig),
-              }}
-              />
+            <section className="hive_control">
+              <input type="hidden" id="invoice_payments_uptoken" name="invoice_payments_uptoken" value={paramInvoicepaymentsUptoken}/>
+              <input type="hidden" id="invoice_payments_mosy_action" name="invoice_payments_mosy_action" value={invoicepaymentsActionStatus}/>
             </section>
-          )}
-        </div>
+            
+            
+          </div>
+          
+        </form>
+        
+        
+        <div className="row justify-content-center m-0 pr-lg-1 pl-lg-1 pt-0 col-md-12" id="">
+          {/*<hive_mini_list/>*/}
+          
+          
+          
+          <style jsx global>{`
+          .data_list_section {
+            display: none;
+          }
+          .bottom_tbl_handler{
+            padding-bottom:70px!important;
+          }
+          `}
+        </style>
+        {invoice_paymentsNode?.primkey && (
+          <section className="col-md-12 m-0 bg-white pt-5 p-0 ">
+            <h5 className="col-md-12 text-left  border-bottom pl-lg-1 text-muted mb-3"> {`Invoice Payment history`} </h5>
+            
+            <InvoicepaymentsList
+            key={`${customQueryStr}-${localEventSignature}`}
+            dataIn={{
+              parentStateSetters : stateItemSetters,
+              parentUseEffectKey : localEventSignature,
+              showNavigationIsle:false,
+              customQueryStr : btoa(`where invoice_id ='${invoice_paymentsNode?.invoice_id}' `),
+              customProfilePath:""
+              
+            }}
+            
+            dataOut={{
+              setChildDataOut: InteprateInvoicepaymentsEvent,
+              setChildDataOutSignature: (sig) => console.log("Signature changed:", sig),
+            }}
+            />
+          </section>
+        )}
       </div>
     </div>
-    
-    
-    {/* snack notifications -- */}
-    {snackMessage &&(
-      <MosySnackWidget
-      content={snackMessage}
-      duration={5000}
-      type="custom"
-      onDone={() => {
-        stateItemSetters.setSnackMessage("");
-        stateItem.snackOnDone(); // Run whats inside onDone
-        deleteUrlParam("snack_alert")
-      }}
-      
-      />)}
-      {/* snack notifications -- */}
-      
-      
-      {/* ================== End Feature Section========================== ------*/}
-    </div>
-    
-  );
+  </div>
   
+  
+  {/* snack notifications -- */}
+  {snackMessage &&(
+    <MosySnackWidget
+    content={snackMessage}
+    duration={5000}
+    type="custom"
+    onDone={() => {
+      stateItemSetters.setSnackMessage("");
+      stateItem.snackOnDone(); // Run whats inside onDone
+      deleteUrlParam("snack_alert")
+    }}
+    
+    />)}
+    {/* snack notifications -- */}
+    
+    
+    {/* ================== End Feature Section========================== ------*/}
+  </div>
+  
+);
+
 }
 
