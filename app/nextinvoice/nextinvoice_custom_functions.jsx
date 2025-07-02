@@ -411,6 +411,7 @@ const defaultTokens = [
   { label: "Amount paid", value: "{{amount_paid}}", key: "amount_paid" },
   { label: "Balance", value: "{{balance}}", key: "invoice_balance" },
   { label: "Due Date", value: "{{due_date}}", key: "date_due" },
+  { label: "Footnote", value: "{{footnote}}", key: "footnote" },
   { label: "Document link", value: "{{doc_link}}", key: "doc_link" },
 ];
 
@@ -462,7 +463,6 @@ Kindly find the attached details for your project invoice
  Remaining balance : ${dataRes?.currency}  {{balance}}
 
  To be paid by Date due : {{due_date}}
-
 
 {{footnote}}
 

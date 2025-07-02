@@ -173,10 +173,10 @@ $novanest_module_ui_blueprint_=[
     "sum_cols_list"=>["subtotal","grand_total","invoice_balance","discount","amount_paid"],
     
     //============================================    on the profile page for these columns use textarea component
-    "textarea_array"=>['vendor_headers',"client_headers"],
+    "textarea_array"=>['vendor_headers',"client_headers", "footnote"],
     
     //============================================    on the profile page for these columns use textarea component
-    "content_editable"=>["footnote"],
+    "content_editable"=>[],
     
     //============================================    on the profile page for these columns use drop down with these values component
     "static_drop_down_array"=>['email'=>"value1,value2,value3","column_name2..."=>"value1,value2,value3"],
@@ -199,7 +199,7 @@ $novanest_module_ui_blueprint_=[
     "datetime_columns"=>['regdate','datke_booked'],
     
     //============================================        on the ui , rename these column lables to the new names indicated ...
-    "rename_cols_array"=>['client_id'=>'Client name',"footnote"=>"Foot notes:col-md-12", "invoice_balance"=>"Balance"],
+    "rename_cols_array"=>['client_id'=>'Client name',"footnote"=>"Foot notes / payment account details :col-md-12", "invoice_balance"=>"Balance"],
 
     //rename the following tables with the indicated alises on the ui 
     "rename_tables_array"=>['allowances'=>'Staff Allowances:plus'],

@@ -481,24 +481,17 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
                   />
                   
                   
-                  <div className="form-group col-md-12">
-                    <label >Foot notes</label>
-                    <MosyHtmlEditor
-                    key={`reload - ${invoicesNode?.primkey}`}
-                    module="invoices"
-                    field="txt_footnote"
-                    label="Foot notes"
-                    value={invoicesNode?.footnote || ""}
-                    onChange={handleInputChange}
-                    context={{ hostParent: hostParent  }}
-                    inputOverrides={{}}
-                    type="content_editable"
-                    cellOverrides={{additionalClass: "d-none"}}
-                    
-                    />
-                    <div className="col-md-12  p-0 m-0 ck_raw_content d-none"  id="footnote_toprint">{invoicesNode?.footnote || ""}</div>
-                    
-                  </div>
+                  <MosySmartField
+                  module="invoices"
+                  field="footnote"
+                  label="Foot notes / payment account details "
+                  value={invoicesNode?.footnote || ""}
+                  onChange={handleInputChange}
+                  context={{ hostParent: hostParent  }}
+                  inputOverrides={{}}
+                  type="textarea"
+                  cellOverrides={{additionalClass: "col-md-12"}}
+                  />
                   
                 </div>
                 
