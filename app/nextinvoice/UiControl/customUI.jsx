@@ -10,6 +10,9 @@ import ClientlistProfile from "../clients/uiControl/ClientlistProfile";
 import ProductandservicesProfile from '../pns/uiControl/ProductandservicesProfile'
 
 import MessagetemplatesProfile from  '../messagetemplates/uiControl/MessagetemplatesProfile'
+
+import BusinesslistProfile from '../vendors/uiControl/BusinesslistProfile';
+
 //dynamic live search / organic live  search 
 export function MosyLiveSearch({
     api = "",
@@ -123,6 +126,14 @@ export function MosyLiveSearch({
     </>, false , "modal1", "mosycard_wide")
     }
 
+    if(table=="companies"){
+      MosyCard("",<>
+        <BusinesslistProfile                           
+            dataIn={{ parentUseEffectKey: "initVendors" , showNavigationIsle : false }}                           
+        />
+      </>, false , "modal1", "mosycard_wide")
+    }
+
     if(table=="inventory"){
       MosyCard("",<>
         <ProductandservicesProfile                           
@@ -134,6 +145,7 @@ export function MosyLiveSearch({
      if(parentTable=="invoice_payments"){
       window.location="../docs/invoiceprofile"
      }
+
      if(table=="message_templates"){
       MosyCard("",<>
         <MessagetemplatesProfile                           
