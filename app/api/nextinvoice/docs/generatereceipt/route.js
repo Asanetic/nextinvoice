@@ -167,7 +167,7 @@ export async function GET(request) {
       </div>
       <!-- Footer -->
       <div class="">
-        ${invoiceDetails?.footnote}
+        ${mosyNl2br(invoiceDetails?.footnote)}
       </div>
 
       <div class="page-break"></div>

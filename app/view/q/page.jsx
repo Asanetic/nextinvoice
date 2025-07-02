@@ -31,7 +31,7 @@ export default function InvoicePrintPage() {
         }, 3000);
 
       } catch (err) {
-        alert("Something went wrong generating the invoice.");
+        alert("Something went wrong generating the Quotation.");
         console.error(err);
       }
     };
