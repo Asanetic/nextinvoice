@@ -166,7 +166,7 @@ export async function GET(request) {
         <p><b>Grand Total: ${invoiceDetails?.currency} ${toNum(grandTotal)}</b></p>
       </div>
       <!-- Footer -->
-      <div class="">
+      <div class="" style="line-height:30px;">
         ${mosyNl2br(invoiceDetails?.footnote)}
       </div>
 
