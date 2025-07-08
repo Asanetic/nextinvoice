@@ -106,7 +106,6 @@ export function loadPaymentModal(amount, planId, planName, phone)
 
 }
 
-
 export async function submitMpesaPayment({ amount, planId, phone }) {
 
     let sessionPrefix = saAuthConfigs.sessionPrefix;
