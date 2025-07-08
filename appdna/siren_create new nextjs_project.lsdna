@@ -1,0 +1,72 @@
+//dna options==
+$dna_file_name="create new nextjs_project"; 
+$create_dna="yes"; //yes | no; 
+$overwrite_dna_file="yes"; //yes | no 
+//dna options==
+
+$app_name="driftdoc";
+if($_POST['function_card']!="")
+{
+  $app_name=$_POST['function_card'];
+}
+
+$project_folder="../../".$app_name;
+ 
+$zip_name="terminal.zip";
+
+
+echo '<a href="'.$project_folder.'/terminal/home" target="_blank">View Folder</a>';
+
+if (!file_exists($project_folder)) mkdir($project_folder);
+
+
+
+ui_write_to_file(''.$project_folder.'/'.$zip_name, file_get_contents('https://github.com/Asanetic/nextjs_lightpeed/blob/main/next_js_terminal.zip?raw=true'));
+
+
+$zip = new ZipArchive;
+$res = $zip->open(''.$project_folder.'/'.$zip_name);
+
+if ($res === TRUE) 
+{
+  
+ $zip->extractTo(''.$project_folder.'/');
+ $zip->close();
+  
+}
+
+
+$source =$project_folder.'/next_js_terminal';
+$destination = $project_folder;
+
+// Open the source directory
+$dir = opendir($source);
+
+while (($file = readdir($dir)) !== false) {
+    if ($file === '.' || $file === '..') continue;
+
+    $srcPath = $source . '/' . $file;
+    $destPath = $destination . '/' . $file;
+
+    // Move file or directory
+    if (is_dir($srcPath)) {
+        rename($srcPath, $destPath); // Moves folder
+    } else {
+        rename($srcPath, $destPath); // Moves file
+    }
+}
+
+// Close the directory
+closedir($dir);
+
+// Optionally remove the now-empty folder
+rmdir($source);
+
+echo "All files moved out of 'next_js_terminal' successfully!";
+
+  
+$blueprint_snippet=find_snippet('1168');
+$blueprint_url__=$project_folder.'/appdna/blueprint.php';
+  
+Recycle($blueprint_url__);  
+ui_write_to_file($blueprint_url__, $blueprint_snippet);
