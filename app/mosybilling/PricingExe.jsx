@@ -103,7 +103,6 @@ export function loadPaymentModal(amount, planId, planName, phone)
       }}
     />,false
     )
-
 }
 
 export async function submitMpesaPayment({ amount, planId, phone }) {
