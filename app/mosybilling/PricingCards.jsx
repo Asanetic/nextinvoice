@@ -37,7 +37,7 @@ export default function PricingPage() {
   }, []);
 
   return (
-    <div className="container py-5">
+    <div className="col-md-12 m-0 p-0 ">
       <div className="text-center mb-5">
         <p className="" dangerouslySetInnerHTML={{__html : appPlans?.summary}}/>
       </div>
@@ -45,10 +45,10 @@ export default function PricingPage() {
       {loading ? (
         <div className="text-center text-muted">Loading plans...</div>
       ) : (
-        <div className="row g-4 col-md-12 justify-content-center">
+        <div className="row p-0 m-0 col-md-12 justify-content-center">
           {appPlans.data.map((plan, i) => (
-            <div className="col-md-4" key={i}>
-              <div className={`card border shadow h-100 shadow-sm rounded-4 ${plan.highlight ? 'border border-primary' : ''}`}>
+            <div className="col-md-4 mr-0 ml-0 mb-3 p-0 " key={i}>
+              <div className={`card border shadow mr-lg-3 h-100 shadow-sm rounded-4 ${plan.highlight ? 'border border-primary' : ''}`}>
                 <div className="card-body d-flex flex-column">
                   <h5 className={`card-title text-center fw-bold border rounded_medium ${plan.highlight ? 'border-info rounded-4 bg-light' : ''} p-3`}>
                     {plan.name}
