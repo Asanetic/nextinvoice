@@ -48,9 +48,9 @@ export default function PricingPage() {
         <div className="row p-0 m-0 col-md-12 justify-content-center">
           {appPlans.data.map((plan, i) => (
             <div className="col-md-4 mr-0 ml-0 mb-3 p-0 " key={i}>
-              <div className={`card border shadow mr-lg-3 h-100 shadow-sm rounded-4 ${plan.highlight ? 'border border-primary' : ''}`}>
+              <div className={`card border shadow mr-lg-3 h-100 shadow-sm rounded-4 ${plan.highlight ? 'border border-primary' : 'border border-primary'}`}>
                 <div className="card-body d-flex flex-column">
-                  <h5 className={`card-title text-center fw-bold border rounded_medium ${plan.highlight ? 'border-info rounded-4 bg-light' : ''} p-3`}>
+                  <h5 className={`card-title text-center fw-bold border rounded_medium ${plan.highlight ? 'border-info rounded-4 bg-light' : 'border-info rounded-4 bg-light'} p-3`}>
                     {plan.name}
                   </h5>
                   <h2 className="text-primary">{`${plan.currency} ${plan.price}`}</h2>
@@ -66,7 +66,7 @@ export default function PricingPage() {
                   <div className="mt-auto">
                     <button type='button' 
                     onClick={()=>{loadPaymentModal(plan.price, plan.id, plan.name)}}
-                    className={`btn ${plan.highlight ? 'btn-primary' : 'btn-outline-primary'} w-100 rounded-pill`}>
+                    className={`btn ${plan.highlight ? 'btn-primary' : 'btn-primary'} w-100 rounded-pill`}>
                       {plan.cta}
                     </button>
                   </div>
