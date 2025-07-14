@@ -5,7 +5,10 @@ export async function POST(req) {
     const formData = await req.formData();
 
     const fileFields = Array.from(formData.entries()).filter(
-      ([key, value]) => key.startsWith('file') && value instanceof File
+      ([key, value]) =>
+        key.startsWith('file') &&
+        typeof value === 'object' &&
+        typeof value.arrayBuffer === 'function' // 💡 Safer file check for Node.js
     );
 
     if (fileFields.length === 0) {
@@ -26,7 +29,6 @@ export async function POST(req) {
     const MAX_HEIGHT = 500;
     const defaultHeight = 400;
 
-    // Guess: if size is crazy big, suggest a height
     const suggestedHeight = fileInput.size > 500 * 1024 ? `${defaultHeight}` : undefined;
 
     return Response.json({
@@ -35,8 +37,8 @@ export async function POST(req) {
           url: fileUrl,
           name: fileInput.name,
           size: fileInput.size,
-          width: "auto",                 // Let it scale width based on editor
-          ...(suggestedHeight && { height: suggestedHeight }) // 👈 only if needed
+          width: "auto",
+          ...(suggestedHeight && { height: suggestedHeight })
         }
       ],
       errorMessage: null,
