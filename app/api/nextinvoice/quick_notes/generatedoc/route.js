@@ -14,11 +14,17 @@ export async function GET(request) {
   const cleanKey = searchParams.get("doc");
   const noteDetails = await mosyQuickSel("quick_notes", `where primkey='${base64Decode(cleanKey)}'`, "r");
 
-
+  const sunEditorCss = fs.readFileSync(
+    path.join(process.cwd(), 'node_modules/suneditor/dist/css/suneditor.min.css'),
+    'utf-8'
+  );
+  
 
   const htmlContent = `
   <html>
     <head>
+      <link href="https://unpkg.com/suneditor/dist/css/suneditor.min.css" rel="stylesheet" />
+      <style>${sunEditorCss}</style>
       <style>
            
       html, body {
