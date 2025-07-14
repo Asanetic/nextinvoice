@@ -33,7 +33,7 @@ import {
 } from '../../UiControl/componentControl';
 
 //nextinvoice custom functions
-import { loadVendorHeaders, loadClientHeaders, downloadQuotation , genDocNo , convertToInvoice} from '../../nextinvoice_custom_functions';
+import { loadVendorHeaders, loadClientHeaders, downloadQuotation , genDocNo , convertToInvoice, sendReminder} from '../../nextinvoice_custom_functions';
 
 //inv items
 import  InvoiceitemsProfile from '../../docitems/uiControl/InvoiceitemsProfile';
@@ -205,6 +205,12 @@ export default function QuotationlistProfile({ dataIn = {}, dataOut = {} }) {
                   onClick={()=>{downloadQuotation({invoiceId:(invoicesNode?.primkey || '')})}}
                   />
                   
+                  <MosyActionButton
+                  label=" Messages "
+                  icon="send"
+                  onClick={()=>{sendReminder({docData : invoicesNode})}}
+                  />
+
                   <MosyActionButton
                   label=" Convert to invoice"
                   icon="copy"

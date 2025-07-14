@@ -129,7 +129,7 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
 
       handleInputChange('txt__invoices_invoice_no_ref_number', `${docData?.invoice_no || ""}`);
       handleInputChange('txt_ref_number', `${docData?.invoice_id || ""}`);
-      handleInputChange('txt_subject', `Hello ${docData?._clients_client_name_client_id || ""} here is your invoice ${docData?.invoice_no || ""}` );      
+      handleInputChange('txt_subject', `Hello ${docData?._clients_client_name_client_id || ""} here is your ${docData?.invoice_type || ""} ${docData?.invoice_no || ""}` );      
 
 
      // console.log(`loadDocMessage`, docData, ", ieneoirneorn",invoiceDataSet)
