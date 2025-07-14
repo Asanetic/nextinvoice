@@ -46,6 +46,7 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
   //initiate data exchange manifest
   //incoming data from parent
   const {
+    docData ={},
     showNavigationIsle = true,
     customQueryStr = "",
     parentUseEffectKey = "",
@@ -112,15 +113,31 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
     })
     
   }
-  
+
   useEffect(() => {
-    
-    messageoutboxProfileData(customQueryStr, stateItemSetters, router, customProfileData)
-    
-    mosyScrollTo("MessageoutboxProfileTray")
-    
-    
-  }, [localEventSignature]);
+    stateItemSetters.setInvoiceDataSet(docData);
+
+    const fetchData = async () => {
+      await messageoutboxProfileData(customQueryStr, stateItemSetters, router, customProfileData);
+      
+      
+      mosyScrollTo("MessageoutboxProfileTray");
+      
+      handleInputChange('txt_message_details', loadDocMessage(docData));
+      handleInputChange('txt_receiver_contacts', `${docData?.client_tel || ""} / ${docData?.client_email || ""}`);
+      handleInputChange('txt_receiver_tel', `${docData?.client_tel || ""}`);
+
+      handleInputChange('txt__invoices_invoice_no_ref_number', `${docData?.invoice_no || ""}`);
+      handleInputChange('txt_ref_number', `${docData?.invoice_id || ""}`);
+      handleInputChange('txt_subject', `Hello ${docData?._clients_client_name_client_id || ""} here is your invoice ${docData?.invoice_no || ""}` );      
+
+
+      console.log(`loadDocMessage`, docData, ", ieneoirneorn",invoiceDataSet)
+    };
+  
+    fetchData(); // Call the async function
+  
+  }, [localEventSignature]);  
   
   
   

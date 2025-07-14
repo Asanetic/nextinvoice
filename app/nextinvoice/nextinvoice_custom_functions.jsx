@@ -373,11 +373,11 @@ export function sendMessage(handleInputChange)
   }, yesLabel : "Send", noLabel:"Cancel"})
 }
 
-export function sendReminder()
+export function sendReminder({docData = {}})
 {
   MosyCard("", <>
       <MessageoutboxProfile
-          dataIn={{ parentUseEffectKey: "sendreminderPopUp" , showNavigationIsle : false }}                           
+          dataIn={{ parentUseEffectKey: "sendreminderPopUp" , docData: docData, showNavigationIsle : false }}                           
       />
     </>,false, "modal2","mosycard_medium")
 }

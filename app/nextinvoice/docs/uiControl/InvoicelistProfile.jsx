@@ -234,7 +234,7 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
                   <MosyActionButton
                   label=" Messages "
                   icon="send"
-                  onClick={()=>{sendReminder()}}
+                  onClick={()=>{sendReminder({docData : invoicesNode})}}
                   />
                   
                 </>
