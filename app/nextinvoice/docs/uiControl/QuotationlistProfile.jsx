@@ -206,7 +206,7 @@ export default function QuotationlistProfile({ dataIn = {}, dataOut = {} }) {
                   />
                   
                   <MosyActionButton
-                  label=" Messages "
+                  label=" Message "
                   icon="send"
                   onClick={()=>{sendReminder({docData : invoicesNode})}}
                   />

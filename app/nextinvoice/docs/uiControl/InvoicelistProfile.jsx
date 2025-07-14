@@ -232,7 +232,7 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
                   />
                   
                   <MosyActionButton
-                  label=" Send "
+                  label=" Message "
                   icon="send"
                   onClick={()=>{sendReminder({docData : invoicesNode})}}
                   />
