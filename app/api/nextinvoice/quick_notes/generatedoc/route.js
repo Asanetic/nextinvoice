@@ -25,7 +25,7 @@ export async function GET(request) {
         font-size: 14px;
       }
 
-        body { font-family: Arial, sans-serif; color: #333; }      
+        body { font-family: Arial, sans-serif; color: #000; }      
         table { width: 100%;}
         .doc_page{
          line-height:30px;

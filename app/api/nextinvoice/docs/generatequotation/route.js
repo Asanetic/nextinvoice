@@ -47,7 +47,7 @@ export async function GET(request) {
         font-size: 14px;
       }
 
-        body { font-family: Arial, sans-serif; padding: 30px; color: #333; }
+        body { font-family: Arial, sans-serif; padding: 30px; color: #000; }
         h1, h3 { margin: 0; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #ccc; padding: 10px; text-align: left; vertical-align: top; }
