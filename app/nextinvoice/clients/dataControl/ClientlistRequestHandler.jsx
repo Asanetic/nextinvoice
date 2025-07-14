@@ -1,17 +1,18 @@
 'use client';
-
-//data utils
+//hive / data utils
 import { mosyPostFormData, mosyGetData, mosyUrlParam, mosyUpdateUrlParam , deleteUrlParam, magicRandomStr, mosyGetLSData  } from '../../../MosyUtils/hiveUtils';
 
-//components
+//action modals 
 import { MosyNotify , closeMosyModal, MosyAlertCard } from '../../../MosyUtils/ActionModals';
 
-//generate data filter 
+//filter util
 import { MosyFilterEngine } from '../../DataControl/MosyFilterEngine';
 
 //custom event manager 
 import { customEventHandler } from '../../DataControl/customDataFunction';
 
+
+//insert data
 export async function insertClientlist() {
  //console.log(`Form clients insert sent `)
 
@@ -23,6 +24,7 @@ export async function insertClientlist() {
   });
 }
 
+//update record 
 export async function updateClientlist() {
 
   //console.log(`Form clients update sent `)
@@ -36,7 +38,7 @@ export async function updateClientlist() {
 }
 
 
- 
+///receive form actions from profile page  
 export async function inteprateClientlistFormAction(e, setters) {
   e.preventDefault();
 
@@ -207,7 +209,7 @@ export async function getClientlistListData(qstr = "") {
   if(qstr=='')
   {
    fullWhere = false 
-   qstr=btoa('')
+   qstr=btoa(``)
   }
   
   //add the following data in response
@@ -231,8 +233,8 @@ export async function getClientlistListData(qstr = "") {
         mutations: encodedMutations,
         fullQ : fullWhere,
         pagination : `l:qclients_page:${recordsPerPage}:${pageNo}`,
-        aw:btoa(`order by primkey desc`),
-        src : btoa(`getClientlistListData`)        
+        aw : btoa(`order by primkey desc`),
+        src : btoa(`getClientlistListData`)
         },
     });
 
@@ -295,7 +297,10 @@ export async function clientlistProfileData(customQueryStr, setters, router, cus
     let rawClientlistQueryStr =`where primkey ='${decodedClientlistToken}'`
     if(customQueryStr!='')
     {
-      rawClientlistQueryStr = customQueryStr
+      // if no clients_uptoken set , use customQueryStr
+      if (!clientlistTokenId) {
+       rawClientlistQueryStr = customQueryStr
+      }
     }
 
     const profileDataRecord = await initClientlistProfileData(rawClientlistQueryStr)
@@ -314,8 +319,6 @@ export async function clientlistProfileData(customQueryStr, setters, router, cus
     setters.setClientlistNode(finalProfileData)
     
     
-
-
 }
   
   
@@ -359,7 +362,7 @@ export function InteprateClientlistEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`add clients `, data?.setters)
+    //console.log(`add clients `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -377,7 +380,7 @@ export function InteprateClientlistEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`update clients `, data?.setters)
+    //console.log(`update clients `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -396,8 +399,6 @@ export function InteprateClientlistEvent(data) {
 
  }
 
- //pass the the data to custom functions
- customEventHandler(data)
   
 }
 
@@ -405,7 +406,7 @@ export function InteprateClientlistEvent(data) {
 export function popDeleteDialog(deleteToken, setters, router, afterDeleteUrl='../clients/list')
 {     
 
-  console.log(`popDeleteDialog`, setters)
+  //console.log(`popDeleteDialog`, setters)
   const childSetters = setters?.childStateSetters
   
   MosyAlertCard({

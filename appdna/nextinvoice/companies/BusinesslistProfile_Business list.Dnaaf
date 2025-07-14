@@ -226,7 +226,8 @@ import {
          MosyActionButton,
          SmartDropdown,
          MosyImageViewer,
-         MosyFileUploadButton          
+         MosyFileUploadButton,
+         DeleteButton 
        } from '../../UiControl/componentControl';
 
 //".$appname." custom functions

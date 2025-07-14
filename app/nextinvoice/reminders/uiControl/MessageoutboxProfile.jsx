@@ -33,7 +33,7 @@ import {
 } from '../../UiControl/componentControl';
 
 //nextinvoice custom functions
-import { sendMessage , loadDocMessage, grabMessage , sendWhatsappMessage, PlaceHolderButtons } from '../../nextinvoice_custom_functions';
+import { sendMessage , loadDocMessage, grabMessage , sendWhatsappMessage } from '../../nextinvoice_custom_functions';
 
 import  MessageoutboxList from './MessageoutboxList';
 
@@ -143,6 +143,8 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
               <>{!showNavigationIsle && (<div className="col m-0 p-0 text-right ">
                 {paramMessageoutboxUptoken && (
                   <DeleteButton
+                  src="MessageoutboxMainProfilePage"
+                  tableName="messaging"
                   uptoken={paramMessageoutboxUptoken}
                   stateItemSetters={stateItemSetters}
                   parentStateSetters={parentStateSetters}
@@ -218,6 +220,8 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
                 <>
                 
                 <DeleteButton
+                src="MessageoutboxMainProfilePage"
+                tableName="messaging"
                 uptoken={paramMessageoutboxUptoken}
                 stateItemSetters={stateItemSetters}
                 parentStateSetters={parentStateSetters}
@@ -226,7 +230,12 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
                 />
                 
                 
-                <AddNewButton link="./message" label="New message " icon="edit" />
+                <AddNewButton
+                src="MessageoutboxMainProfilePage"
+                tableName="messaging"
+                link="./message"
+                label="New message "
+                icon="edit" />
               </>
             )}
             
@@ -309,7 +318,7 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
                   cellOverrides={{additionalClass: "col-md-12 hive_data_cell"}}
                   />
                   
-                  <PlaceHolderButtons textareaId="txt_message_details" insertAfterId="label_messaging_txt_message_details" />
+                  
                   <MosySmartField
                   module="messaging"
                   field="message_details"
@@ -340,7 +349,12 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
                 </div>
                 
                 <div className="col-md-12 text-center">
-                  <SubmitButtons tblName="messaging" extraClass="optional-custom-class" />
+                  <SubmitButtons
+                  src="MessageoutboxMainProfilePage"
+                  tblName="messaging"
+                  extraClass="optional-custom-class"
+                  
+                  />
                 </div>
               </div></div>
               {/*    Input cells section isle      */}

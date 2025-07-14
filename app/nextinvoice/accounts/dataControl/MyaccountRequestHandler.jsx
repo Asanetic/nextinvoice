@@ -1,17 +1,18 @@
 'use client';
-
-//data utils
+//hive / data utils
 import { mosyPostFormData, mosyGetData, mosyUrlParam, mosyUpdateUrlParam , deleteUrlParam, magicRandomStr, mosyGetLSData  } from '../../../MosyUtils/hiveUtils';
 
-//components
+//action modals 
 import { MosyNotify , closeMosyModal, MosyAlertCard } from '../../../MosyUtils/ActionModals';
 
-//generate data filter 
+//filter util
 import { MosyFilterEngine } from '../../DataControl/MosyFilterEngine';
 
 //custom event manager 
 import { customEventHandler } from '../../DataControl/customDataFunction';
 
+
+//insert data
 export async function insertMyaccount() {
  //console.log(`Form system_users insert sent `)
 
@@ -23,6 +24,7 @@ export async function insertMyaccount() {
   });
 }
 
+//update record 
 export async function updateMyaccount() {
 
   //console.log(`Form system_users update sent `)
@@ -36,7 +38,7 @@ export async function updateMyaccount() {
 }
 
 
- 
+///receive form actions from profile page  
 export async function inteprateMyaccountFormAction(e, setters) {
   e.preventDefault();
 
@@ -205,7 +207,7 @@ export async function getMyaccountListData(qstr = "") {
   if(qstr=='')
   {
    fullWhere = false 
-   qstr=btoa('')
+   qstr=btoa(``)
   }
   
   //add the following data in response
@@ -227,8 +229,8 @@ export async function getMyaccountListData(qstr = "") {
         mutations: encodedMutations,
         fullQ : fullWhere,
         pagination : `l:qsystem_users_page:${recordsPerPage}:${pageNo}`,
-        aw:btoa(`order by primkey desc`),
-        src : btoa(`getMyaccountListData`)        
+        aw : btoa(`order by primkey desc`),
+        src : btoa(`getMyaccountListData`)
         },
     });
 
@@ -291,7 +293,10 @@ export async function myaccountProfileData(customQueryStr, setters, router, cust
     let rawMyaccountQueryStr =`where primkey ='${decodedMyaccountToken}'`
     if(customQueryStr!='')
     {
-      rawMyaccountQueryStr = customQueryStr
+      // if no system_users_uptoken set , use customQueryStr
+      if (!myaccountTokenId) {
+       rawMyaccountQueryStr = customQueryStr
+      }
     }
 
     const profileDataRecord = await initMyaccountProfileData(rawMyaccountQueryStr)
@@ -310,8 +315,6 @@ export async function myaccountProfileData(customQueryStr, setters, router, cust
     setters.setMyaccountNode(finalProfileData)
     
     
-
-
 }
   
   
@@ -355,7 +358,7 @@ export function InteprateMyaccountEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`add system_users `, data?.setters)
+    //console.log(`add system_users `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -373,7 +376,7 @@ export function InteprateMyaccountEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`update system_users `, data?.setters)
+    //console.log(`update system_users `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -392,8 +395,6 @@ export function InteprateMyaccountEvent(data) {
 
  }
 
- //pass the the data to custom functions
- customEventHandler(data)
   
 }
 
@@ -401,7 +402,7 @@ export function InteprateMyaccountEvent(data) {
 export function popDeleteDialog(deleteToken, setters, router, afterDeleteUrl='../accounts/list')
 {     
 
-  console.log(`popDeleteDialog`, setters)
+  //console.log(`popDeleteDialog`, setters)
   const childSetters = setters?.childStateSetters
   
   MosyAlertCard({

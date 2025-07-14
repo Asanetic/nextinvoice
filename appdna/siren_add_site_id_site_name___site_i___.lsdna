@@ -1,0 +1,28 @@
+//dna options==
+$dna_file_name="add_site_id_site_name___site_i___"; 
+$create_dna="yes"; //yes | no; 
+$overwrite_dna_file="yes"; //yes | no 
+//dna options==
+
+///$tbl_array=['billing_transactions'];
+$arr_tbl_ = mysqli_query($single_conn, "SHOW TABLES FROM `$dbname`");
+
+$tbl_array=array();
+
+while($arr_tbl_res_=mysqli_fetch_array($arr_tbl_))
+{
+  $tbl_array[]=$arr_tbl_res_[0];
+}
+
+
+print_r($tbl_array);
+
+foreach($tbl_array as $tb_name_)
+{
+ 
+  if($tb_name_!="")
+  {
+   alter_table($mysqliconn, $dbname, $tb_name_, 'ADD column `hive_site_id` varchar(500) not null');
+   alter_table($mysqliconn, $dbname, $tb_name_, 'ADD column `hive_site_name` varchar(500) not null');
+  }
+}

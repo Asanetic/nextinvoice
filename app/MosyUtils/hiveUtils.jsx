@@ -743,3 +743,21 @@ export function mosyRefreshPage(delay = 0) {
     }
   }
 }
+
+export function mosyFileUrl(pathname) {
+  if (typeof window !== 'undefined' && !pathname) {
+    pathname = window.location.pathname;
+  }
+
+  if (!pathname) return '';
+
+  const parts = pathname.split('/').filter(Boolean); // remove empty parts
+  const lastPart = parts[parts.length - 1] || '';
+
+  // Remove dynamic route brackets like [id] or [...slug]
+  const fileName = lastPart.replace(/\[|\]|\.\.\./g, '');
+
+  return fileName;
+}
+
+

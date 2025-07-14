@@ -4,12 +4,13 @@ import { createRoot } from "react-dom/client";
 
 // add app based functons here /nextinvoiceCustomFunctions 
 import { mosyCreatePdf } from '../MosyUtils/mosyCreatePdf'
-import { magicTrimText, mosyBtoa, mosyGetData, mosyGetElemVal, mosyNl2br, mosyPostFormData, mosyTonum } from '../MosyUtils/hiveUtils';
+import { magicTrimText, mosyBtoa, mosyGetData, mosyGetElemVal, mosyNl2br, mosyPostData, mosyPostFormData, mosyTonum } from '../MosyUtils/hiveUtils';
 import { MosyAlertCard, MosyConfirm, MosyNotify } from '../MosyUtils/ActionModals';
 import { closeMosyCard, MosyCard } from '../components/MosyCard';
 import { insertInvoicelist } from './docs/dataControl/InvoicelistRequestHandler';
 import SmsremindersProfile from './reminders/uiControl/SmsremindersProfile';
 import MessageoutboxProfile from './reminders/uiControl/MessageoutboxProfile';
+import { insertClientlist } from "./clients/dataControl/ClientlistRequestHandler";
 
 
 export function loadVendorHeaders(dataRes)
@@ -239,6 +240,67 @@ export async function downloadReceipt({ invoiceId = "test", onComplete = null, e
 
 
 
+export async function downloadDocument({ docId = "test", onComplete = null, externalWindow = null }) {
+  try {
+    MosyNotify({ message: "Creating document...", addTimer: false, icon: "copy" });
+
+    const response = await mosyGetData({
+      endpoint: '/api/nextinvoice/quick_notes/generatedoc',
+      params: { doc: mosyBtoa(docId) },
+      rawResponse: true
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      const fileName = `${docId}.pdf`;
+      const url = URL.createObjectURL(blob);
+
+      // Open tab if not passed
+      let win = externalWindow || window.open('', '_blank');
+      if (win) {
+        win.location.href = url;
+      }
+
+      // Optional: trigger auto-download in current tab
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Cleanup
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+        if (onComplete) {
+          onComplete(); // Your custom cleanup logic
+        } else if (win && !win.closed) {
+          win.close(); // Default: just close the tab
+        }
+      }, 5000);
+
+      closeMosyCard();
+    } else {
+      MosyNotify({
+        message: `Error creating document... ${response.message}`,
+        addTimer: false,
+        icon: "times-circle",
+        iconColor: "text-danger"
+      });
+    }
+
+  } catch (err) {
+    console.log('Error:', err);
+    MosyNotify({
+      message: `Fatal error creating document... ${err}`,
+      addTimer: false,
+      icon: "times-circle",
+      iconColor: "text-danger"
+    });
+  }
+}
+
+
 export function convertToInvoice(handleInputChange)
 {
   MosyAlertCard({message : "Convert to quotation to invoice?", icon: "copy", iconColor : "text-info",
@@ -265,6 +327,36 @@ export function convertToInvoice(handleInputChange)
   },dismissable :false})
 }
 
+export function convertToCustomer({name, email, tel})
+{
+  MosyAlertCard({message : "Convert to lead to customer?", icon: "copy", iconColor : "text-info",
+     onYes: async ()=>{
+    
+    closeMosyCard("modal2")
+
+    MosyNotify({message:"Converting to lead...", icon:"send",addTimer:false, id:"modal1"})
+    
+    const result = await  mosyPostData({url:`/api/nextinvoice/clients/clientlist`,
+       data:{
+        clients_mosy_action:"add_clients",
+        txt_client_name:name, 
+        txt_client_email:email, 
+        txt_client_tel : tel,
+        txt_client_location : `Online Lead`}
+      })
+
+    if (result?.status === 'success') {
+      
+      const clientToken = btoa(result.clients_uptoken || '');
+      
+      window.location=`../clients/clientprofile?clients_uptoken=${clientToken}`
+
+    }
+
+  },id:"modal2", onNo:()=>{
+    closeMosyCard("modal2")
+  },dismissable :false})
+}
 
 export function sendMessage(handleInputChange)
 {

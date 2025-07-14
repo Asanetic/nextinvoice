@@ -6,29 +6,8 @@ import Link from 'next/link';
 
 import { useRouter } from 'next/navigation';
 
-//custom utils
-import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime} from "../../../MosyUtils/hiveUtils"
-
-import { mosyFilterUrl } from "../../DataControl/MosyFilterEngine";
 
 
-//components
-import {
-  MosySmartDropdownActions,
-  AddNewButton,
-  MosyImageViewer ,
-  MosyActionButton,
-  MosyGridRowOptions,
-  MosyPaginationUi
-} from "../../UiControl/componentControl";
-
-import MosySnackWidget from '../../../MosyUtils/MosySnackWidget';
-
-//data
-import { loadMycompaniesListData, popDeleteDialog, InteprateMycompaniesEvent  } from '../dataControl/MycompaniesRequestHandler';
-
-//state management
-import { useMycompaniesState } from '../dataControl/MycompaniesStateManager';
 
 import logo from '../../../img/logo/logo.png'; // outside public!
 
@@ -178,6 +157,7 @@ export default function MycompaniesList({ dataIn = {}, dataOut = {} }) {
                     <td scope="col"><span title={listcompanies_result.swort_code}>{magicTrimText(listcompanies_result.swort_code, 30)}</span></td>
                     
                   </tr>
+                  
                   
                 </Fragment>
                 

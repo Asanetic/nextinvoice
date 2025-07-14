@@ -1,17 +1,18 @@
 'use client';
-
-//data utils
+//hive / data utils
 import { mosyPostFormData, mosyGetData, mosyUrlParam, mosyUpdateUrlParam , deleteUrlParam, magicRandomStr, mosyGetLSData  } from '../../../MosyUtils/hiveUtils';
 
-//components
+//action modals 
 import { MosyNotify , closeMosyModal, MosyAlertCard } from '../../../MosyUtils/ActionModals';
 
-//generate data filter 
+//filter util
 import { MosyFilterEngine } from '../../DataControl/MosyFilterEngine';
 
 //custom event manager 
 import { customEventHandler } from '../../DataControl/customDataFunction';
 
+
+//insert data
 export async function insertMessagetemplates() {
  //console.log(`Form message_templates insert sent `)
 
@@ -23,6 +24,7 @@ export async function insertMessagetemplates() {
   });
 }
 
+//update record 
 export async function updateMessagetemplates() {
 
   //console.log(`Form message_templates update sent `)
@@ -36,7 +38,7 @@ export async function updateMessagetemplates() {
 }
 
 
- 
+///receive form actions from profile page  
 export async function inteprateMessagetemplatesFormAction(e, setters) {
   e.preventDefault();
 
@@ -205,7 +207,7 @@ export async function getMessagetemplatesListData(qstr = "") {
   if(qstr=='')
   {
    fullWhere = false 
-   qstr=btoa('')
+   qstr=btoa(``)
   }
   
   //add the following data in response
@@ -227,8 +229,8 @@ export async function getMessagetemplatesListData(qstr = "") {
         mutations: encodedMutations,
         fullQ : fullWhere,
         pagination : `l:qmessage_templates_page:${recordsPerPage}:${pageNo}`,
-        aw:btoa(`order by primkey desc`),
-        src : btoa(`getMessagetemplatesListData`)        
+        aw : btoa(`order by primkey desc`),
+        src : btoa(`getMessagetemplatesListData`)
         },
     });
 
@@ -291,7 +293,10 @@ export async function messagetemplatesProfileData(customQueryStr, setters, route
     let rawMessagetemplatesQueryStr =`where primkey ='${decodedMessagetemplatesToken}'`
     if(customQueryStr!='')
     {
-      rawMessagetemplatesQueryStr = customQueryStr
+      // if no message_templates_uptoken set , use customQueryStr
+      if (!messagetemplatesTokenId) {
+       rawMessagetemplatesQueryStr = customQueryStr
+      }
     }
 
     const profileDataRecord = await initMessagetemplatesProfileData(rawMessagetemplatesQueryStr)
@@ -310,8 +315,6 @@ export async function messagetemplatesProfileData(customQueryStr, setters, route
     setters.setMessagetemplatesNode(finalProfileData)
     
     
-
-
 }
   
   
@@ -355,7 +358,7 @@ export function InteprateMessagetemplatesEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`add message_templates `, data?.setters)
+    //console.log(`add message_templates `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -373,7 +376,7 @@ export function InteprateMessagetemplatesEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`update message_templates `, data?.setters)
+    //console.log(`update message_templates `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -392,8 +395,6 @@ export function InteprateMessagetemplatesEvent(data) {
 
  }
 
- //pass the the data to custom functions
- customEventHandler(data)
   
 }
 
@@ -401,7 +402,7 @@ export function InteprateMessagetemplatesEvent(data) {
 export function popDeleteDialog(deleteToken, setters, router, afterDeleteUrl='../messagetemplates/list')
 {     
 
-  console.log(`popDeleteDialog`, setters)
+  //console.log(`popDeleteDialog`, setters)
   const childSetters = setters?.childStateSetters
   
   MosyAlertCard({

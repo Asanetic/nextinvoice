@@ -139,7 +139,6 @@ export async function POST(QuotationlistRequest) {
     "date_due" : "?", 
     "client_id" : "?", 
     "invoice_amount" : "?", 
-    "amount_paid" : "?", 
     "remark" : "?", 
     "date_created" : "?", 
     "paid_status" : "?", 

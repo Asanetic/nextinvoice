@@ -17,18 +17,34 @@ import { PremiumDataBtn } from '../../mosybilling/PremuimBtn';
 
 
 function isComponentEnabled(tblName, actionType = 'cu') {
-  const disabledDeleteTables = ["system_role_bundles", "system_users", "client_list", "affiliates", "services"];
+  const disabledDeleteTables = ["MyaccountList","MyaccountMainProfilePage","system_role_bundles", "system_users", "client_list", "affiliates", "services"];
   const [action, table] = tblName.includes(':') ? tblName.split(':') : [actionType, tblName];
 
   if (action === "delete" && disabledDeleteTables.includes(table)) {
     return false;
   }
 
+  if (action === "delete" && disabledDeleteTables.includes(table)) {
+    return false;
+  }
+
+  if (action === "add_new" && disabledDeleteTables.includes(table)) {
+    return false;
+  }
+
+  if (action === "clone" && disabledDeleteTables.includes(table)) {
+    return false;
+  }
+
+  if (action === "paginate" && disabledDeleteTables.includes(table)) {
+    return false;
+  }
+    
   return true;
 }
 
 
-export  function DeleteButton({ uptoken, stateItemSetters, parentStateSetters, router = null, onDelete}) {
+export  function DeleteButton({src, tblName, uptoken, stateItemSetters, parentStateSetters, router = null, onDelete}) {
   if (!uptoken) return null;
 
   const handleClick = () => {
@@ -48,6 +64,12 @@ export  function DeleteButton({ uptoken, stateItemSetters, parentStateSetters, r
   if (billingStatus !== "Active") {
     return <PremiumDataBtn  buttonName='Manage data'/>;
   }
+
+  if(!isComponentEnabled(src,"delete"))
+  {
+    return null
+  }
+
   return (
     <button
       type="button"
@@ -60,7 +82,7 @@ export  function DeleteButton({ uptoken, stateItemSetters, parentStateSetters, r
 }
 
 
-export function SubmitButtons({ tblName, extraClass = '' }) {
+export function SubmitButtons({src, tblName, extraClass = '' }) {
   const searchParams = useSearchParams();
   const isUpdate = searchParams.has(`${tblName}_uptoken`);
 
@@ -77,6 +99,8 @@ export function SubmitButtons({ tblName, extraClass = '' }) {
     return <PremiumDataBtn  buttonName='Manage data'/>;
   }
 
+  const isCloneEnabled = isComponentEnabled(src, "clone")
+
   return (
     <>
       {isUpdate ? (
@@ -90,6 +114,7 @@ export function SubmitButtons({ tblName, extraClass = '' }) {
             <i className="fa fa-save"></i> Save Changes
           </button>
 
+         {isCloneEnabled &&(
           <button
             type="submit"
             id={`mp${tblName}_insert_btn`}
@@ -99,6 +124,7 @@ export function SubmitButtons({ tblName, extraClass = '' }) {
           >
             <i className="fa fa-copy"></i> Clone Record
           </button>
+         )}
         </>
       ) : (
         <button
@@ -117,13 +143,18 @@ export function SubmitButtons({ tblName, extraClass = '' }) {
 
 
 // Add New Button
-export function AddNewButton({ link, label, icon = 'plus', className = 'medium_btn btn-primary border border_set hive_profile_add_new_btn p-2 mb-3 ml-1 mr-1 ' }) {
+export function AddNewButton({src, link, label, icon = 'plus', className = 'medium_btn btn-primary border border_set hive_profile_add_new_btn p-2 mb-3 ml-1 mr-1 ' }) {
 
   const billingStatus = useBillingAccountStatus();
   //  Don't render buttons if billing is not active
   if (billingStatus !== "Active") {
     return <PremiumDataBtn  buttonName='Add new'/>;
   }
+
+  if(!isComponentEnabled(src,"add_new"))
+    {
+      return null
+    }  
   return (
     <a href={link} className={className}>
       <i className={`fa fa-${icon}`}></i> {label}
@@ -811,6 +842,7 @@ export function MosySmartField({
 }
 
 export function MosyPaginationUi({
+  src="",
   tblName = "",
   totalPages = 0,
   onPageSwitch = () => {},
@@ -932,6 +964,7 @@ useEffect(() => {
     return 
   }
   
+  if(isComponentEnabled(src, "paginate"))
 
   return (
     <div className="mt-4 mb-3 row justify-content-center col-md-12 m-0 p-0 border-top border_set pt-2">

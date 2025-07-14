@@ -1,17 +1,18 @@
 'use client';
-
-//data utils
+//hive / data utils
 import { mosyPostFormData, mosyGetData, mosyUrlParam, mosyUpdateUrlParam , deleteUrlParam, magicRandomStr, mosyGetLSData  } from '../../../MosyUtils/hiveUtils';
 
-//components
+//action modals 
 import { MosyNotify , closeMosyModal, MosyAlertCard } from '../../../MosyUtils/ActionModals';
 
-//generate data filter 
+//filter util
 import { MosyFilterEngine } from '../../DataControl/MosyFilterEngine';
 
 //custom event manager 
 import { customEventHandler } from '../../DataControl/customDataFunction';
 
+
+//insert data
 export async function insertBusinesslist() {
  //console.log(`Form companies insert sent `)
 
@@ -23,6 +24,7 @@ export async function insertBusinesslist() {
   });
 }
 
+//update record 
 export async function updateBusinesslist() {
 
   //console.log(`Form companies update sent `)
@@ -36,7 +38,7 @@ export async function updateBusinesslist() {
 }
 
 
- 
+///receive form actions from profile page  
 export async function inteprateBusinesslistFormAction(e, setters) {
   e.preventDefault();
 
@@ -205,7 +207,7 @@ export async function getBusinesslistListData(qstr = "") {
   if(qstr=='')
   {
    fullWhere = false 
-   qstr=btoa('')
+   qstr=btoa(``)
   }
   
   //add the following data in response
@@ -227,8 +229,8 @@ export async function getBusinesslistListData(qstr = "") {
         mutations: encodedMutations,
         fullQ : fullWhere,
         pagination : `l:qcompanies_page:${recordsPerPage}:${pageNo}`,
-        aw:btoa(`order by primkey desc`),
-        src : btoa(`getBusinesslistListData`)        
+        aw : btoa(`order by primkey desc`),
+        src : btoa(`getBusinesslistListData`)
         },
     });
 
@@ -291,7 +293,10 @@ export async function businesslistProfileData(customQueryStr, setters, router, c
     let rawBusinesslistQueryStr =`where primkey ='${decodedBusinesslistToken}'`
     if(customQueryStr!='')
     {
-      rawBusinesslistQueryStr = customQueryStr
+      // if no companies_uptoken set , use customQueryStr
+      if (!businesslistTokenId) {
+       rawBusinesslistQueryStr = customQueryStr
+      }
     }
 
     const profileDataRecord = await initBusinesslistProfileData(rawBusinesslistQueryStr)
@@ -310,8 +315,6 @@ export async function businesslistProfileData(customQueryStr, setters, router, c
     setters.setBusinesslistNode(finalProfileData)
     
     
-
-
 }
   
   
@@ -355,7 +358,7 @@ export function InteprateBusinesslistEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`add companies `, data?.setters)
+    //console.log(`add companies `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -373,7 +376,7 @@ export function InteprateBusinesslistEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`update companies `, data?.setters)
+    //console.log(`update companies `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -392,8 +395,6 @@ export function InteprateBusinesslistEvent(data) {
 
  }
 
- //pass the the data to custom functions
- customEventHandler(data)
   
 }
 
@@ -401,7 +402,7 @@ export function InteprateBusinesslistEvent(data) {
 export function popDeleteDialog(deleteToken, setters, router, afterDeleteUrl='../vendors/businesslist')
 {     
 
-  console.log(`popDeleteDialog`, setters)
+  //console.log(`popDeleteDialog`, setters)
   const childSetters = setters?.childStateSetters
   
   MosyAlertCard({

@@ -138,6 +138,8 @@ export default function InvoiceitemsProfile({ dataIn = {}, dataOut = {} }) {
               <>{!showNavigationIsle && (<div className="col m-0 p-0 text-right ">
                 {paramInvoiceitemsUptoken && (
                   <DeleteButton
+                  src="InvoiceitemsMainProfilePage"
+                  tableName="invoice_items"
                   uptoken={paramInvoiceitemsUptoken}
                   stateItemSetters={stateItemSetters}
                   parentStateSetters={parentStateSetters}
@@ -172,6 +174,8 @@ export default function InvoiceitemsProfile({ dataIn = {}, dataOut = {} }) {
                 <>
                 
                 <DeleteButton
+                src="InvoiceitemsMainProfilePage"
+                tableName="invoice_items"
                 uptoken={paramInvoiceitemsUptoken}
                 stateItemSetters={stateItemSetters}
                 parentStateSetters={parentStateSetters}
@@ -180,7 +184,12 @@ export default function InvoiceitemsProfile({ dataIn = {}, dataOut = {} }) {
                 />
                 
                 
-                <AddNewButton link="./profile" label="Add item " icon="plus-circle" />
+                <AddNewButton
+                src="InvoiceitemsMainProfilePage"
+                tableName="invoice_items"
+                link="./profile"
+                label="Add item "
+                icon="plus-circle" />
               </>
             )}
             
@@ -315,7 +324,12 @@ export default function InvoiceitemsProfile({ dataIn = {}, dataOut = {} }) {
                   </div>
                   
                   <div className="col-md-12 text-center">
-                    <SubmitButtons tblName="invoice_items" extraClass="optional-custom-class" />
+                    <SubmitButtons
+                    src="InvoiceitemsMainProfilePage"
+                    tblName="invoice_items"
+                    extraClass="optional-custom-class"
+                    
+                    />
                   </div>
                 </div></div>
                 {/*    Input cells section isle      */}

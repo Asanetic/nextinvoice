@@ -1,17 +1,18 @@
 'use client';
-
-//data utils
+//hive / data utils
 import { mosyPostFormData, mosyGetData, mosyUrlParam, mosyUpdateUrlParam , deleteUrlParam, magicRandomStr, mosyGetLSData  } from '../../../MosyUtils/hiveUtils';
 
-//components
+//action modals 
 import { MosyNotify , closeMosyModal, MosyAlertCard } from '../../../MosyUtils/ActionModals';
 
-//generate data filter 
+//filter util
 import { MosyFilterEngine } from '../../DataControl/MosyFilterEngine';
 
 //custom event manager 
 import { customEventHandler } from '../../DataControl/customDataFunction';
 
+
+//insert data
 export async function insertMessageoutbox() {
  //console.log(`Form messaging insert sent `)
 
@@ -23,6 +24,7 @@ export async function insertMessageoutbox() {
   });
 }
 
+//update record 
 export async function updateMessageoutbox() {
 
   //console.log(`Form messaging update sent `)
@@ -36,7 +38,7 @@ export async function updateMessageoutbox() {
 }
 
 
- 
+///receive form actions from profile page  
 export async function inteprateMessageoutboxFormAction(e, setters) {
   e.preventDefault();
 
@@ -207,7 +209,7 @@ export async function getMessageoutboxListData(qstr = "") {
   if(qstr=='')
   {
    fullWhere = false 
-   qstr=btoa('')
+   qstr=btoa(``)
   }
   
   //add the following data in response
@@ -231,8 +233,8 @@ export async function getMessageoutboxListData(qstr = "") {
         mutations: encodedMutations,
         fullQ : fullWhere,
         pagination : `l:qmessaging_page:${recordsPerPage}:${pageNo}`,
-        aw:btoa(`order by primkey desc`),
-        src : btoa(`getMessageoutboxListData`)        
+        aw : btoa(`order by primkey desc`),
+        src : btoa(`getMessageoutboxListData`)
         },
     });
 
@@ -295,7 +297,10 @@ export async function messageoutboxProfileData(customQueryStr, setters, router, 
     let rawMessageoutboxQueryStr =`where primkey ='${decodedMessageoutboxToken}'`
     if(customQueryStr!='')
     {
-      rawMessageoutboxQueryStr = customQueryStr
+      // if no messaging_uptoken set , use customQueryStr
+      if (!messageoutboxTokenId) {
+       rawMessageoutboxQueryStr = customQueryStr
+      }
     }
 
     const profileDataRecord = await initMessageoutboxProfileData(rawMessageoutboxQueryStr)
@@ -314,8 +319,6 @@ export async function messageoutboxProfileData(customQueryStr, setters, router, 
     setters.setMessageoutboxNode(finalProfileData)
     
     
-
-
 }
   
   
@@ -359,7 +362,7 @@ export function InteprateMessageoutboxEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`add messaging `, data?.setters)
+    //console.log(`add messaging `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -377,7 +380,7 @@ export function InteprateMessageoutboxEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`update messaging `, data?.setters)
+    //console.log(`update messaging `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -396,8 +399,6 @@ export function InteprateMessageoutboxEvent(data) {
 
  }
 
- //pass the the data to custom functions
- customEventHandler(data)
   
 }
 
@@ -405,7 +406,7 @@ export function InteprateMessageoutboxEvent(data) {
 export function popDeleteDialog(deleteToken, setters, router, afterDeleteUrl='../reminders/messages')
 {     
 
-  console.log(`popDeleteDialog`, setters, router)
+  //console.log(`popDeleteDialog`, setters)
   const childSetters = setters?.childStateSetters
   
   MosyAlertCard({

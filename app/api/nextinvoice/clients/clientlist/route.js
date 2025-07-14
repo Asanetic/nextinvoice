@@ -162,8 +162,7 @@ export async function POST(ClientlistRequest) {
       // Insert into table Clientlist
       const result = await AddClientlist(newId, mutatedDataArray, body, authData);     
 
-       
-
+      
       return Response.json({
         status: 'success',
         message: result.message,

@@ -198,7 +198,7 @@ $novanest_module_ui_blueprint_=[
     //$rename_tables_array=['table'=>'New name:fafa icon eg plus, plus-circle, copy etc'];
 
     //on these tables let the add new button lable have the following icons and label 
-    "new_label_buttons_arr"=>['inventory'=>'plus-circle:Add products / services  : Item / {{item_name}}'],
+    "new_label_buttons_arr"=>['inventory'=>'plus-circle:Add products / services  : Item frommmmmmm / {{item_name}}'],
     //sample 
     //$new_label_buttons_arr=['table_name'=>'plus-circle:New Project:Project profile - {{project_name}}'];    
     

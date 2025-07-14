@@ -104,7 +104,8 @@ export default function InvoicepaymentsList({ dataIn = {}, dataOut = {} }) {
             
             <a href="list" className="medium_btn border border_set btn-white hive_list_nav_refresh ml-3"><i className="fa fa-refresh mr-1 "></i> Refresh </a>
             
-            <AddNewButton link={customProfilePath} label=" Add payments " icon="plus-circle" />
+            
+            <AddNewButton src="InvoicepaymentsList" link={customProfilePath} label=" Add payments " icon="plus-circle" />
           </div>
         </div>
       </div> )}
@@ -176,6 +177,7 @@ export default function InvoicepaymentsList({ dataIn = {}, dataOut = {} }) {
                     
                   </tr>
                   
+                  
                 </Fragment>
                 
               ))
@@ -188,7 +190,7 @@ export default function InvoicepaymentsList({ dataIn = {}, dataOut = {} }) {
                 <div className="col-md-12 text-center mt-4">
                   <h6 className="col-md-12 text-center p-3 mb-5 text-muted"><i className="fa fa-search"></i> Sorry, no invoice payments records found</h6>
                   
-                  <AddNewButton link={customProfilePath} label=" Add payments " icon="plus-circle" />
+                  <AddNewButton src="InvoicepaymentsList"  link={customProfilePath} label=" Add payments " icon="plus-circle" />
                   <div className="col-md-12 pt-5 " id=""></div>
                 </div>
               </td></tr>
@@ -198,6 +200,7 @@ export default function InvoicepaymentsList({ dataIn = {}, dataOut = {} }) {
         </table>
         
         <MosyPaginationUi
+        src="InvoicepaymentsList"
         tblName="invoice_payments"
         totalPages={stateItem.invoicepaymentsListPageCount}
         stateItemSetters={stateItemSetters}

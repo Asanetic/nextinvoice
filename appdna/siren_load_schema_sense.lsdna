@@ -1,0 +1,7 @@
+//dna options==
+$dna_file_name="load_schema_sense"; 
+$create_dna="yes"; //yes | no; 
+$overwrite_dna_file="yes"; //yes | no 
+//dna options==
+
+echo '<a target="_blank" href="./schemasense">Load schema sense</a>'

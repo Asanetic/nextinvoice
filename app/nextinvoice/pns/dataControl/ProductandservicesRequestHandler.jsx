@@ -1,17 +1,18 @@
 'use client';
-
-//data utils
+//hive / data utils
 import { mosyPostFormData, mosyGetData, mosyUrlParam, mosyUpdateUrlParam , deleteUrlParam, magicRandomStr, mosyGetLSData  } from '../../../MosyUtils/hiveUtils';
 
-//components
+//action modals 
 import { MosyNotify , closeMosyModal, MosyAlertCard } from '../../../MosyUtils/ActionModals';
 
-//generate data filter 
+//filter util
 import { MosyFilterEngine } from '../../DataControl/MosyFilterEngine';
 
 //custom event manager 
 import { customEventHandler } from '../../DataControl/customDataFunction';
 
+
+//insert data
 export async function insertProductandservices() {
  //console.log(`Form inventory insert sent `)
 
@@ -23,6 +24,7 @@ export async function insertProductandservices() {
   });
 }
 
+//update record 
 export async function updateProductandservices() {
 
   //console.log(`Form inventory update sent `)
@@ -36,7 +38,7 @@ export async function updateProductandservices() {
 }
 
 
- 
+///receive form actions from profile page  
 export async function inteprateProductandservicesFormAction(e, setters) {
   e.preventDefault();
 
@@ -205,7 +207,7 @@ export async function getProductandservicesListData(qstr = "") {
   if(qstr=='')
   {
    fullWhere = false 
-   qstr=btoa('')
+   qstr=btoa(``)
   }
   
   //add the following data in response
@@ -227,8 +229,8 @@ export async function getProductandservicesListData(qstr = "") {
         mutations: encodedMutations,
         fullQ : fullWhere,
         pagination : `l:qinventory_page:${recordsPerPage}:${pageNo}`,
-        aw:btoa(`order by primkey desc`),
-        src : btoa(`getProductandservicesListData`)        
+        aw : btoa(`order by primkey desc`),
+        src : btoa(`getProductandservicesListData`)
         },
     });
 
@@ -291,7 +293,10 @@ export async function productandservicesProfileData(customQueryStr, setters, rou
     let rawProductandservicesQueryStr =`where primkey ='${decodedProductandservicesToken}'`
     if(customQueryStr!='')
     {
-      rawProductandservicesQueryStr = customQueryStr
+      // if no inventory_uptoken set , use customQueryStr
+      if (!productandservicesTokenId) {
+       rawProductandservicesQueryStr = customQueryStr
+      }
     }
 
     const profileDataRecord = await initProductandservicesProfileData(rawProductandservicesQueryStr)
@@ -310,8 +315,6 @@ export async function productandservicesProfileData(customQueryStr, setters, rou
     setters.setProductandservicesNode(finalProfileData)
     
     
-
-
 }
   
   
@@ -355,7 +358,7 @@ export function InteprateProductandservicesEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`add inventory `, data?.setters)
+    //console.log(`add inventory `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -373,7 +376,7 @@ export function InteprateProductandservicesEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`update inventory `, data?.setters)
+    //console.log(`update inventory `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -392,8 +395,6 @@ export function InteprateProductandservicesEvent(data) {
 
  }
 
- //pass the the data to custom functions
- customEventHandler(data)
   
 }
 
@@ -401,7 +402,7 @@ export function InteprateProductandservicesEvent(data) {
 export function popDeleteDialog(deleteToken, setters, router, afterDeleteUrl='../pns/list')
 {     
 
-  console.log(`popDeleteDialog`, setters)
+  //console.log(`popDeleteDialog`, setters)
   const childSetters = setters?.childStateSetters
   
   MosyAlertCard({

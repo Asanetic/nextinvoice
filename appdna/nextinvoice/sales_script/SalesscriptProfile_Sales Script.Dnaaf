@@ -1,24 +1,31 @@
+//dna options==
+$dna_file_name="next_js_module_builder___next____"; 
+$create_dna="yes"; //yes | no; 
+$overwrite_dna_file="yes"; //yes | no 
+//dna options==
+
 eval(find_snippet('986'));
 eval(find_snippet("1171")); // camel case 
 
 $custom_col_main_file__="../appdna/custom_colums.php";
-$table_config_file__="../appdna/nextinvoice/invoices/tbl_attr/tbl_attr_invoices_dnaaf.php";
+$table_config_file__="../appdna/nextinvoice/sales_script/tbl_attr/tbl_attr_sales_script_dnaaf.php";
 
 if(file_exists($custom_col_main_file__))
 {
   include($custom_col_main_file__);
 }
 
-$primary_table__="companies";
+$primary_table__="sales_script";
 $tbl_id_column_name="primkey";
 $record_id_col_name="record_id";
+//1. app_list //"primkey" , "app_id" , "app_name" , "logo" , "account_id" , "remark" , "payment_redirect" , "pricing_page_message" ,
 
 
-$nextjs_tbl_alias="vendors";
+$nextjs_tbl_alias="sales_script";
 
 // Report configurations
-$main_report_title_="My companies";
-$api_endpoint_name="manage";
+$main_report_title_="Sales Script";
+$api_endpoint_name="sales_script";
 
 $multigrid_col_span="9";
 $enable_multigrid_view_more_link ="";
@@ -92,8 +99,8 @@ $additional_details_segment_title="";
   
 $col_size_def='col-md-12';
 
-$def_profile_container_class="col-md-11 rounded text-left p-2 mb-0  bg-white ";
-$def_profile_inner_container_class="col-md-12 p-2 pr-lg-4 pl-lg-4 m-0";  
+$def_profile_container_class="col-md-12 rounded text-left p-2 mb-0  bg-white ";
+$def_profile_inner_container_class='` profile_container col-md-12 m-0 p-0  ${showNavigationIsle &&("pr-lg-4 pl-lg-4 m-0")}`';  
 $override_justify_class="justify-content-center";
 $overide_img_section_class="col-md-6 mr-lg-5";
 $override_large_col_size="col-md-6 hive_data_cell";
@@ -156,10 +163,10 @@ $script_filter_str=$billing_q_str;
 //$script_filter_str='where $gft_'.$primary_table__.'_and transfer_type= \'Stock Out\' order by primkey desc';
 
 
-echo '<hr>List Widget --- '.$camelcasetbl_prefix.'List <br>';
-echo 'Profile Widget --- '.$camelcasetbl_prefix.'Profile <br>';
-echo 'Event Inteprate --- Inteprate'.$camelcasetbl_prefix.'Event <hr>';
-
+echo '<hr>List Widget  --- '.$camelcasetbl_prefix.'List <br>';
+echo 'Profile Widget   --- '.$camelcasetbl_prefix.'Profile <br>';
+echo 'Event Inteprate  --- Inteprate'.$camelcasetbl_prefix.'Event <br>';
+echo 'Api route        --- /api/'.$appname.'/'.$nextjs_tbl_alias.'/'.$last_file_name.'<hr>';
 
 $add_new_data_entry_page=$main_file_name."_profile";
 
@@ -186,6 +193,8 @@ import {InteprateDeposithistoryEvent} from '../../depositbymode/dataControl/Depo
 //profile 
 import DeposithistoryProfile from '../../depositbymode/uiControl/DeposithistoryProfile';
 
+import logo from '../../../img/logo/logo.png'; // outside public!
+
 
 import { 
          MosyDateInputComponent,
@@ -198,44 +207,88 @@ import {
        } from '../../UiControl/componentControl';
 */
 
-$additional_imports="
-import logo from '../../../img/logo/logo.png'; // outside public!
+$additional_imports="//components
+import { MosyAlertCard, MosyNotify ,closeMosyModal } from  '../../../MosyUtils/ActionModals'; 
 
-import  ".$camelcasetbl_prefix."List from './".$camelcasetbl_prefix."List';
+import MosySnackWidget from '../../../MosyUtils/MosySnackWidget';
 
+//basic utils
+import { mosyScrollTo , deleteUrlParam, mosyFormInputHandler,mosyUrlParam  } from '../../../MosyUtils/hiveUtils';
+
+//data control and processors
+import { inteprate".$camelcasetbl_prefix."FormAction, ".$camelcasetbl."ProfileData , popDeleteDialog, Inteprate".$camelcasetbl_prefix."Event } from '../dataControl/".$camelcasetbl_prefix."RequestHandler';
+
+//state management
+import { use".$camelcasetbl_prefix."State } from '../dataControl/".$camelcasetbl_prefix."StateManager';
+
+//profile components
 import { 
          SubmitButtons,
          AddNewButton, 
          LiveSearchDropdown,
          MosySmartField,
          MosyActionButton,
-         SmartDropdown,
-         MosyImageViewer,
-         MosyFileUploadButton
+         SmartDropdown,  
+         DeleteButton ,
        } from '../../UiControl/componentControl';
-import { MosyLiveSearch } from '../../UiControl/customUI';
 
-";
+//".$appname." custom functions
+//import {  } from '../../".$appname."_custom_functions';
 
-$additional_list_imports="
+//def logo 
 import logo from '../../../img/logo/logo.png'; // outside public!
 
-import { MosyLiveSearch } from '../../UiControl/customUI';
-";
+import MosyHtmlEditor from '../../../MosyUtils/htmlEditor'
+
+
+// export profile";
+
+
+$additional_list_imports="//custom utils
+import { deleteUrlParam, magicTrimText, mosyUrlParam, mosyFormatDateOnly , mosyFormatDateTime} from '../../../MosyUtils/hiveUtils';
+
+import { mosyFilterUrl } from '../../DataControl/MosyFilterEngine';
+
+//list components
+import { 
+         MosySmartDropdownActions, 
+         AddNewButton, 
+         MosyActionButton, 
+         MosyGridRowOptions,
+         MosyPaginationUi,
+         DeleteButton,
+         MosyImageViewer
+       } from '../../UiControl/componentControl';
+         
+import MosySnackWidget from '../../../MosyUtils/MosySnackWidget';
+
+//data 
+import { load".$camelcasetbl_prefix."ListData, popDeleteDialog, Inteprate".$camelcasetbl_prefix."Event  } from '../dataControl/".$camelcasetbl_prefix."RequestHandler';
+
+//state management
+import { use".$camelcasetbl_prefix."State } from '../dataControl/".$camelcasetbl_prefix."StateManager';
+
+//".$appname." custom functions
+//import {  } from '../../".$appname."_custom_functions';
+
+//def logo 
+//import logo from '../../../img/logo/logo.png'; // outside public!
+
+//large text 
+//import ReactMarkdown from 'react-markdown';
+
+//export list";
 
 $customProfileData="{}";
 /*$customProfileData='
-//bank id data 
+//invoice data 
 {
-    deposit_file_id : (bankingNode?.record_id || ""),
-    station_id : (bankingNode?.station_id || ""),
-    shift_id : (bankingNode?.shift_code || ""),
-    _fuel_stations_station_name_station_id: (bankingNode?._fuel_stations_station_name_station_id || ""),
-    _banking_record_id_deposit_file_id: (bankingNode?.record_id || "")
+    invoice_id : (invoicesNode?.invoice_id || ""),
+
 }
 
-';*/
- 
+';
+ */
 
 //main widget configs
 $widget_and_ist_array=[
@@ -246,7 +299,7 @@ $widget_and_ist_array=[
 
 /// mini list creator configs
 $mini_list_array=[
-  
+     //" app_id ='\${app_listNode?.app_id}' "=>'SubscriptionplansList:{`App plans`}:../snippets/list::hide:InteprateSubscriptionplansEvent', 
      //"tag ='\${infosnippetsNode?.tag}' order by primkey desc "=>''.$camelcasetbl_prefix.'List:{`Related ${infosnippetsNode?.tag} Notes`}:../snippets/list:::InteprateInfosnippetsEvent', 
      //""=>''.$camelcasetbl_prefix.'List:{`More Notes`}:../snippets/list:::InteprateInfosnippetsEvent', 
      //"deposit_file_id='\${bankingNode?.record_id}' order by primkey desc "=>'DeposithistoryList:{`Deposits list`}:../inventory/fuel::hide:InteprateDeposithistoryEvent', 
@@ -255,8 +308,7 @@ $mini_list_array=[
 
 /// mini list creator configs
 $subprofile_list_array=[
-    /*"where deposit_file_id ='\${bankingNode?.record_id}' order by primkey desc  "=>'DeposithistoryProfile:{`Manage Deposits`}:../staff:../staff/profile:hide:InteprateDeposithistoryEvent
-:setDeposithistoryCustomProfileQuery:deposits_by_mode', */ 
+   // "where app_id ='\${app_listNode?.app_id}' "=>'SubscriptionplansProfile:{`Manage Items`}:_:_:hide:InteprateSubscriptionplansEvent:setSubscriptionplansCustomProfileQuery:plans', 
 
   ];
 
@@ -313,7 +365,7 @@ $profile_btn_table_array=[
         
         ",  */ 
     
-      //"edit: Review request"=>"console.log(`first next js button....`)",
+      //"print: Print invoice"=>"console.log(`first next js button....`)",
       //"search: Search users"=>"console.log(`first next js button users test....`)",
       //"refresh: sync work schedule"=>"syncWorkSchedule()"
   ],

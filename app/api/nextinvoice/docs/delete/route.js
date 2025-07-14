@@ -1,7 +1,7 @@
 
 import { mosySqlDelete , base64Decode , mosyQddata , mosyDeleteFile } from '../../../apiUtils/dataControl/dataUtils';
 
-import { DeleteInvoicelist } from '../invoicelist/InvoicelistDbGateway';
+import { DeleteQuotationlist } from '../quotationlist/QuotationlistDbGateway';
 
 export async function GET(request) {
 
@@ -18,7 +18,7 @@ export async function GET(request) {
     
     const whereStr = `WHERE primkey = '${deleteTokenDecode}'`;
 
-    const res = await DeleteInvoicelist(deleteTokenDecode, whereStr);
+    const res = await DeleteQuotationlist(deleteTokenDecode, whereStr);
 
     if (res.status === 'success') {
       return Response.json({ status: 'success', rowsAffected: res.affectedRows });

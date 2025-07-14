@@ -1,0 +1,53 @@
+//dna options==
+$dna_file_name="Assembly_show_cols_table"; 
+$create_dna="yes"; //yes | no; 
+$overwrite_dna_file="yes"; //yes | no 
+//dna options==
+
+$query=" SHOW TABLES FROM `$dbname` ";
+
+if($_POST['folderpath']!=""){
+
+  $query = "SHOW TABLES FROM `$db`  where Tables_in_$dbname ='".$_POST['folderpath']."'";
+  
+}
+
+
+$dbshowtbls_q = mysqli_query($single_conn, $query);
+
+
+$tbl_json_res=array();
+
+while($dbshowtbls_r=mysqli_fetch_array($dbshowtbls_q))
+{
+  $tbl_json_res[]='"'.$dbshowtbls_r[0].'":"?"';
+}
+
+
+$tbl_list_json='{'.implode(",", $tbl_json_res).'}';
+
+//echo "decodes string json -- > ".$tbl_list_json;
+
+
+$tbl_list_arr=json_decode($tbl_list_json, true);
+
+
+//============================== ====================== ============== App exe ==================================================
+$js_widget_str="";
+foreach($tbl_list_arr as $curr_tbl => $tbl_filename)
+{
+  
+  
+  echo "//".$curr_tbl.PHP_EOL.PHP_EOL;
+  $table_cols_="//";
+      $keyquery = mysqli_query($single_conn, "SHOW COLUMNS FROM `$dbname`.`$curr_tbl`");
+       
+     while($key_res = mysqli_fetch_array($keyquery))
+     {
+  
+       $table_cols_.='"'.$key_res['Field'].'" , ';
+       
+     }
+      
+  echo $table_cols_.PHP_EOL.PHP_EOL;
+}

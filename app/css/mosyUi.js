@@ -62,9 +62,11 @@ const MosyUiTheme = () => (
 .sidebar-inner {
   scrollbar-width: thin;
   scrollbar-color: ${mosyThemeConfigs.btnBg} transparent;
+  overflow-y: auto;
+
 }
 
-  
+
 /* File: bootstrapSkeleton.css */
 .skeleton-loader .skeleton-box {
   background: #e0e0e0;

@@ -55,7 +55,9 @@ export async function GET(request) {
         .header-table td { border: none; padding: 0; }
         .header-section { margin-bottom: 20px; }
         hr { margin: 30px 0; border: none; border-top: 1px solid #ccc; }
-
+        .doc_page{
+         line-height:30px;
+        }
         .section {
           page-break-inside: avoid;
           margin-bottom: 20px;
@@ -107,7 +109,7 @@ export async function GET(request) {
       </table>
       <hr>
       
-      <div class="">
+      <div class="doc_page">
         ${invoiceDetails?.footnote}
       </div>
       <h2><u>Quotation items</u></h2>

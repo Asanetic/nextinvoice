@@ -221,7 +221,8 @@ import {
          LiveSearchDropdown,
          MosySmartField,
          MosyActionButton,
-         MosyFileUploadButton 
+         MosyFileUploadButton,
+         DeleteButton 
        } from '../../UiControl/componentControl';
 
 //".$appname." custom functions

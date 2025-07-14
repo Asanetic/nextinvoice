@@ -90,14 +90,14 @@ export default function MyaccountList({ dataIn = {}, dataOut = {} }) {
         <div className="col-md-6 p-0 text-left pt-3 hive_list_title">
           <h6 className="text-muted"><b> My account </b></h6>
         </div>
-        <div className="col-md-6 p-0 text-right hive_list_search_tray d-none">
+        <div className="col-md-6 p-0 text-right hive_list_search_tray">
           <input type="text" id="txt_system_users" name="txt_system_users" className="custom-search-input form-control" placeholder="Search in My account "
           onChange={(e) => stateItemSetters.setMyaccountQuerySearchStr(e.target.value)}
           />
           <button className="custom-search-botton" id="qsystem_users_btn" name="qsystem_users_btn" type="submit"><i className="fa fa-search mr-1"></i> Go </button>
         </div>
         <div className="col-md-12 pt-5 p-0 hive_list_search_divider" id=""></div>
-        <div className="d-none row justify-content-end m-0 p-0 col-md-12 hive_list_action_btn_tray" id="">
+        <div className="row justify-content-end m-0 p-0 col-md-12 hive_list_action_btn_tray" id="">
           <div className="col-md-5 d-none p-0 text-left hive_list_nav_left_ribbon" id="">
           </div>
           <div className="col-md-12 p-0 hive_list_nav_right_ribbon" id="">
@@ -105,7 +105,8 @@ export default function MyaccountList({ dataIn = {}, dataOut = {} }) {
             
             <a href="list" className="medium_btn border border_set btn-white hive_list_nav_refresh ml-3"><i className="fa fa-refresh mr-1 "></i> Refresh </a>
             
-            <AddNewButton link={customProfilePath} label=" Add new" icon="plus-circle" />
+            
+            <AddNewButton src="MyaccountList" link={customProfilePath} label=" Add new" icon="plus-circle" />
           </div>
         </div>
       </div> )}
@@ -129,14 +130,19 @@ export default function MyaccountList({ dataIn = {}, dataOut = {} }) {
         ) : (
           
           
-          <div className="col-md-12 text-center mt-4 d-none ">
+          <div className="col-md-12 text-center mt-4">
             <h6 className="col-md-12 text-center p-3 mb-5 text-muted"><i className="fa fa-search"></i> Sorry, no system users records found</h6>
             
-            <AddNewButton link={customProfilePath} label=" Add new" icon="plus-circle" />
+            <AddNewButton src="MyaccountList"  link={customProfilePath} label=" Add new" icon="plus-circle" />
             <div className="col-md-12 pt-5 " id=""></div>
           </div>
         )}
-
+        <MosyPaginationUi
+        src="MyaccountList"
+        tblName="system_users"
+        totalPages={stateItem.myaccountListPageCount}
+        stateItemSetters={stateItemSetters}
+        />
       </div>
       
     </form>

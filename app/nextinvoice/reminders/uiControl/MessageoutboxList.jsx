@@ -106,6 +106,8 @@ export default function MessageoutboxList({ dataIn = {}, dataOut = {} }) {
             {/*--<navgation_buttons/>--*/}
             
             <MosyActionButton
+            src="MessageoutboxList"
+            action="_search_invoice_/_ref_no"
             label=" Search invoice / ref no"
             icon="copy"
             onClick={()=>{
@@ -123,7 +125,8 @@ export default function MessageoutboxList({ dataIn = {}, dataOut = {} }) {
             
             <a href="messages" className="medium_btn border border_set btn-white hive_list_nav_refresh ml-3"><i className="fa fa-refresh mr-1 "></i> Refresh </a>
             
-            <AddNewButton link={customProfilePath} label="New message " icon="edit" />
+            
+            <AddNewButton src="MessageoutboxList" link={customProfilePath} label="New message " icon="edit" />
           </div>
         </div>
       </div> )}
@@ -149,11 +152,12 @@ export default function MessageoutboxList({ dataIn = {}, dataOut = {} }) {
           <div className="col-md-12 text-center mt-4">
             <h6 className="col-md-12 text-center p-3 mb-5 text-muted"><i className="fa fa-search"></i> Sorry, no messaging records found</h6>
             
-            <AddNewButton link={customProfilePath} label="New message " icon="edit" />
+            <AddNewButton src="MessageoutboxList"  link={customProfilePath} label="New message " icon="edit" />
             <div className="col-md-12 pt-5 " id=""></div>
           </div>
         )}
         <MosyPaginationUi
+        src="MessageoutboxList"
         tblName="messaging"
         totalPages={stateItem.messageoutboxListPageCount}
         stateItemSetters={stateItemSetters}

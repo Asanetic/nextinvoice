@@ -9,6 +9,9 @@ const MosyColumnFactory = {
    //-- clients cols--//
   clients: ["client_name", "client_email", "client_tel", "client_location", "client_photo", "gender", "date_registered", "password", "admin_id", "hive_site_id", "hive_site_name"],
 
+   //-- cloud_files cols--//
+  cloud_files: ["itemid", "remark", "photo", "dateuploaded", "hive_site_id", "hive_site_name"],
+
    //-- companies cols--//
   companies: ["business_no", "name", "mobile", "email", "business_name", "location", "specialty", "remark", "logo", "bank_name", "account_no", "pin_no", "swort_code", "hive_site_id", "hive_site_name"],
 
@@ -27,6 +30,12 @@ const MosyColumnFactory = {
    //-- invoices cols--//
   invoices: ["invoice_no", "date_created", "date_due", "paid_status", "created_by", "name", "invoice_stage", "remark", "client_id", "paid_on", "supplier_id", "invoice_type", "account_affect", "inv_no_int", "invoice_key", "client_name", "client_tel", "client_email", "invoice_amount", "hive_site_id", "hive_site_name", "vendor_headers", "client_headers", "vendor_name", "currency", "discount", "date_paid", "ref_no", "quotation", "date_updated", "folder", "footnote"],
 
+   //-- lead_followup cols--//
+  lead_followup: ["lead_id", "followup_type", "followup_date", "status", "remark", "potential", "stage", "hive_site_id", "hive_site_name"],
+
+   //-- leads_list cols--//
+  leads_list: ["name", "tel", "email", "lead_date", "source", "campaign", "cost", "potential", "stage", "tag", "remark", "hive_site_id", "hive_site_name"],
+
    //-- message_templates cols--//
   message_templates: ["template_name", "message_subject", "message_template", "template_code", "hive_site_id", "hive_site_name"],
 
@@ -38,6 +47,12 @@ const MosyColumnFactory = {
 
    //-- page_manifest_ cols--//
   page_manifest_: ["page_group", "site_id", "page_url", "hive_site_id", "hive_site_name"],
+
+   //-- quick_notes cols--//
+  quick_notes: ["note_title", "note_date", "note_details", "note_tag", "folder_name", "dateupdated", "hive_site_id", "hive_site_name"],
+
+   //-- sales_script cols--//
+  sales_script: ["title", "tag", "event", "reply_rate", "message", "lead_reply", "hive_site_id", "hive_site_name"],
 
    //-- system_users cols--//
   system_users: ["name", "email", "tel", "login_password", "ref_id", "regdate", "user_no", "user_pic", "user_gender", "last_seen", "about", "hive_site_id", "hive_site_name", "auth_token", "token_status", "token_expiring_in"],

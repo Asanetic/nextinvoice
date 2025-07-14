@@ -1,17 +1,18 @@
 'use client';
-
-//data utils
+//hive / data utils
 import { mosyPostFormData, mosyGetData, mosyUrlParam, mosyUpdateUrlParam , deleteUrlParam, magicRandomStr, mosyGetLSData  } from '../../../MosyUtils/hiveUtils';
 
-//components
+//action modals 
 import { MosyNotify , closeMosyModal, MosyAlertCard } from '../../../MosyUtils/ActionModals';
 
-//generate data filter 
+//filter util
 import { MosyFilterEngine } from '../../DataControl/MosyFilterEngine';
 
 //custom event manager 
 import { customEventHandler } from '../../DataControl/customDataFunction';
 
+
+//insert data
 export async function insertInvoicepayments() {
  //console.log(`Form invoice_payments insert sent `)
 
@@ -23,6 +24,7 @@ export async function insertInvoicepayments() {
   });
 }
 
+//update record 
 export async function updateInvoicepayments() {
 
   //console.log(`Form invoice_payments update sent `)
@@ -36,7 +38,7 @@ export async function updateInvoicepayments() {
 }
 
 
- 
+///receive form actions from profile page  
 export async function inteprateInvoicepaymentsFormAction(e, setters) {
   e.preventDefault();
 
@@ -209,7 +211,7 @@ export async function getInvoicepaymentsListData(qstr = "") {
   if(qstr=='')
   {
    fullWhere = false 
-   qstr=btoa('')
+   qstr=btoa(``)
   }
   
   //add the following data in response
@@ -235,8 +237,8 @@ export async function getInvoicepaymentsListData(qstr = "") {
         mutations: encodedMutations,
         fullQ : fullWhere,
         pagination : `l:qinvoice_payments_page:${recordsPerPage}:${pageNo}`,
-        aw:btoa(`order by primkey desc`),
-        src : btoa(`getInvoicepaymentsListData`)        
+        aw : btoa(`order by primkey desc`),
+        src : btoa(`getInvoicepaymentsListData`)
         },
     });
 
@@ -299,7 +301,10 @@ export async function invoicepaymentsProfileData(customQueryStr, setters, router
     let rawInvoicepaymentsQueryStr =`where primkey ='${decodedInvoicepaymentsToken}'`
     if(customQueryStr!='')
     {
-      rawInvoicepaymentsQueryStr = customQueryStr
+      // if no invoice_payments_uptoken set , use customQueryStr
+      if (!invoicepaymentsTokenId) {
+       rawInvoicepaymentsQueryStr = customQueryStr
+      }
     }
 
     const profileDataRecord = await initInvoicepaymentsProfileData(rawInvoicepaymentsQueryStr)
@@ -318,8 +323,6 @@ export async function invoicepaymentsProfileData(customQueryStr, setters, router
     setters.setInvoicepaymentsNode(finalProfileData)
     
     
-
-
 }
   
   
@@ -363,7 +366,7 @@ export function InteprateInvoicepaymentsEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`add invoice_payments `, data?.setters)
+    //console.log(`add invoice_payments `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -381,7 +384,7 @@ export function InteprateInvoicepaymentsEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`update invoice_payments `, data?.setters)
+    //console.log(`update invoice_payments `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -400,8 +403,6 @@ export function InteprateInvoicepaymentsEvent(data) {
 
  }
 
- //pass the the data to custom functions
- customEventHandler(data)
   
 }
 
@@ -409,7 +410,7 @@ export function InteprateInvoicepaymentsEvent(data) {
 export function popDeleteDialog(deleteToken, setters, router, afterDeleteUrl='../payments/list')
 {     
 
-  console.log(`popDeleteDialog`, setters)
+  //console.log(`popDeleteDialog`, setters)
   const childSetters = setters?.childStateSetters
   
   MosyAlertCard({

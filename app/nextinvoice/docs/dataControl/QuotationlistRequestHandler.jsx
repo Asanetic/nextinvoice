@@ -1,17 +1,18 @@
 'use client';
-
-//data utils
+//hive / data utils
 import { mosyPostFormData, mosyGetData, mosyUrlParam, mosyUpdateUrlParam , deleteUrlParam, magicRandomStr, mosyGetLSData  } from '../../../MosyUtils/hiveUtils';
 
-//components
+//action modals 
 import { MosyNotify , closeMosyModal, MosyAlertCard } from '../../../MosyUtils/ActionModals';
 
-//generate data filter 
+//filter util
 import { MosyFilterEngine } from '../../DataControl/MosyFilterEngine';
 
 //custom event manager 
 import { customEventHandler } from '../../DataControl/customDataFunction';
 
+
+//insert data
 export async function insertQuotationlist() {
  //console.log(`Form invoices insert sent `)
 
@@ -23,6 +24,7 @@ export async function insertQuotationlist() {
   });
 }
 
+//update record 
 export async function updateQuotationlist() {
 
   //console.log(`Form invoices update sent `)
@@ -36,7 +38,7 @@ export async function updateQuotationlist() {
 }
 
 
- 
+///receive form actions from profile page  
 export async function inteprateQuotationlistFormAction(e, setters) {
   e.preventDefault();
 
@@ -209,7 +211,7 @@ export async function getQuotationlistListData(qstr = "") {
   if(qstr=='')
   {
    fullWhere = false 
-   qstr=btoa('')
+   qstr=btoa(``)
   }
   
   //add the following data in response
@@ -235,8 +237,8 @@ export async function getQuotationlistListData(qstr = "") {
         mutations: encodedMutations,
         fullQ : fullWhere,
         pagination : `l:qinvoices_page:${recordsPerPage}:${pageNo}`,
-        aw:btoa(`order by primkey desc`),
-        src : btoa(`getQuotationlistListData`)        
+        aw : btoa(`order by primkey desc`),
+        src : btoa(`getQuotationlistListData`)
         },
     });
 
@@ -299,7 +301,10 @@ export async function quotationlistProfileData(customQueryStr, setters, router, 
     let rawQuotationlistQueryStr =`where primkey ='${decodedQuotationlistToken}'`
     if(customQueryStr!='')
     {
-      rawQuotationlistQueryStr = customQueryStr
+      // if no invoices_uptoken set , use customQueryStr
+      if (!quotationlistTokenId) {
+       rawQuotationlistQueryStr = customQueryStr
+      }
     }
 
     const profileDataRecord = await initQuotationlistProfileData(rawQuotationlistQueryStr)
@@ -318,8 +323,6 @@ export async function quotationlistProfileData(customQueryStr, setters, router, 
     setters.setQuotationlistNode(finalProfileData)
     
     
-
-
 }
   
   
@@ -363,7 +366,7 @@ export function InteprateQuotationlistEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`add invoices `, data?.setters)
+    //console.log(`add invoices `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -381,7 +384,7 @@ export function InteprateQuotationlistEvent(data) {
     const stateSetter =data?.setters.childStateSetters
     const parentStateSetter =data?.setters.parentStateSetters
 
-    console.log(`update invoices `, data?.setters)
+    //console.log(`update invoices `, data?.setters)
 
     if(stateSetter.setLocalEventSignature){
      stateSetter?.setLocalEventSignature(magicRandomStr())
@@ -400,8 +403,6 @@ export function InteprateQuotationlistEvent(data) {
 
  }
 
- //pass the the data to custom functions
- customEventHandler(data)
   
 }
 
@@ -409,7 +410,7 @@ export function InteprateQuotationlistEvent(data) {
 export function popDeleteDialog(deleteToken, setters, router, afterDeleteUrl='../docs/quotations')
 {     
 
-  console.log(`popDeleteDialog`, setters)
+  //console.log(`popDeleteDialog`, setters)
   const childSetters = setters?.childStateSetters
   
   MosyAlertCard({

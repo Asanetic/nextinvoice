@@ -1,3 +1,4 @@
+ // C:\xampp\htdocs\nextv2\mainapps\nextinvoice\appdna\nextinvoice\clients/ClientlistProfile_Client List.Dnaaf code 
 eval(find_snippet('986'));
 eval(find_snippet("1171")); // camel case 
 
@@ -222,7 +223,8 @@ import {
          LiveSearchDropdown,
          MosySmartField,
          MosyActionButton,
-         SmartDropdown,                  
+         SmartDropdown, 
+         DeleteButton
        } from '../../UiControl/componentControl';
 
 //".$appname." custom functions

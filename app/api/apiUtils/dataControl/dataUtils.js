@@ -132,13 +132,6 @@ export async function mosyUploadFile(fileObj, subDir = 'uploads/users')
 
     const relativePath =path.join(subDir, fileName);
 
-    // Return relative path for internal reference
-    /*return {
-      relativePath: path.join(subDir, fileName),
-      fullPath: filePath,
-      fileName: fileName
-    };*/
-
     return `${subDir}/${fileName}`;  // ✅ proper URL/path
 
   } catch (err) {
