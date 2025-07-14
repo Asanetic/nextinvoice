@@ -182,11 +182,11 @@ export default function NavSidebar({
                </li>
 
                <li className="submenu">
-                <a href="#"><i className="fa fa-edit"></i> <span> Leads & Follow ups </span> <span className="menu-arrow"></span></a>
+                <a href="#"><i className="fa fa-edit"></i> <span> Lead Management </span> <span className="menu-arrow"></span></a>
                 <ul style={{display: "none"}} >
                 <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/leads_list/profile`}>Add lead</a></li>
                 <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/leads_list/list`}>Manage leads</a></li>
-                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/lead_followup/list`}>Manage Followups</a></li>                
+                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/lead_followup/list`}>Lead Followups</a></li>                
                 <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/quick_notes/list`}>My Documents</a></li>                
                 </ul>
                </li>
