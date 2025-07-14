@@ -132,7 +132,7 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
       handleInputChange('txt_subject', `Hello ${docData?._clients_client_name_client_id || ""} here is your invoice ${docData?.invoice_no || ""}` );      
 
 
-      console.log(`loadDocMessage`, docData, ", ieneoirneorn",invoiceDataSet)
+     // console.log(`loadDocMessage`, docData, ", ieneoirneorn",invoiceDataSet)
     };
   
     fetchData(); // Call the async function
