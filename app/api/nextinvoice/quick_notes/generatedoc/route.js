@@ -18,6 +18,47 @@ export async function GET(request) {
   <html>
     <head>
       <link href="https://unpkg.com/suneditor/dist/css/suneditor.min.css" rel="stylesheet" />
+
+      <style>
+  .se-table-layout-fixed {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .se-table-layout-fixed td, .se-table-layout-fixed th {
+    border: 1px solid #ccc;
+    padding: 8px;
+    vertical-align: top;
+  }
+
+  .se-component.se-image-container {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .se-component img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .__se__solid {
+    border: none;
+    border-top: 2px solid #666;
+    margin: 10px 0;
+  }
+
+  .__se__float-none {
+    float: none;
+  }
+
+  .se-component {
+    margin-bottom: 10px;
+  }
+</style>
+
       <style>
            
       html, body {
