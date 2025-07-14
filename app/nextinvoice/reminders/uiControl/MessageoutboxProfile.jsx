@@ -33,7 +33,7 @@ import {
 } from '../../UiControl/componentControl';
 
 //nextinvoice custom functions
-import { sendMessage , loadDocMessage, grabMessage , sendWhatsappMessage } from '../../nextinvoice_custom_functions';
+import { sendMessage , loadDocMessage, grabMessage , sendWhatsappMessage, PlaceHolderButtons } from '../../nextinvoice_custom_functions';
 
 import  MessageoutboxList from './MessageoutboxList';
 
@@ -318,7 +318,7 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
                   cellOverrides={{additionalClass: "col-md-12 hive_data_cell"}}
                   />
                   
-                  
+                  <PlaceHolderButtons textareaId="txt_message_details" insertAfterId="label_messaging_txt_message_details"/>
                   <MosySmartField
                   module="messaging"
                   field="message_details"

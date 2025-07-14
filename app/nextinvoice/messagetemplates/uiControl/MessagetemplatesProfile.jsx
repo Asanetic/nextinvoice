@@ -29,12 +29,14 @@ import {
   MosySmartField,
   MosyActionButton,
   SmartDropdown,
+  DeleteButton
 } from '../../UiControl/componentControl';
 
 //nextinvoice custom functions
 //import {  } from '../../nextinvoice_custom_functions';
 
 import  MessagetemplatesList from './MessagetemplatesList';
+import { PlaceHolderButtons } from '../../nextinvoice_custom_functions';
 
 
 // export profile
@@ -240,6 +242,7 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
                   cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
                   />
                   
+                  <PlaceHolderButtons textareaId="txt_message_template" insertAfterId="label_message_templates_txt_message_template"/>                
                   
                   <MosySmartField
                   module="message_templates"

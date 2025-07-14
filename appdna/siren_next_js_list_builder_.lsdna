@@ -1,31 +1,24 @@
-//dna options==
-$dna_file_name="next_js_module_builder___next____"; 
-$create_dna="yes"; //yes | no; 
-$overwrite_dna_file="yes"; //yes | no 
-//dna options==
-
 eval(find_snippet('986'));
 eval(find_snippet("1171")); // camel case 
 
 $custom_col_main_file__="../appdna/custom_colums.php";
-$table_config_file__="../appdna/nextinvoice/lead_followup/tbl_attr/tbl_attr_lead_followup_dnaaf.php";
+$table_config_file__="../appdna/nextinvoice/message_templates/tbl_attr/tbl_attr_templates_dnaaf.php";
 
 if(file_exists($custom_col_main_file__))
 {
   include($custom_col_main_file__);
 }
 
-$primary_table__="lead_followup";
+$primary_table__="message_templates";
 $tbl_id_column_name="primkey";
 $record_id_col_name="record_id";
-//1. app_list //"primkey" , "app_id" , "app_name" , "logo" , "account_id" , "remark" , "payment_redirect" , "pricing_page_message" ,
 
 
-$nextjs_tbl_alias="lead_followup";
+$nextjs_tbl_alias="messagetemplates";
 
 // Report configurations
-$main_report_title_="Lead Followup";
-$api_endpoint_name="lead_followup";
+$main_report_title_="Message Templates";
+$api_endpoint_name="manage";
 
 $multigrid_col_span="9";
 $enable_multigrid_view_more_link ="";
@@ -54,14 +47,13 @@ $next_js_custom_profile_card=[
 
 
 $next_js_custom_List_card=[
-"infoqqsnippets"=>[
-  'card_name'=>"BlogCard",   
+"messaging"=>[
+  'card_name'=>"TimelineCard",   
    "replacements"=>[
     "editLink"=>"editlink",
-    "photoNode"=>"media",
-    "node1"=>"title",
-    "node2"=>"tag",
-    "node3"=>"date_created"
+    "node1"=>"message_date",
+    "node2"=>"message_details",
+    "node3"=>"receiver_contacts"
     ]
   
   ]
@@ -85,7 +77,7 @@ if (!file_exists($features_app_folder)) mkdir($features_app_folder);
 
 ///=================================== basic template setup 
 
-$override_def_col_size="col-md-3 hive_data_cell ";
+$override_def_col_size="col-md-6 hive_data_cell ";
 
 $skip_hive_sites=["hive_site_id","hive_site_name"];
 
@@ -101,7 +93,7 @@ $col_size_def='col-md-12';
 
 $def_profile_container_class="col-md-12 rounded text-left p-2 mb-0  bg-white ";
 $def_profile_inner_container_class='` profile_container col-md-12 m-0 p-0  ${showNavigationIsle &&("pr-lg-4 pl-lg-4 m-0")}`';  
-$override_justify_class="justify-content-start";
+$override_justify_class="justify-content-center";
 $overide_img_section_class="col-md-6 mr-lg-5";
 $override_large_col_size="col-md-12 hive_data_cell";
 $image_style_="rounded_avatar";
@@ -228,20 +220,15 @@ import {
          LiveSearchDropdown,
          MosySmartField,
          MosyActionButton,
-         SmartDropdown,  
-         DeleteButton ,
+         SmartDropdown,    
+         DeleteButton 
        } from '../../UiControl/componentControl';
 
 //".$appname." custom functions
 //import {  } from '../../".$appname."_custom_functions';
-import { sendReminder } from '../../".$appname."_custom_functions';
-
-//def logo 
-import logo from '../../../img/logo/logo.png'; // outside public!
-
-import MosyHtmlEditor from '../../../MosyUtils/htmlEditor'
 
 import  ".$camelcasetbl_prefix."List from './".$camelcasetbl_prefix."List';
+
 
 // export profile";
 
@@ -257,9 +244,7 @@ import {
          AddNewButton, 
          MosyActionButton, 
          MosyGridRowOptions,
-         MosyPaginationUi,
-         DeleteButton,
-         MosyImageViewer
+         MosyPaginationUi
        } from '../../UiControl/componentControl';
          
 import MosySnackWidget from '../../../MosyUtils/MosySnackWidget';
@@ -273,10 +258,6 @@ import { use".$camelcasetbl_prefix."State } from '../dataControl/".$camelcasetbl
 //".$appname." custom functions
 //import {  } from '../../".$appname."_custom_functions';
 
-//def logo 
-//import logo from '../../../img/logo/logo.png'; // outside public!
-
-//large text 
 import ReactMarkdown from 'react-markdown';
 
 //export list";
@@ -301,8 +282,9 @@ $widget_and_ist_array=[
 
 /// mini list creator configs
 $mini_list_array=[
-     " lead_id ='\${lead_followupNode?.lead_id}' "=>''.$camelcasetbl_prefix.'List:{`Followup history`}:../snippets/list::hide:InteprateLeadfollowupEvent', 
-     //"tag ='\${infosnippetsNode?.tag}' order by primkey desc "=>''.$camelcasetbl_prefix.'List:{`Related ${infosnippetsNode?.tag} Notes`}:../snippets/list:::InteprateInfosnippetsEvent', 
+       //" invoice_id ='\${invoicesNode?.invoice_id}' order by primkey desc "=>'InvoiceitemsList:{`Invoice items`}:../snippets/list::hide:InteprateInvoiceitemsEvent', 
+
+     " "=>''.$camelcasetbl_prefix.'List:{`More templates`}:./list:::InteprateMessagetemplatesEvent', 
      //""=>''.$camelcasetbl_prefix.'List:{`More Notes`}:../snippets/list:::InteprateInfosnippetsEvent', 
      //"deposit_file_id='\${bankingNode?.record_id}' order by primkey desc "=>'DeposithistoryList:{`Deposits list`}:../inventory/fuel::hide:InteprateDeposithistoryEvent', 
     
@@ -310,7 +292,7 @@ $mini_list_array=[
 
 /// mini list creator configs
 $subprofile_list_array=[
-   // "where app_id ='\${app_listNode?.app_id}' "=>'SubscriptionplansProfile:{`Manage Items`}:_:_:hide:InteprateSubscriptionplansEvent:setSubscriptionplansCustomProfileQuery:plans', 
+    //"where invoice_id ='\${invoicesNode?.invoice_id}' order by primkey desc  "=>'InvoiceitemsProfile:{`Manage Items`}:_:_:hide:InteprateInvoiceitemsEvent:setInvoiceitemsCustomProfileQuery:invoice_items', 
 
   ];
 
@@ -320,19 +302,8 @@ $list_btn_table_array=[
   
   $primary_table__=>[
           
-    /*"tag: Search by tag"=>"
-      MosyLiveSearch({
-        api:' /api/infowell/snippets/infosnippets', 
-        displayField:'tag', 
-        tableName:'infosnippets',
-        actionName : 'mosyfilter',
-        title:'Search by tag',
-        actionData : {path: '../snippets/list', router : router , qstr : `tag='{{tag}}'`, stateSetters : stateItemSetters}        
-        })
-        
-        ",
     
-    "bolt: Search by title"=>"
+   /* "bolt: Search by title"=>"
       MosyLiveSearch({
         api:' /api/infowell/snippets/infosnippets', 
         displayField:'title', 
@@ -366,8 +337,7 @@ $profile_btn_table_array=[
         })
         
         ",  */ 
-     // "send: Messages "=>"sendReminder()",
-    
+
       //"print: Print invoice"=>"console.log(`first next js button....`)",
       //"search: Search users"=>"console.log(`first next js button users test....`)",
       //"refresh: sync work schedule"=>"syncWorkSchedule()"
