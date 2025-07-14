@@ -22,7 +22,7 @@ export async function GET(request) {
       <style>
            
       html, body {
-        font-size: 14px;
+        font-size: 16px;
       }
 
         body { font-family: Arial, sans-serif; color: #000; }      
