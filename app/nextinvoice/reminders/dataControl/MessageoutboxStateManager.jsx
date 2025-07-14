@@ -20,6 +20,7 @@ const defaultMessageoutboxStateDefaults = {
   snackOnDone : ()=>()=>{},
   messageoutboxUptoken:'',
   messageoutboxNode : {},
+  invoiceDataSet : {},
   
   //dataScript
   messageoutboxCustomProfileQuery : '',

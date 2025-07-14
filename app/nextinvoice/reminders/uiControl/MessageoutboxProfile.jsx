@@ -72,6 +72,9 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
   const paramMessageoutboxUptoken  = stateItem.messageoutboxUptoken
   const messageoutboxActionStatus = stateItem.messageoutboxActionStatus
   const snackMessage = stateItem.snackMessage
+
+  const invoiceDataSet = stateItem.invoiceDataSet
+
   //const snackOnDone = stateItem.snackOnDone
   
   const localEventSignature = stateItem.localEventSignature
@@ -84,10 +87,11 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
   //manage post form
   function postMessageoutboxFormData(e) {
     
+    handleInputChange('txt_message_details', loadDocMessage(invoiceDataSet));
+
     MosyNotify({message: "Sending request",icon:"send"})
     
     inteprateMessageoutboxFormAction(e, stateItemSetters).then(response=>{
-      
       setChildDataOut({
         
         actionName : response.actionName,
@@ -175,19 +179,30 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
                   <MosyActionButton
                   label=" Send"
                   icon="send"
-                  onClick={()=>{sendMessage()}}
+                  onClick={()=>{
+                    sendMessage()
+                    handleInputChange('txt_message_details', loadDocMessage(invoiceDataSet));
+                  }}
                   />
                   
                   <MosyActionButton
                   label=" Copy"
                   icon="copy"
-                  onClick={()=>{grabMessage('txt_message_details')}}
+                  onClick={()=>{
+
+                    grabMessage('txt_message_details')
+                    handleInputChange('txt_message_details', loadDocMessage(invoiceDataSet));
+
+                  }}
                   />
                   
                   <MosyActionButton
                   label=" Whatsapp"
                   icon="whatsapp"
-                  onClick={()=>{sendWhatsappMessage()}}
+                  onClick={()=>{
+                    sendWhatsappMessage()
+                    handleInputChange('txt_message_details', loadDocMessage(invoiceDataSet));
+                  }}
                   />
                   
                   <MosyActionButton
@@ -274,6 +289,8 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
                     handleInputChange('txt_receiver_contacts', `${dataRes?.client_tel} / ${dataRes?.client_email}`);
                     handleInputChange('txt_receiver_tel', `${dataRes?.client_tel}`);
                     handleInputChange('txt_receiver_email', `${dataRes?.client_email}`);
+
+                    stateItemSetters.setInvoiceDataSet(dataRes)
                   }}
                   onInputChange={handleInputChange}
                   defaultColSize="col-md-4 hive_data_cell "
