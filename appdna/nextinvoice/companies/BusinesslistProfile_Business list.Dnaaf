@@ -42,6 +42,7 @@ $next_js_custom_profile_card=[
   profilePic={{profilePic}}
   profileUploadBtn={{profileUploadBtn}}
   mainContent={{mainContent}}
+  
 />']
   ];
 
