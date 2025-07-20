@@ -234,6 +234,27 @@ max-height:300px;
 overflow-y:auto;
 } 
 
+.smart_editor_editor_page {
+  width: 21cm; /* A4 width */
+  height: 29.7cm; /* A4 height */
+  padding: 2cm;
+  margin: 1cm auto;
+  border: 1px solid #ddd;
+  background: white;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  overflow: hidden;
+  page-break-after: always;
+}
+
+@media print {
+  .smart_editor_editor_page {
+    border: none;
+    box-shadow: none;
+    page-break-after: always;
+  }
+}
+
+
 @keyframes fadeInSlide {
   from {
     opacity: 0;

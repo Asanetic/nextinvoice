@@ -15,13 +15,17 @@ export default function MosyHtmlEditor({ value = '', field = "defname", onChange
   // Sync editor and previous content on initial load or prop change
   useEffect(() => {
     if (editorRef.current && value) {
-      editorRef.current.setContents(value);
+      //editorRef.current.setContents(value);
+      editorRef.current.setContents(stripEditorPageWrapper(value));
       previousContentRef.current = value;
     }
   }, [value]);
 
   const handleEditorChange = async (newContent) => {
-    handleChange(newContent);
+
+    const cleanContent = stripEditorPageWrapper(newContent);
+    const wrappedContent = `<div class="smart_editor_editor_page">${cleanContent}</div>`;
+    handleChange(wrappedContent);    
 
     const removedImages = getRemovedImageSources(previousContentRef.current, newContent);
     if (removedImages.length > 0) {
@@ -38,7 +42,7 @@ export default function MosyHtmlEditor({ value = '', field = "defname", onChange
       height="400px"
       name={field}
       id={field}
-      defaultValue={value}
+      defaultValue={stripEditorPageWrapper(value)}
       onChange={handleEditorChange}
       setOptions={{
         buttonList: [
@@ -103,3 +107,10 @@ async function deleteImages(imageUrls = []) {
     }
   }
 }
+
+
+function stripEditorPageWrapper(content = '') {
+  return content.replace(/<div class="smart_editor_editor_page">([\s\S]*?)<\/div>/gi, '$1');
+}
+
+
