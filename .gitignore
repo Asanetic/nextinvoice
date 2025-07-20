@@ -19,3 +19,8 @@ phpmagicbits.php
 .git
 
 jsondb.php
+hotspot.php
+hotspots.php
+openaiimg_gen.php
+openaitts.php
+video.php
