@@ -131,7 +131,7 @@ export default function ProductandservicesProfile({ dataIn = {}, dataOut = {} })
             <div className="col-md-12 pt-4 p-0 hive_profile_title_top d-lg-none" id=""></div>
             <h3 className="col-md-12 title_text text-left p-0 pt-3 hive_profile_title row justify-content-center m-0 ">
               <div className="col m-0 p-0 pb-3">
-                {inventoryNode?.primkey ? (  <span> Item / {inventoryNode?.item_name || ""}</span> ) :(<span> Add products / services  </span>)}
+                {inventoryNode?.primkey ? (  <span> Item profile / {inventoryNode?.item_name || ""}</span> ) :(<span> Add products / services  </span>)}
               </div>
               <>{!showNavigationIsle && (<div className="col m-0 p-0 text-right ">
                 {paramProductandservicesUptoken && (
