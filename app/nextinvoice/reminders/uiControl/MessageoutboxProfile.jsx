@@ -33,7 +33,7 @@ import {
 } from '../../UiControl/componentControl';
 
 //nextinvoice custom functions
-import { sendMessage , loadDocMessage, grabMessage , sendWhatsappMessage } from '../../nextinvoice_custom_functions';
+import { sendMessage , loadDocMessage, grabMessage , sendWhatsappMessage, PlaceHolderButtons } from '../../nextinvoice_custom_functions';
 
 import  MessageoutboxList from './MessageoutboxList';
 
@@ -46,14 +46,13 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
   //initiate data exchange manifest
   //incoming data from parent
   const {
+    docData ={},
     showNavigationIsle = true,
     customQueryStr = "",
     parentUseEffectKey = "",
     parentStateSetters=null,
     customProfileData={},
-    hostParent="MessageoutboxMainProfilePage",
-    parentProfileItemId = "MessageoutboxProfileTray"
-    
+    hostParent="MessageoutboxMainProfilePage"
   } = dataIn;
   
   //outgoing data to parent
@@ -64,7 +63,7 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
   
   
   //set default state values
-  const settersOverrides  = {localEventSignature : parentUseEffectKey,   activeScrollId : parentProfileItemId}
+  const settersOverrides  = {localEventSignature : parentUseEffectKey}
   
   //manage Messageoutbox states
   const [stateItem, stateItemSetters] = useMessageoutboxState(settersOverrides);
@@ -74,8 +73,9 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
   const paramMessageoutboxUptoken  = stateItem.messageoutboxUptoken
   const messageoutboxActionStatus = stateItem.messageoutboxActionStatus
   const snackMessage = stateItem.snackMessage
-  const activeScrollId = stateItem.activeScrollId
-  
+
+  const invoiceDataSet = stateItem.invoiceDataSet
+
   //const snackOnDone = stateItem.snackOnDone
   
   const localEventSignature = stateItem.localEventSignature
@@ -88,10 +88,11 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
   //manage post form
   function postMessageoutboxFormData(e) {
     
+    handleInputChange('txt_message_details', loadDocMessage(invoiceDataSet));
+
     MosyNotify({message: "Sending request",icon:"send"})
     
     inteprateMessageoutboxFormAction(e, stateItemSetters).then(response=>{
-      
       setChildDataOut({
         
         actionName : response.actionName,
@@ -106,23 +107,41 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
         
       })
       
-      //focus on this form on submission
-      stateItemSetters.setActiveScrollId("MessageoutboxProfileTray")
-      mosyScrollTo(activeScrollId)
-      
+      mosyScrollTo("MessageoutboxProfileTray")
       closeMosyModal()
       
     })
     
   }
-  
+
   useEffect(() => {
-    
-    messageoutboxProfileData(customQueryStr, stateItemSetters, router, customProfileData)
-    
-    mosyScrollTo(activeScrollId)
-    
-  }, [localEventSignature]);
+    stateItemSetters.setInvoiceDataSet(docData);
+
+    const fetchData = async () => {
+      await messageoutboxProfileData(customQueryStr, stateItemSetters, router, customProfileData);
+      
+      
+      mosyScrollTo("MessageoutboxProfileTray");
+      
+      if (docData && Object.keys(docData).length > 0) {
+
+        handleInputChange('txt_message_details', loadDocMessage(docData));
+        handleInputChange('txt_receiver_contacts', `${docData?.client_tel || ""} / ${docData?.client_email || ""}`);
+        handleInputChange('txt_receiver_tel', `${docData?.client_tel || ""}`);
+        handleInputChange('txt_receiver_email', `${docData?.client_email}`);
+
+        handleInputChange('txt__invoices_invoice_no_ref_number', `${docData?.invoice_no || ""}`);
+        handleInputChange('txt_ref_number', `${docData?.invoice_id || ""}`);
+        handleInputChange('txt_subject', `Hello ${docData?._clients_client_name_client_id || ""} here is your ${docData?.invoice_type || ""} ${docData?.invoice_no || ""}` );      
+        
+      }
+
+     // console.log(`loadDocMessage`, docData, ", ieneoirneorn",invoiceDataSet)
+    };
+  
+    fetchData(); // Call the async function
+  
+  }, [localEventSignature]);  
   
   
   
@@ -181,19 +200,30 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
                   <MosyActionButton
                   label=" Send"
                   icon="send"
-                  onClick={()=>{sendMessage()}}
+                  onClick={()=>{
+                    sendMessage()
+                    handleInputChange('txt_message_details', loadDocMessage(invoiceDataSet));
+                  }}
                   />
                   
                   <MosyActionButton
                   label=" Copy"
                   icon="copy"
-                  onClick={()=>{grabMessage('txt_message_details')}}
+                  onClick={()=>{
+
+                    grabMessage('txt_message_details')
+                    handleInputChange('txt_message_details', loadDocMessage(invoiceDataSet));
+
+                  }}
                   />
                   
                   <MosyActionButton
                   label=" Whatsapp"
                   icon="whatsapp"
-                  onClick={()=>{sendWhatsappMessage()}}
+                  onClick={()=>{
+                    sendWhatsappMessage()
+                    handleInputChange('txt_message_details', loadDocMessage(invoiceDataSet));
+                  }}
                   />
                   
                   <MosyActionButton
@@ -280,6 +310,8 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
                     handleInputChange('txt_receiver_contacts', `${dataRes?.client_tel} / ${dataRes?.client_email}`);
                     handleInputChange('txt_receiver_tel', `${dataRes?.client_tel}`);
                     handleInputChange('txt_receiver_email', `${dataRes?.client_email}`);
+
+                    stateItemSetters.setInvoiceDataSet(dataRes)
                   }}
                   onInputChange={handleInputChange}
                   defaultColSize="col-md-4 hive_data_cell "
@@ -324,7 +356,7 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
                   cellOverrides={{additionalClass: "col-md-12 hive_data_cell"}}
                   />
                   
-                  
+                  <PlaceHolderButtons textareaId="txt_message_details" insertAfterId="label_messaging_txt_message_details"/>
                   <MosySmartField
                   module="messaging"
                   field="message_details"

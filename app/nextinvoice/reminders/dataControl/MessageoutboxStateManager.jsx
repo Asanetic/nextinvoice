@@ -22,6 +22,9 @@ const defaultMessageoutboxStateDefaults = {
   messageoutboxNode : {},
   activeScrollId : 'MessageoutboxProfileTray',
   
+  invoiceDataSet : {},
+
+  
   //dataScript
   messageoutboxCustomProfileQuery : '',
   
