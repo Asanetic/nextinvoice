@@ -20,6 +20,7 @@ const defaultSalesscriptStateDefaults = {
   snackOnDone : ()=>()=>{},
   salesscriptUptoken:'',
   salesscriptNode : {},
+  activeScrollId : 'SalesscriptProfileTray',
   
   //dataScript
   salesscriptCustomProfileQuery : '',

@@ -46,7 +46,9 @@ export default function InvoiceitemsProfile({ dataIn = {}, dataOut = {} }) {
     parentUseEffectKey = "",
     parentStateSetters=null,
     customProfileData={},
-    hostParent="InvoiceitemsMainProfilePage"
+    hostParent="InvoiceitemsMainProfilePage",
+    parentProfileItemId = "InvoiceitemsProfileTray"
+    
   } = dataIn;
   
   //outgoing data to parent
@@ -57,7 +59,7 @@ export default function InvoiceitemsProfile({ dataIn = {}, dataOut = {} }) {
   
   
   //set default state values
-  const settersOverrides  = {localEventSignature : parentUseEffectKey}
+  const settersOverrides  = {localEventSignature : parentUseEffectKey,   activeScrollId : parentProfileItemId}
   
   //manage Invoiceitems states
   const [stateItem, stateItemSetters] = useInvoiceitemsState(settersOverrides);
@@ -67,6 +69,8 @@ export default function InvoiceitemsProfile({ dataIn = {}, dataOut = {} }) {
   const paramInvoiceitemsUptoken  = stateItem.invoiceitemsUptoken
   const invoiceitemsActionStatus = stateItem.invoiceitemsActionStatus
   const snackMessage = stateItem.snackMessage
+  const activeScrollId = stateItem.activeScrollId
+  
   //const snackOnDone = stateItem.snackOnDone
   
   const localEventSignature = stateItem.localEventSignature
@@ -97,7 +101,10 @@ export default function InvoiceitemsProfile({ dataIn = {}, dataOut = {} }) {
         
       })
       
-      mosyScrollTo("InvoiceitemsProfileTray")
+      //focus on this form on submission
+      stateItemSetters.setActiveScrollId("InvoiceitemsProfileTray")
+      mosyScrollTo(activeScrollId)
+      
       closeMosyModal()
       
     })
@@ -108,8 +115,7 @@ export default function InvoiceitemsProfile({ dataIn = {}, dataOut = {} }) {
     
     invoiceitemsProfileData(customQueryStr, stateItemSetters, router, customProfileData)
     
-    mosyScrollTo("InvoiceitemsProfileTray")
-    
+    mosyScrollTo(activeScrollId)
     
   }, [localEventSignature]);
   

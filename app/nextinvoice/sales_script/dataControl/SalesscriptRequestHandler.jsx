@@ -347,6 +347,8 @@ export function InteprateSalesscriptEvent(data) {
 
     parentSetter?.setLocalEventSignature(magicRandomStr())
     parentSetter?.setParentUseEffectKey(magicRandomStr())
+    parentSetter?.setActiveScrollId('SalesscriptProfileTray')
+
     
     mosyUpdateUrlParam('sales_script_uptoken', btoa(data?.token))
     
@@ -367,6 +369,7 @@ export function InteprateSalesscriptEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('SalesscriptProfileTray')
       }
     }
      
@@ -385,6 +388,8 @@ export function InteprateSalesscriptEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('SalesscriptProfileTray')
+        
       }
     }
   }

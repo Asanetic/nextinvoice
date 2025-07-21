@@ -20,6 +20,7 @@ const defaultQuotationlistStateDefaults = {
   snackOnDone : ()=>()=>{},
   quotationlistUptoken:'',
   quotationlistNode : {},
+  activeScrollId : 'QuotationlistProfileTray',
   
   //dataScript
   quotationlistCustomProfileQuery : '',

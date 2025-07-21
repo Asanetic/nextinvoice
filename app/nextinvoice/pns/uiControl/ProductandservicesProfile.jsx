@@ -44,7 +44,9 @@ export default function ProductandservicesProfile({ dataIn = {}, dataOut = {} })
     parentUseEffectKey = "",
     parentStateSetters=null,
     customProfileData={},
-    hostParent="ProductandservicesMainProfilePage"
+    hostParent="ProductandservicesMainProfilePage",
+    parentProfileItemId = "ProductandservicesProfileTray"
+    
   } = dataIn;
   
   //outgoing data to parent
@@ -55,7 +57,7 @@ export default function ProductandservicesProfile({ dataIn = {}, dataOut = {} })
   
   
   //set default state values
-  const settersOverrides  = {localEventSignature : parentUseEffectKey}
+  const settersOverrides  = {localEventSignature : parentUseEffectKey,   activeScrollId : parentProfileItemId}
   
   //manage Productandservices states
   const [stateItem, stateItemSetters] = useProductandservicesState(settersOverrides);
@@ -65,6 +67,8 @@ export default function ProductandservicesProfile({ dataIn = {}, dataOut = {} })
   const paramProductandservicesUptoken  = stateItem.productandservicesUptoken
   const productandservicesActionStatus = stateItem.productandservicesActionStatus
   const snackMessage = stateItem.snackMessage
+  const activeScrollId = stateItem.activeScrollId
+  
   //const snackOnDone = stateItem.snackOnDone
   
   const localEventSignature = stateItem.localEventSignature
@@ -95,7 +99,10 @@ export default function ProductandservicesProfile({ dataIn = {}, dataOut = {} })
         
       })
       
-      mosyScrollTo("ProductandservicesProfileTray")
+      //focus on this form on submission
+      stateItemSetters.setActiveScrollId("ProductandservicesProfileTray")
+      mosyScrollTo(activeScrollId)
+      
       closeMosyModal()
       
     })
@@ -106,8 +113,7 @@ export default function ProductandservicesProfile({ dataIn = {}, dataOut = {} })
     
     productandservicesProfileData(customQueryStr, stateItemSetters, router, customProfileData)
     
-    mosyScrollTo("ProductandservicesProfileTray")
-    
+    mosyScrollTo(activeScrollId)
     
   }, [localEventSignature]);
   

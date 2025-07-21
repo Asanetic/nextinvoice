@@ -55,7 +55,9 @@ export default function LeadfollowupProfile({ dataIn = {}, dataOut = {} }) {
     parentUseEffectKey = "",
     parentStateSetters=null,
     customProfileData={},
-    hostParent="LeadfollowupMainProfilePage"
+    hostParent="LeadfollowupMainProfilePage",
+    parentProfileItemId = "LeadfollowupProfileTray"
+    
   } = dataIn;
   
   //outgoing data to parent
@@ -66,7 +68,7 @@ export default function LeadfollowupProfile({ dataIn = {}, dataOut = {} }) {
   
   
   //set default state values
-  const settersOverrides  = {localEventSignature : parentUseEffectKey}
+  const settersOverrides  = {localEventSignature : parentUseEffectKey,   activeScrollId : parentProfileItemId}
   
   //manage Leadfollowup states
   const [stateItem, stateItemSetters] = useLeadfollowupState(settersOverrides);
@@ -76,6 +78,8 @@ export default function LeadfollowupProfile({ dataIn = {}, dataOut = {} }) {
   const paramLeadfollowupUptoken  = stateItem.leadfollowupUptoken
   const leadfollowupActionStatus = stateItem.leadfollowupActionStatus
   const snackMessage = stateItem.snackMessage
+  const activeScrollId = stateItem.activeScrollId
+  
   //const snackOnDone = stateItem.snackOnDone
   
   const localEventSignature = stateItem.localEventSignature
@@ -106,7 +110,10 @@ export default function LeadfollowupProfile({ dataIn = {}, dataOut = {} }) {
         
       })
       
-      mosyScrollTo("LeadfollowupProfileTray")
+      //focus on this form on submission
+      stateItemSetters.setActiveScrollId("LeadfollowupProfileTray")
+      mosyScrollTo(activeScrollId)
+      
       closeMosyModal()
       
     })
@@ -117,8 +124,7 @@ export default function LeadfollowupProfile({ dataIn = {}, dataOut = {} }) {
     
     leadfollowupProfileData(customQueryStr, stateItemSetters, router, customProfileData)
     
-    mosyScrollTo("LeadfollowupProfileTray")
-    
+    mosyScrollTo(activeScrollId)
     
   }, [localEventSignature]);
   

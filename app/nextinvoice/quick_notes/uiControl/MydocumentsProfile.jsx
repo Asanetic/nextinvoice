@@ -56,7 +56,9 @@ export default function MydocumentsProfile({ dataIn = {}, dataOut = {} }) {
     parentUseEffectKey = "",
     parentStateSetters=null,
     customProfileData={},
-    hostParent="MydocumentsMainProfilePage"
+    hostParent="MydocumentsMainProfilePage",
+    parentProfileItemId = "MydocumentsProfileTray"
+    
   } = dataIn;
   
   //outgoing data to parent
@@ -67,7 +69,7 @@ export default function MydocumentsProfile({ dataIn = {}, dataOut = {} }) {
   
   
   //set default state values
-  const settersOverrides  = {localEventSignature : parentUseEffectKey}
+  const settersOverrides  = {localEventSignature : parentUseEffectKey,   activeScrollId : parentProfileItemId}
   
   //manage Mydocuments states
   const [stateItem, stateItemSetters] = useMydocumentsState(settersOverrides);
@@ -77,6 +79,8 @@ export default function MydocumentsProfile({ dataIn = {}, dataOut = {} }) {
   const paramMydocumentsUptoken  = stateItem.mydocumentsUptoken
   const mydocumentsActionStatus = stateItem.mydocumentsActionStatus
   const snackMessage = stateItem.snackMessage
+  const activeScrollId = stateItem.activeScrollId
+  
   //const snackOnDone = stateItem.snackOnDone
   
   const localEventSignature = stateItem.localEventSignature
@@ -107,7 +111,10 @@ export default function MydocumentsProfile({ dataIn = {}, dataOut = {} }) {
         
       })
       
-      mosyScrollTo("MydocumentsProfileTray")
+      //focus on this form on submission
+      stateItemSetters.setActiveScrollId("MydocumentsProfileTray")
+      mosyScrollTo(activeScrollId)
+      
       closeMosyModal()
       
     })
@@ -118,8 +125,7 @@ export default function MydocumentsProfile({ dataIn = {}, dataOut = {} }) {
     
     mydocumentsProfileData(customQueryStr, stateItemSetters, router, customProfileData)
     
-    mosyScrollTo("MydocumentsProfileTray")
-    
+    mosyScrollTo(activeScrollId)
     
   }, [localEventSignature]);
   
@@ -186,7 +192,7 @@ export default function MydocumentsProfile({ dataIn = {}, dataOut = {} }) {
                       displayField:'note_title',
                       tableName:'quick_notes',
                       actionName : 'load_profile',
-                      title:'Search by title, tag or content',
+                      title:'Search by title',
                       actionData : {path: '../quick_notes/profile', router : router , token : `{{primkey}}`, stateSetters : stateItemSetters , actionName:`load_profile`}
                     })
                     

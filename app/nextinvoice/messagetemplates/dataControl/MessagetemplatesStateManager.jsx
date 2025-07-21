@@ -20,6 +20,7 @@ const defaultMessagetemplatesStateDefaults = {
   snackOnDone : ()=>()=>{},
   messagetemplatesUptoken:'',
   messagetemplatesNode : {},
+  activeScrollId : 'MessagetemplatesProfileTray',
   
   //dataScript
   messagetemplatesCustomProfileQuery : '',

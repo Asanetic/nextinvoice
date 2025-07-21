@@ -50,7 +50,9 @@ export default function MyaccountProfile({ dataIn = {}, dataOut = {} }) {
     parentUseEffectKey = "",
     parentStateSetters=null,
     customProfileData={},
-    hostParent="MyaccountMainProfilePage"
+    hostParent="MyaccountMainProfilePage",
+    parentProfileItemId = "MyaccountProfileTray"
+    
   } = dataIn;
   
   //outgoing data to parent
@@ -61,7 +63,7 @@ export default function MyaccountProfile({ dataIn = {}, dataOut = {} }) {
   
   
   //set default state values
-  const settersOverrides  = {localEventSignature : parentUseEffectKey}
+  const settersOverrides  = {localEventSignature : parentUseEffectKey,   activeScrollId : parentProfileItemId}
   
   //manage Myaccount states
   const [stateItem, stateItemSetters] = useMyaccountState(settersOverrides);
@@ -71,6 +73,8 @@ export default function MyaccountProfile({ dataIn = {}, dataOut = {} }) {
   const paramMyaccountUptoken  = stateItem.myaccountUptoken
   const myaccountActionStatus = stateItem.myaccountActionStatus
   const snackMessage = stateItem.snackMessage
+  const activeScrollId = stateItem.activeScrollId
+  
   //const snackOnDone = stateItem.snackOnDone
   
   const localEventSignature = stateItem.localEventSignature
@@ -101,7 +105,10 @@ export default function MyaccountProfile({ dataIn = {}, dataOut = {} }) {
         
       })
       
-      mosyScrollTo("MyaccountProfileTray")
+      //focus on this form on submission
+      stateItemSetters.setActiveScrollId("MyaccountProfileTray")
+      mosyScrollTo(activeScrollId)
+      
       closeMosyModal()
       
     })
@@ -112,8 +119,7 @@ export default function MyaccountProfile({ dataIn = {}, dataOut = {} }) {
     
     myaccountProfileData(customQueryStr, stateItemSetters, router, customProfileData)
     
-    mosyScrollTo("MyaccountProfileTray")
-    
+    mosyScrollTo(activeScrollId)
     
   }, [localEventSignature]);
   

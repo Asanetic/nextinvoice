@@ -347,6 +347,8 @@ export function InteprateBusinesslistEvent(data) {
 
     parentSetter?.setLocalEventSignature(magicRandomStr())
     parentSetter?.setParentUseEffectKey(magicRandomStr())
+    parentSetter?.setActiveScrollId('BusinesslistProfileTray')
+
     
     mosyUpdateUrlParam('companies_uptoken', btoa(data?.token))
     
@@ -367,6 +369,7 @@ export function InteprateBusinesslistEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('BusinesslistProfileTray')
       }
     }
      
@@ -385,6 +388,8 @@ export function InteprateBusinesslistEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('BusinesslistProfileTray')
+        
       }
     }
   }

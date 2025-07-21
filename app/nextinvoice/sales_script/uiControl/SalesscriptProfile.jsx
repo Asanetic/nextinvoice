@@ -53,7 +53,9 @@ export default function SalesscriptProfile({ dataIn = {}, dataOut = {} }) {
     parentUseEffectKey = "",
     parentStateSetters=null,
     customProfileData={},
-    hostParent="SalesscriptMainProfilePage"
+    hostParent="SalesscriptMainProfilePage",
+    parentProfileItemId = "SalesscriptProfileTray"
+    
   } = dataIn;
   
   //outgoing data to parent
@@ -64,7 +66,7 @@ export default function SalesscriptProfile({ dataIn = {}, dataOut = {} }) {
   
   
   //set default state values
-  const settersOverrides  = {localEventSignature : parentUseEffectKey}
+  const settersOverrides  = {localEventSignature : parentUseEffectKey,   activeScrollId : parentProfileItemId}
   
   //manage Salesscript states
   const [stateItem, stateItemSetters] = useSalesscriptState(settersOverrides);
@@ -74,6 +76,8 @@ export default function SalesscriptProfile({ dataIn = {}, dataOut = {} }) {
   const paramSalesscriptUptoken  = stateItem.salesscriptUptoken
   const salesscriptActionStatus = stateItem.salesscriptActionStatus
   const snackMessage = stateItem.snackMessage
+  const activeScrollId = stateItem.activeScrollId
+  
   //const snackOnDone = stateItem.snackOnDone
   
   const localEventSignature = stateItem.localEventSignature
@@ -104,7 +108,10 @@ export default function SalesscriptProfile({ dataIn = {}, dataOut = {} }) {
         
       })
       
-      mosyScrollTo("SalesscriptProfileTray")
+      //focus on this form on submission
+      stateItemSetters.setActiveScrollId("SalesscriptProfileTray")
+      mosyScrollTo(activeScrollId)
+      
       closeMosyModal()
       
     })
@@ -115,8 +122,7 @@ export default function SalesscriptProfile({ dataIn = {}, dataOut = {} }) {
     
     salesscriptProfileData(customQueryStr, stateItemSetters, router, customProfileData)
     
-    mosyScrollTo("SalesscriptProfileTray")
-    
+    mosyScrollTo(activeScrollId)
     
   }, [localEventSignature]);
   

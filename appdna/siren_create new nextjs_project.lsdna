@@ -1,10 +1,4 @@
 //dna options==
-$dna_file_name="new_next_js_project____new_pro___"; 
-$create_dna="yes"; //yes | no; 
-$overwrite_dna_file="yes"; //yes | no 
-//dna options==
-
-//dna options==
 $dna_file_name="create new nextjs_project"; 
 $create_dna="yes"; //yes | no; 
 $overwrite_dna_file="yes"; //yes | no 

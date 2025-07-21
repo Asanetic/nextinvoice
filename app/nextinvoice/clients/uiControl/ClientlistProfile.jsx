@@ -56,7 +56,9 @@ export default function ClientlistProfile({ dataIn = {}, dataOut = {} }) {
     parentUseEffectKey = "",
     parentStateSetters=null,
     customProfileData={},
-    hostParent="ClientlistMainProfilePage"
+    hostParent="ClientlistMainProfilePage",
+    parentProfileItemId = "ClientlistProfileTray"
+    
   } = dataIn;
   
   //outgoing data to parent
@@ -67,7 +69,7 @@ export default function ClientlistProfile({ dataIn = {}, dataOut = {} }) {
   
   
   //set default state values
-  const settersOverrides  = {localEventSignature : parentUseEffectKey}
+  const settersOverrides  = {localEventSignature : parentUseEffectKey,   activeScrollId : parentProfileItemId}
   
   //manage Clientlist states
   const [stateItem, stateItemSetters] = useClientlistState(settersOverrides);
@@ -77,6 +79,8 @@ export default function ClientlistProfile({ dataIn = {}, dataOut = {} }) {
   const paramClientlistUptoken  = stateItem.clientlistUptoken
   const clientlistActionStatus = stateItem.clientlistActionStatus
   const snackMessage = stateItem.snackMessage
+  const activeScrollId = stateItem.activeScrollId
+  
   //const snackOnDone = stateItem.snackOnDone
   
   const localEventSignature = stateItem.localEventSignature
@@ -107,7 +111,10 @@ export default function ClientlistProfile({ dataIn = {}, dataOut = {} }) {
         
       })
       
-      mosyScrollTo("ClientlistProfileTray")
+      //focus on this form on submission
+      stateItemSetters.setActiveScrollId("ClientlistProfileTray")
+      mosyScrollTo(activeScrollId)
+      
       closeMosyModal()
       
     })
@@ -118,8 +125,7 @@ export default function ClientlistProfile({ dataIn = {}, dataOut = {} }) {
     
     clientlistProfileData(customQueryStr, stateItemSetters, router, customProfileData)
     
-    mosyScrollTo("ClientlistProfileTray")
-    
+    mosyScrollTo(activeScrollId)
     
   }, [localEventSignature]);
   

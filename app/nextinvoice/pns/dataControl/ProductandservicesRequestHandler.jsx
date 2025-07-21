@@ -347,6 +347,8 @@ export function InteprateProductandservicesEvent(data) {
 
     parentSetter?.setLocalEventSignature(magicRandomStr())
     parentSetter?.setParentUseEffectKey(magicRandomStr())
+    parentSetter?.setActiveScrollId('ProductandservicesProfileTray')
+
     
     mosyUpdateUrlParam('inventory_uptoken', btoa(data?.token))
     
@@ -367,6 +369,7 @@ export function InteprateProductandservicesEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('ProductandservicesProfileTray')
       }
     }
      
@@ -385,6 +388,8 @@ export function InteprateProductandservicesEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('ProductandservicesProfileTray')
+        
       }
     }
   }

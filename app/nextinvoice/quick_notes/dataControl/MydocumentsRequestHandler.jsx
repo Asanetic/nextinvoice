@@ -347,6 +347,8 @@ export function InteprateMydocumentsEvent(data) {
 
     parentSetter?.setLocalEventSignature(magicRandomStr())
     parentSetter?.setParentUseEffectKey(magicRandomStr())
+    parentSetter?.setActiveScrollId('MydocumentsProfileTray')
+
     
     mosyUpdateUrlParam('quick_notes_uptoken', btoa(data?.token))
     
@@ -367,6 +369,7 @@ export function InteprateMydocumentsEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('MydocumentsProfileTray')
       }
     }
      
@@ -385,6 +388,8 @@ export function InteprateMydocumentsEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('MydocumentsProfileTray')
+        
       }
     }
   }

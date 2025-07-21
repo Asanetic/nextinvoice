@@ -20,6 +20,7 @@ const defaultInvoicepaymentsStateDefaults = {
   snackOnDone : ()=>()=>{},
   invoicepaymentsUptoken:'',
   invoicepaymentsNode : {},
+  activeScrollId : 'InvoicepaymentsProfileTray',
   
   //dataScript
   invoicepaymentsCustomProfileQuery : '',

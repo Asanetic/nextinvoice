@@ -57,7 +57,9 @@ export default function LeadslistProfile({ dataIn = {}, dataOut = {} }) {
     parentUseEffectKey = "",
     parentStateSetters=null,
     customProfileData={},
-    hostParent="LeadslistMainProfilePage"
+    hostParent="LeadslistMainProfilePage",
+    parentProfileItemId = "LeadslistProfileTray"
+    
   } = dataIn;
   
   //outgoing data to parent
@@ -68,7 +70,7 @@ export default function LeadslistProfile({ dataIn = {}, dataOut = {} }) {
   
   
   //set default state values
-  const settersOverrides  = {localEventSignature : parentUseEffectKey}
+  const settersOverrides  = {localEventSignature : parentUseEffectKey,   activeScrollId : parentProfileItemId}
   
   //manage Leadslist states
   const [stateItem, stateItemSetters] = useLeadslistState(settersOverrides);
@@ -78,6 +80,8 @@ export default function LeadslistProfile({ dataIn = {}, dataOut = {} }) {
   const paramLeadslistUptoken  = stateItem.leadslistUptoken
   const leadslistActionStatus = stateItem.leadslistActionStatus
   const snackMessage = stateItem.snackMessage
+  const activeScrollId = stateItem.activeScrollId
+  
   //const snackOnDone = stateItem.snackOnDone
   
   const localEventSignature = stateItem.localEventSignature
@@ -108,7 +112,10 @@ export default function LeadslistProfile({ dataIn = {}, dataOut = {} }) {
         
       })
       
-      mosyScrollTo("LeadslistProfileTray")
+      //focus on this form on submission
+      stateItemSetters.setActiveScrollId("LeadslistProfileTray")
+      mosyScrollTo(activeScrollId)
+      
       closeMosyModal()
       
     })
@@ -119,8 +126,7 @@ export default function LeadslistProfile({ dataIn = {}, dataOut = {} }) {
     
     leadslistProfileData(customQueryStr, stateItemSetters, router, customProfileData)
     
-    mosyScrollTo("LeadslistProfileTray")
-    
+    mosyScrollTo(activeScrollId)
     
   }, [localEventSignature]);
   
@@ -473,6 +479,7 @@ export default function LeadslistProfile({ dataIn = {}, dataOut = {} }) {
                 showNavigationIsle:false,
                 customQueryStr : leadfollowupCustomProfileQuery,
                 hostParent : "LeadslistProfile",
+                parentProfileItemId : activeScrollId,
                 customProfileData :
                 //lead_followup data
                 {

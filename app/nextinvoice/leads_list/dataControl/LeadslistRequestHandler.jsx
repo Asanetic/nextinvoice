@@ -347,6 +347,8 @@ export function InteprateLeadslistEvent(data) {
 
     parentSetter?.setLocalEventSignature(magicRandomStr())
     parentSetter?.setParentUseEffectKey(magicRandomStr())
+    parentSetter?.setActiveScrollId('LeadslistProfileTray')
+
     
     mosyUpdateUrlParam('leads_list_uptoken', btoa(data?.token))
     
@@ -367,6 +369,7 @@ export function InteprateLeadslistEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('LeadslistProfileTray')
       }
     }
      
@@ -385,6 +388,8 @@ export function InteprateLeadslistEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('LeadslistProfileTray')
+        
       }
     }
   }

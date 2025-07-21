@@ -59,7 +59,9 @@ export default function BusinesslistProfile({ dataIn = {}, dataOut = {} }) {
     parentUseEffectKey = "",
     parentStateSetters=null,
     customProfileData={},
-    hostParent="BusinesslistMainProfilePage"
+    hostParent="BusinesslistMainProfilePage",
+    parentProfileItemId = "BusinesslistProfileTray"
+    
   } = dataIn;
   
   //outgoing data to parent
@@ -70,7 +72,7 @@ export default function BusinesslistProfile({ dataIn = {}, dataOut = {} }) {
   
   
   //set default state values
-  const settersOverrides  = {localEventSignature : parentUseEffectKey}
+  const settersOverrides  = {localEventSignature : parentUseEffectKey,   activeScrollId : parentProfileItemId}
   
   //manage Businesslist states
   const [stateItem, stateItemSetters] = useBusinesslistState(settersOverrides);
@@ -80,6 +82,8 @@ export default function BusinesslistProfile({ dataIn = {}, dataOut = {} }) {
   const paramBusinesslistUptoken  = stateItem.businesslistUptoken
   const businesslistActionStatus = stateItem.businesslistActionStatus
   const snackMessage = stateItem.snackMessage
+  const activeScrollId = stateItem.activeScrollId
+  
   //const snackOnDone = stateItem.snackOnDone
   
   const localEventSignature = stateItem.localEventSignature
@@ -110,7 +114,10 @@ export default function BusinesslistProfile({ dataIn = {}, dataOut = {} }) {
         
       })
       
-      mosyScrollTo("BusinesslistProfileTray")
+      //focus on this form on submission
+      stateItemSetters.setActiveScrollId("BusinesslistProfileTray")
+      mosyScrollTo(activeScrollId)
+      
       closeMosyModal()
       
     })
@@ -121,8 +128,7 @@ export default function BusinesslistProfile({ dataIn = {}, dataOut = {} }) {
     
     businesslistProfileData(customQueryStr, stateItemSetters, router, customProfileData)
     
-    mosyScrollTo("BusinesslistProfileTray")
-    
+    mosyScrollTo(activeScrollId)
     
   }, [localEventSignature]);
   

@@ -66,7 +66,9 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
     parentUseEffectKey = "",
     parentStateSetters=null,
     customProfileData={},
-    hostParent="InvoicelistMainProfilePage"
+    hostParent="InvoicelistMainProfilePage",
+    parentProfileItemId = "InvoicelistProfileTray"
+    
   } = dataIn;
   
   //outgoing data to parent
@@ -77,7 +79,7 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
   
   
   //set default state values
-  const settersOverrides  = {localEventSignature : parentUseEffectKey}
+  const settersOverrides  = {localEventSignature : parentUseEffectKey,   activeScrollId : parentProfileItemId}
   
   //manage Invoicelist states
   const [stateItem, stateItemSetters] = useInvoicelistState(settersOverrides);
@@ -87,6 +89,8 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
   const paramInvoicelistUptoken  = stateItem.invoicelistUptoken
   const invoicelistActionStatus = stateItem.invoicelistActionStatus
   const snackMessage = stateItem.snackMessage
+  const activeScrollId = stateItem.activeScrollId
+  
   //const snackOnDone = stateItem.snackOnDone
   
   const localEventSignature = stateItem.localEventSignature
@@ -117,7 +121,10 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
         
       })
       
-      mosyScrollTo("InvoicelistProfileTray")
+      //focus on this form on submission
+      stateItemSetters.setActiveScrollId("InvoicelistProfileTray")
+      mosyScrollTo(activeScrollId)
+      
       closeMosyModal()
       
     })
@@ -128,8 +135,7 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
     
     invoicelistProfileData(customQueryStr, stateItemSetters, router, customProfileData)
     
-    mosyScrollTo("InvoicelistProfileTray")
-    
+    mosyScrollTo(activeScrollId)
     
   }, [localEventSignature]);
   
@@ -232,9 +238,9 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
                   />
                   
                   <MosyActionButton
-                  label=" Message "
+                  label=" Messages "
                   icon="send"
-                  onClick={()=>{sendReminder({docData : invoicesNode})}}
+                  onClick={()=>{sendReminder()}}
                   />
                   
                 </>
@@ -583,6 +589,7 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
                         showNavigationIsle:false,
                         customQueryStr : invoiceitemsCustomProfileQuery,
                         hostParent : "InvoicelistProfile",
+                        parentProfileItemId : activeScrollId,
                         customProfileData :
                         //invoice data
                         {
@@ -616,6 +623,7 @@ export default function InvoicelistProfile({ dataIn = {}, dataOut = {} }) {
                         showNavigationIsle:false,
                         customQueryStr : invoicepaymentsCustomProfileQuery,
                         hostParent : "InvoicelistProfile",
+                        parentProfileItemId : activeScrollId,
                         customProfileData :
                         //invoice data
                         {

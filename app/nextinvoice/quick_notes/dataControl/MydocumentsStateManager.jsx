@@ -20,6 +20,7 @@ const defaultMydocumentsStateDefaults = {
   snackOnDone : ()=>()=>{},
   mydocumentsUptoken:'',
   mydocumentsNode : {},
+  activeScrollId : 'MydocumentsProfileTray',
   
   //dataScript
   mydocumentsCustomProfileQuery : '',

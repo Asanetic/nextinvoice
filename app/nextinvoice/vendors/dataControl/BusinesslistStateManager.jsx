@@ -20,6 +20,7 @@ const defaultBusinesslistStateDefaults = {
   snackOnDone : ()=>()=>{},
   businesslistUptoken:'',
   businesslistNode : {},
+  activeScrollId : 'BusinesslistProfileTray',
   
   //dataScript
   businesslistCustomProfileQuery : '',

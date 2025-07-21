@@ -36,7 +36,6 @@ import {
 //import {  } from '../../nextinvoice_custom_functions';
 
 import  MessagetemplatesList from './MessagetemplatesList';
-import { PlaceHolderButtons } from '../../nextinvoice_custom_functions';
 
 
 // export profile
@@ -51,7 +50,9 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
     parentUseEffectKey = "",
     parentStateSetters=null,
     customProfileData={},
-    hostParent="MessagetemplatesMainProfilePage"
+    hostParent="MessagetemplatesMainProfilePage",
+    parentProfileItemId = "MessagetemplatesProfileTray"
+    
   } = dataIn;
   
   //outgoing data to parent
@@ -62,7 +63,7 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
   
   
   //set default state values
-  const settersOverrides  = {localEventSignature : parentUseEffectKey}
+  const settersOverrides  = {localEventSignature : parentUseEffectKey,   activeScrollId : parentProfileItemId}
   
   //manage Messagetemplates states
   const [stateItem, stateItemSetters] = useMessagetemplatesState(settersOverrides);
@@ -72,6 +73,8 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
   const paramMessagetemplatesUptoken  = stateItem.messagetemplatesUptoken
   const messagetemplatesActionStatus = stateItem.messagetemplatesActionStatus
   const snackMessage = stateItem.snackMessage
+  const activeScrollId = stateItem.activeScrollId
+  
   //const snackOnDone = stateItem.snackOnDone
   
   const localEventSignature = stateItem.localEventSignature
@@ -102,7 +105,10 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
         
       })
       
-      mosyScrollTo("MessagetemplatesProfileTray")
+      //focus on this form on submission
+      stateItemSetters.setActiveScrollId("MessagetemplatesProfileTray")
+      mosyScrollTo(activeScrollId)
+      
       closeMosyModal()
       
     })
@@ -113,8 +119,7 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
     
     messagetemplatesProfileData(customQueryStr, stateItemSetters, router, customProfileData)
     
-    mosyScrollTo("MessagetemplatesProfileTray")
-    
+    mosyScrollTo(activeScrollId)
     
   }, [localEventSignature]);
   
@@ -242,7 +247,6 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
                   cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
                   />
                   
-                  <PlaceHolderButtons textareaId="txt_message_template" insertAfterId="label_message_templates_txt_message_template"/>                
                   
                   <MosySmartField
                   module="message_templates"

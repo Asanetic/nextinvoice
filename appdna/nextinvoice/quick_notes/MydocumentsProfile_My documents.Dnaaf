@@ -362,7 +362,7 @@ $profile_btn_table_array=[
         displayField:'note_title', 
         tableName:'quick_notes',
         actionName : 'load_profile',
-        title:'Search by title, tag or content',
+        title:'Search by title',
         actionData : {path: '../quick_notes/profile', router : router , token : `{{primkey}}`, stateSetters : stateItemSetters , actionName:`load_profile`}        
         })
         

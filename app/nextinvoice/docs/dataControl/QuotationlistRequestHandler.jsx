@@ -355,6 +355,8 @@ export function InteprateQuotationlistEvent(data) {
 
     parentSetter?.setLocalEventSignature(magicRandomStr())
     parentSetter?.setParentUseEffectKey(magicRandomStr())
+    parentSetter?.setActiveScrollId('QuotationlistProfileTray')
+
     
     mosyUpdateUrlParam('invoices_uptoken', btoa(data?.token))
     
@@ -375,6 +377,7 @@ export function InteprateQuotationlistEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('QuotationlistProfileTray')
       }
     }
      
@@ -393,6 +396,8 @@ export function InteprateQuotationlistEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('QuotationlistProfileTray')
+        
       }
     }
   }

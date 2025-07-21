@@ -20,6 +20,7 @@ const defaultLeadfollowupStateDefaults = {
   snackOnDone : ()=>()=>{},
   leadfollowupUptoken:'',
   leadfollowupNode : {},
+  activeScrollId : 'LeadfollowupProfileTray',
   
   //dataScript
   leadfollowupCustomProfileQuery : '',

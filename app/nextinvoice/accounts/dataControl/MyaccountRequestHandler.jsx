@@ -347,6 +347,8 @@ export function InteprateMyaccountEvent(data) {
 
     parentSetter?.setLocalEventSignature(magicRandomStr())
     parentSetter?.setParentUseEffectKey(magicRandomStr())
+    parentSetter?.setActiveScrollId('MyaccountProfileTray')
+
     
     mosyUpdateUrlParam('system_users_uptoken', btoa(data?.token))
     
@@ -367,6 +369,7 @@ export function InteprateMyaccountEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('MyaccountProfileTray')
       }
     }
      
@@ -385,6 +388,8 @@ export function InteprateMyaccountEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('MyaccountProfileTray')
+        
       }
     }
   }

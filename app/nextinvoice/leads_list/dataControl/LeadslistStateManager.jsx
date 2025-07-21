@@ -20,6 +20,7 @@ const defaultLeadslistStateDefaults = {
   snackOnDone : ()=>()=>{},
   leadslistUptoken:'',
   leadslistNode : {},
+  activeScrollId : 'LeadslistProfileTray',
   
   //dataScript
   leadslistCustomProfileQuery : '',

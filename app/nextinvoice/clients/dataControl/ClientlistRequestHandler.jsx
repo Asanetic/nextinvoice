@@ -351,6 +351,8 @@ export function InteprateClientlistEvent(data) {
 
     parentSetter?.setLocalEventSignature(magicRandomStr())
     parentSetter?.setParentUseEffectKey(magicRandomStr())
+    parentSetter?.setActiveScrollId('ClientlistProfileTray')
+
     
     mosyUpdateUrlParam('clients_uptoken', btoa(data?.token))
     
@@ -371,6 +373,7 @@ export function InteprateClientlistEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('ClientlistProfileTray')
       }
     }
      
@@ -389,6 +392,8 @@ export function InteprateClientlistEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('ClientlistProfileTray')
+        
       }
     }
   }

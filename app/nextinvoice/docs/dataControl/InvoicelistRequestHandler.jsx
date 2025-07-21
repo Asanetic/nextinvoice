@@ -371,6 +371,8 @@ export function InteprateInvoicelistEvent(data) {
 
     parentSetter?.setLocalEventSignature(magicRandomStr())
     parentSetter?.setParentUseEffectKey(magicRandomStr())
+    parentSetter?.setActiveScrollId('InvoicelistProfileTray')
+
     
     mosyUpdateUrlParam('invoices_uptoken', btoa(data?.token))
     
@@ -391,6 +393,7 @@ export function InteprateInvoicelistEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('InvoicelistProfileTray')
       }
     }
      
@@ -409,6 +412,8 @@ export function InteprateInvoicelistEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('InvoicelistProfileTray')
+        
       }
     }
   }

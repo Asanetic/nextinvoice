@@ -20,6 +20,7 @@ const defaultClientlistStateDefaults = {
   snackOnDone : ()=>()=>{},
   clientlistUptoken:'',
   clientlistNode : {},
+  activeScrollId : 'ClientlistProfileTray',
   
   //dataScript
   clientlistCustomProfileQuery : '',

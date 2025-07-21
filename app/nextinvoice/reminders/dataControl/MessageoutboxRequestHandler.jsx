@@ -351,6 +351,8 @@ export function InteprateMessageoutboxEvent(data) {
 
     parentSetter?.setLocalEventSignature(magicRandomStr())
     parentSetter?.setParentUseEffectKey(magicRandomStr())
+    parentSetter?.setActiveScrollId('MessageoutboxProfileTray')
+
     
     mosyUpdateUrlParam('messaging_uptoken', btoa(data?.token))
     
@@ -371,6 +373,7 @@ export function InteprateMessageoutboxEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('MessageoutboxProfileTray')
       }
     }
      
@@ -389,6 +392,8 @@ export function InteprateMessageoutboxEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('MessageoutboxProfileTray')
+        
       }
     }
   }

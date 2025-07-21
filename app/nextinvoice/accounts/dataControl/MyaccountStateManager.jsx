@@ -20,6 +20,7 @@ const defaultMyaccountStateDefaults = {
   snackOnDone : ()=>()=>{},
   myaccountUptoken:'',
   myaccountNode : {},
+  activeScrollId : 'MyaccountProfileTray',
   
   //dataScript
   myaccountCustomProfileQuery : '',

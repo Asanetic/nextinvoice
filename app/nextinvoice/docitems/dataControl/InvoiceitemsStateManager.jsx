@@ -20,6 +20,7 @@ const defaultInvoiceitemsStateDefaults = {
   snackOnDone : ()=>()=>{},
   invoiceitemsUptoken:'',
   invoiceitemsNode : {},
+  activeScrollId : 'InvoiceitemsProfileTray',
   
   //dataScript
   invoiceitemsCustomProfileQuery : '',

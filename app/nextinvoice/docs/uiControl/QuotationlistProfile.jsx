@@ -33,7 +33,7 @@ import {
 } from '../../UiControl/componentControl';
 
 //nextinvoice custom functions
-import { loadVendorHeaders, loadClientHeaders, downloadQuotation , genDocNo , convertToInvoice, sendReminder} from '../../nextinvoice_custom_functions';
+import { loadVendorHeaders, loadClientHeaders, downloadQuotation , genDocNo , convertToInvoice} from '../../nextinvoice_custom_functions';
 
 //inv items
 import  InvoiceitemsProfile from '../../docitems/uiControl/InvoiceitemsProfile';
@@ -59,7 +59,9 @@ export default function QuotationlistProfile({ dataIn = {}, dataOut = {} }) {
     parentUseEffectKey = "",
     parentStateSetters=null,
     customProfileData={},
-    hostParent="QuotationlistMainProfilePage"
+    hostParent="QuotationlistMainProfilePage",
+    parentProfileItemId = "QuotationlistProfileTray"
+    
   } = dataIn;
   
   //outgoing data to parent
@@ -70,7 +72,7 @@ export default function QuotationlistProfile({ dataIn = {}, dataOut = {} }) {
   
   
   //set default state values
-  const settersOverrides  = {localEventSignature : parentUseEffectKey}
+  const settersOverrides  = {localEventSignature : parentUseEffectKey,   activeScrollId : parentProfileItemId}
   
   //manage Quotationlist states
   const [stateItem, stateItemSetters] = useQuotationlistState(settersOverrides);
@@ -80,6 +82,8 @@ export default function QuotationlistProfile({ dataIn = {}, dataOut = {} }) {
   const paramQuotationlistUptoken  = stateItem.quotationlistUptoken
   const quotationlistActionStatus = stateItem.quotationlistActionStatus
   const snackMessage = stateItem.snackMessage
+  const activeScrollId = stateItem.activeScrollId
+  
   //const snackOnDone = stateItem.snackOnDone
   
   const localEventSignature = stateItem.localEventSignature
@@ -110,7 +114,10 @@ export default function QuotationlistProfile({ dataIn = {}, dataOut = {} }) {
         
       })
       
-      mosyScrollTo("QuotationlistProfileTray")
+      //focus on this form on submission
+      stateItemSetters.setActiveScrollId("QuotationlistProfileTray")
+      mosyScrollTo(activeScrollId)
+      
       closeMosyModal()
       
     })
@@ -121,8 +128,7 @@ export default function QuotationlistProfile({ dataIn = {}, dataOut = {} }) {
     
     quotationlistProfileData(customQueryStr, stateItemSetters, router, customProfileData)
     
-    mosyScrollTo("QuotationlistProfileTray")
-    
+    mosyScrollTo(activeScrollId)
     
   }, [localEventSignature]);
   
@@ -205,12 +211,6 @@ export default function QuotationlistProfile({ dataIn = {}, dataOut = {} }) {
                   onClick={()=>{downloadQuotation({invoiceId:(invoicesNode?.primkey || '')})}}
                   />
                   
-                  <MosyActionButton
-                  label=" Message "
-                  icon="send"
-                  onClick={()=>{sendReminder({docData : invoicesNode})}}
-                  />
-
                   <MosyActionButton
                   label=" Convert to invoice"
                   icon="copy"
@@ -562,6 +562,7 @@ export default function QuotationlistProfile({ dataIn = {}, dataOut = {} }) {
                   showNavigationIsle:false,
                   customQueryStr : invoiceitemsCustomProfileQuery,
                   hostParent : "QuotationlistProfile",
+                  parentProfileItemId : activeScrollId,
                   customProfileData :
                   //invoice data
                   {

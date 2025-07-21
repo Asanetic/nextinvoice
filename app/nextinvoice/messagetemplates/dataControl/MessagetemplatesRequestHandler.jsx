@@ -347,6 +347,8 @@ export function InteprateMessagetemplatesEvent(data) {
 
     parentSetter?.setLocalEventSignature(magicRandomStr())
     parentSetter?.setParentUseEffectKey(magicRandomStr())
+    parentSetter?.setActiveScrollId('MessagetemplatesProfileTray')
+
     
     mosyUpdateUrlParam('message_templates_uptoken', btoa(data?.token))
     
@@ -367,6 +369,7 @@ export function InteprateMessagetemplatesEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('MessagetemplatesProfileTray')
       }
     }
      
@@ -385,6 +388,8 @@ export function InteprateMessagetemplatesEvent(data) {
     if(parentStateSetter){
       if(parentStateSetter.setLocalEventSignature){
         parentStateSetter?.setLocalEventSignature(magicRandomStr())
+        parentStateSetter?.setActiveScrollId('MessagetemplatesProfileTray')
+        
       }
     }
   }

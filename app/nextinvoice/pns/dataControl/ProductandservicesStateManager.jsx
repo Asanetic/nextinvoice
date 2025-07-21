@@ -20,6 +20,7 @@ const defaultProductandservicesStateDefaults = {
   snackOnDone : ()=>()=>{},
   productandservicesUptoken:'',
   productandservicesNode : {},
+  activeScrollId : 'ProductandservicesProfileTray',
   
   //dataScript
   productandservicesCustomProfileQuery : '',
