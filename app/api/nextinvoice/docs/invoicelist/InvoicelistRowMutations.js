@@ -26,7 +26,7 @@ export const InvoicelistRowMutations = {
   //dope grand_total column to the response              
   grand_total: async (row) => {
 
-    const data_res = await mosySumRows("invoice_items", `(rate*quantity)-${row?.discount}`, `where invoice_id ='${row?.invoice_id}'`);
+    const data_res = await (Number(row?.subtotal) - Number(row?.discount));
 
     return data_res;
 

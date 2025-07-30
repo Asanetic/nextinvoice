@@ -363,11 +363,11 @@ $profile_btn_table_array=[
         title:'Search by title',
         actionData : {path: '../snippets/profile', router : router , token : `{{primkey}}`, stateSetters : stateItemSetters , actionName:`load_profile`}        
         })
-        
+        {sendReminder({docData : invoicesNode})}}
         ",  */ 
     
       "print: Print invoice"=>"downloadInvoice({invoiceId:(invoicesNode?.primkey || '')})",
-      "send: Messages "=>"sendReminder()",
+      "send: Messages "=>"sendReminder({docData : invoicesNode})",
       //"search: Search users"=>"console.log(`first next js button users test....`)",
       //"refresh: sync work schedule"=>"syncWorkSchedule()"
   ],

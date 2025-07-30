@@ -73,10 +73,6 @@ $custom_profile_default_data_=[
 
 $custom_next_js_query_line_cols=[
   
-   "grand_total"=>[
-    "function" => 'await mosySumRows("invoice_items", `(rate*quantity)-${row?.discount}`, `where invoice_id =\'${row?.invoice_id}\'`)',
-    "args"=>[],
-    "return"=>"data_res"],
   
    "subtotal"=>[
     "function" => 'await mosySumRows("invoice_items", `(rate*quantity)`, `where invoice_id =\'${row?.invoice_id}\'`)',
@@ -85,6 +81,11 @@ $custom_next_js_query_line_cols=[
   
     "amount_paid"=>[
     "function" => 'await mosySumRows("invoice_payments", "amount_paid", `where invoice_id =\'${row?.invoice_id}\'`)',
+    "args"=>[],
+    "return"=>"data_res"],
+  
+  "grand_total"=>[
+    "function" => 'await (Number(row?.subtotal) - Number(row?.discount))',
     "args"=>[],
     "return"=>"data_res"],
   
