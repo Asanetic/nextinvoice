@@ -62,7 +62,7 @@ export async function downloadInvoiceOld({invoiceId="test"})
           }
 }
 
-export async function downloadInvoice({invoiceId="test"})
+export async function downloadInvoice({invoiceId="test", docName="Invoice"})
 {
           try {
             MosyNotify({message : "Generating invoice...", addTimer: false, icon:"copy"})
@@ -85,7 +85,7 @@ export async function downloadInvoice({invoiceId="test"})
           
               const blob = await response.blob();
           
-              const fileName = `${invoiceId}.pdf`;
+              const fileName = `${docName}_${invoiceId}.pdf`;
               const url = URL.createObjectURL(blob);
           
               // 1. Preview in a new tab
@@ -122,7 +122,7 @@ export async function downloadInvoice({invoiceId="test"})
 }
 
 
-export async function downloadQuotation({invoiceId="test"})
+export async function downloadQuotation({invoiceId="test", docName="Quotation"})
 {
           try {
             MosyNotify({message : "Generating quotation...", addTimer: false, icon:"copy"})
@@ -145,7 +145,7 @@ export async function downloadQuotation({invoiceId="test"})
           
               const blob = await response.blob();
           
-              const fileName = `${invoiceId}.pdf`;
+              const fileName = `${docName}_${invoiceId}.pdf`;
               const url = URL.createObjectURL(blob);
           
               // 1. Preview in a new tab
@@ -178,7 +178,7 @@ export async function downloadQuotation({invoiceId="test"})
 }
 
 
-export async function downloadReceipt({ invoiceId = "test", onComplete = null, externalWindow = null }) {
+export async function downloadReceipt({ invoiceId = "test", onComplete = null, externalWindow = null , docName="Receipt"}) {
   try {
     MosyNotify({ message: "Generating receipt...", addTimer: false, icon: "copy" });
 
@@ -190,7 +190,7 @@ export async function downloadReceipt({ invoiceId = "test", onComplete = null, e
 
     if (response.ok) {
       const blob = await response.blob();
-      const fileName = `${invoiceId}.pdf`;
+      const fileName = `${docName}_${invoiceId}.pdf`;
       const url = URL.createObjectURL(blob);
 
       // Open tab if not passed
@@ -240,7 +240,7 @@ export async function downloadReceipt({ invoiceId = "test", onComplete = null, e
 
 
 
-export async function downloadDocument({ docId = "test", onComplete = null, externalWindow = null }) {
+export async function downloadDocument({ docId = "test", onComplete = null, externalWindow = null, docName="Document" }) {
   try {
     MosyNotify({ message: "Creating document...", addTimer: false, icon: "copy" });
 
@@ -252,7 +252,9 @@ export async function downloadDocument({ docId = "test", onComplete = null, exte
 
     if (response.ok) {
       const blob = await response.blob();
-      const fileName = `${docId}.pdf`;
+
+      const fileName = `${docName}_${docId}.pdf`;
+
       const url = URL.createObjectURL(blob);
 
       // Open tab if not passed
