@@ -24,7 +24,7 @@ export default function MosyHtmlEditor({ value = '', field = "defname", onChange
   const handleEditorChange = async (newContent) => {
 
     const cleanContent = stripEditorPageWrapper(newContent);
-    const wrappedContent = `<div class="smart_editor_editor_page">${cleanContent}</div>`;
+    const wrappedContent = `<p class="smart_editor_editor_page">${cleanContent}</p>`;
     handleChange(wrappedContent);    
 
     const removedImages = getRemovedImageSources(previousContentRef.current, newContent);
@@ -36,6 +36,7 @@ export default function MosyHtmlEditor({ value = '', field = "defname", onChange
     previousContentRef.current = newContent; // 🔁 Update content snapshot
   };
 
+  
   return (
     <SunEditor
       ref={editorRef}
@@ -70,7 +71,7 @@ export default function MosyHtmlEditor({ value = '', field = "defname", onChange
 
 // Extracts all <img src="..."> from HTML string
 function extractImageSources(html = '') {
-  const container = document.createElement('div');
+  const container = document.createElement('p');
   container.innerHTML = html;
 
   const images = container.querySelectorAll('img');
@@ -110,7 +111,7 @@ async function deleteImages(imageUrls = []) {
 
 
 function stripEditorPageWrapper(content = '') {
-  return content.replace(/<div class="smart_editor_editor_page">([\s\S]*?)<\/div>/gi, '$1');
+  return content.replace(/<p class="smart_editor_editor_page">([\s\S]*?)<\/p>/gi, '$1');
 }
 
 
