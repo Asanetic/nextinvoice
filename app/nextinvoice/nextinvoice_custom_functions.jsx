@@ -254,7 +254,6 @@ export async function downloadDocument({ docId = "test", onComplete = null, exte
       const blob = await response.blob();
 
       const fileName = `${docName}_${docId}.pdf`;
-
       const url = URL.createObjectURL(blob);
 
       // Open tab if not passed
