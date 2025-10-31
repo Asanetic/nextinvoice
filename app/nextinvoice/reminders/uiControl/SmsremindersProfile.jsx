@@ -198,6 +198,12 @@ export default function SmsremindersProfile({ dataIn = {}, dataOut = {} }) {
                   icon="send"
                   onClick={()=>{sendMessage()}}
                   />
+
+                <MosyActionButton
+                  label=" Send SMS"
+                  icon="send"
+                  onClick={()=>{sendSMSMessage()}}
+                  />                  
                   
                 </>
               )}

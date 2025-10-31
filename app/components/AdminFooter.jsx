@@ -14,7 +14,7 @@ export default function AdminFooter() {
       <div id="magic_alert"></div>
       <DynamicModalProvider />
       <FloatingUpgradeButton/>
-
+      <script type="text/javascript" src="https://cora.asanetic.com/cora.js?coraasset=Spectra invoices"></script>
 
     </>
   );

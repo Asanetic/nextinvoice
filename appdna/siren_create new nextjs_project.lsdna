@@ -70,3 +70,4 @@ $blueprint_url__=$project_folder.'/appdna/blueprint.php';
   
 Recycle($blueprint_url__);  
 ui_write_to_file($blueprint_url__, $blueprint_snippet);
+ 

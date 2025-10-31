@@ -359,15 +359,31 @@ export function convertToCustomer({name, email, tel})
   },dismissable :false})
 }
 
-export function sendMessage(handleInputChange)
+export function sendMessage({sms=false, email =true})
 {
-  MosyAlertCard({message : "I confirm the receiver and the message details are correct", icon: "info-circle", iconColor : "text-info",
+  let messageType ="Email"
+  if(sms)
+  {
+    messageType ="SMS"
+  }
+  MosyAlertCard({message : `I confirm the receiver and the ${messageType} message details are correct`, icon: "info-circle", iconColor : "text-info",
      onYes: async ()=>{
     
-    MosyNotify({message:"Sending message...", icon:"send",addTimer:false, id:"topmost"})
+    MosyNotify({message:`Sending ${messageType}...`, icon:"send",addTimer:false, id:"topmost"})
     
-    await sendEmail()
-    closeMosyCard("topmost")
+    if(email){
+     
+     await sendEmail()
+     closeMosyCard("topmost")
+
+    }
+
+    if(sms)
+    {
+      
+      await sendPrimarySMS()
+
+    }
 
   }, onNo:()=>{
     closeMosyCard()
@@ -500,7 +516,6 @@ const defaultTokens = [
   { label: "Name", value: "{{first_name}}", key: "_clients_client_name_client_id" },
   { label: "SubTotal", value: "{{subtotal}}", key: "subtotal" },
   { label: "Discount", value: "{{discount}}", key: "discount" },
-  { label: "Grand total", value: "{{grand_total}}", key: "grand_total" },
   { label: "Amount paid", value: "{{amount_paid}}", key: "amount_paid" },
   { label: "Balance", value: "{{balance}}", key: "invoice_balance" },
   { label: "Due Date", value: "{{due_date}}", key: "date_due" },
@@ -701,3 +716,52 @@ export async function sendEmail()
 }
 
 
+// ====================
+// Send SMS
+// ====================
+export async function sendPrimarySMS() {
+    try {
+      // const payload = {
+      //   recp: phone,
+      //   body: message,
+      //   pushsms: "ok",
+      // };
+  
+      MosyNotify({ message: "Sending SMS...", icon: "send", id: "topmost" });
+
+      //insert sent sms message
+      //await insertSentSmsmessage(formSrc);
+
+      // var smsResponse = await mosyPostData({
+      //   url: `/api/nextinvoice/sendsms`,
+      //   data: payload,
+      //   isMultipart: true,
+      // });
+      const response = await mosyPostFormData({ 
+        formId :"messaging_profile_form", 
+        url: '/api/nextinvoice/sendsms'
+      });
+      console.log("SMS sent successfully:", response);
+
+      //update sent sms message
+     // await updateSentSmsmessage(formSrc,smsResponse);
+
+      MosyNotify({
+        message: "SMS sent successfully",
+        icon: "check",
+        id: "topmost",
+        addTimer: false,
+      });
+    } catch (error) {
+      MosyNotify({
+        message: "Failed to send SMS",
+        icon: "times-circle",
+        iconColor :"text-danger",
+        id: "topmost",
+        addTimer: true,
+        duration: 4000,
+      });
+      console.error("SMS error:", error);
+    }
+  }
+  

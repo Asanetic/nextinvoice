@@ -1,16 +1,15 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { mosyGetLSData, dayTime } from '../MosyUtils/hiveUtils';
 import saAuthConfigs from '../auth/featureConfig/saAuthConfigs';
-import {destroyAppSession} from '../auth/AuthUtils';
-
-import {hiveRoutes} from '../appConfigs/hiveRoutes'; 
-import initSidebarControls from './initSideBarControl'
+import { destroyAppSession } from '../auth/AuthUtils';
+import { hiveRoutes } from '../appConfigs/hiveRoutes';
+import initSidebarControls from './initSideBarControl';
 import { loadTrxHistory } from '../mosybilling/PricingCards';
+import { sidebarConfig } from '../appConfigs/sidebarConfig';
 
 export default function NavSidebar({
   appName = 'MosyApp',
@@ -18,39 +17,81 @@ export default function NavSidebar({
   userAvatar = '/img/useravatar.png',
   appLogoStyle = { height: '50px', width: 'auto', marginRight: '20px' },
   indexPage = '/',
-  commonRoot = ''
+  userRole = 'User', // pass role from auth/session
 }) {
   const { sessionPrefix, usernameCol } = saAuthConfigs;
   const cookieKey = `${sessionPrefix}_sa_authsess_${usernameCol}_val`;
-
   const [username, setUsername] = useState('User');
-  
+
   useEffect(() => {
     const usernameRaw = mosyGetLSData(cookieKey);
-    if (usernameRaw) {
-      setUsername(usernameRaw.split(' ')[0]);
+    if (usernameRaw) setUsername(usernameRaw.split(' ')[0]);
+    initSidebarControls();
+  }, []);
+
+  const canView = (item) => {
+    if (!item.roles) return true;          // no roles = show
+    if (item.roles.length === 0) return true; // empty roles = show to everyone
+    if (!userRole) return true;            // no userRole argument = show
+    return item.roles.includes(userRole); // otherwise check match
+  };
+  
+  const renderMenuItem = (item, idx) => {
+    if (!canView(item)) return null;
+
+    if (item.type === 'link') {
+      return (
+        <li key={idx}>
+          <a className="nav-link" href={item.href(hiveRoutes)}>
+            <i className={item.icon}></i> <span>{item.label}</span>
+          </a>
+        </li>
+      );
     }
 
-    initSidebarControls();
+    if (item.type === 'action') {
+      return (
+        <li key={idx}>
+          <a className="nav-link cpointer text-white"  onClick={item.onClick}>
+            <i className={item.icon}></i> <span>{item.label}</span>
+          </a>
+        </li>
+      );
+    }
 
+    if (item.type === 'submenu') {
+      const visibleItems = item.items.filter(canView);
+      if (visibleItems.length === 0) return null;
 
-  }, []); // Empty dependency array ensures this runs only on the client side
+      return (
+        <li className="submenu" key={idx}>
+          <a href="#">
+            <i className={item.icon}></i> <span>{item.label}</span>
+            <span className="menu-arrow"></span>
+          </a>
+          <ul style={{ display: 'none' }}>
+            {visibleItems.map((sub, sIdx) => (
+              <li key={sIdx}>
+                <a className="nav-link" href={sub.href(hiveRoutes)}>
+                  {sub.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </li>
+      );
+    }
 
-
-  const userRole = 'User';
-  const notificationCount = 0;
-  const navRoutes = hiveRoutes;
+    return null;
+  };
 
   return (
     <>
+      {/* Header */}
       <div className="header">
         <div className="header-left">
-          <a className="mobile_btn cpointer" id="mobile_btn">
-            <i className="fa fa-bars" />
-          </a>
-          <span id="toggle_btn" className="cpointer">
-            <i className="fe fe-text-align-left" />
-          </span>
+          <a className="mobile_btn cpointer" id="mobile_btn"><i className="fa fa-bars" /></a>
+          <span id="toggle_btn" className="cpointer"><i className="fe fe-text-align-left" /></span>
           <Link href={indexPage} className="logo logo-small text-dark" style={{ marginLeft: '-100px' }}>
             <Image src={appLogo} alt="Logo" style={appLogoStyle} width={30} height={30} />
             <span className="bold h5">{appName}</span>
@@ -69,139 +110,32 @@ export default function NavSidebar({
             <a href="#" className="dropdown-toggle nav-link" data-bs-toggle="dropdown">
               <span className="text-primary mr-2">Good {dayTime()} {username}</span>
               <span className="user-img">
-                <Image
-                  className="rounded-circle"
-                  src={userAvatar}
-                  width={31}
-                  height={31}
-                  alt="Avatar"
-                />
+                <Image className="rounded-circle" src={userAvatar} width={31} height={31} alt="Avatar" />
               </span>
             </a>
             <div className="dropdown-menu">
               <div className="user-header">
                 <div className="avatar avatar-sm">
-                  <Image
-                    src={userAvatar}
-                    alt="User Image"
-                    className="avatar-img rounded-circle"
-                    width={40}
-                    height={40}
-                  />
+                  <Image src={userAvatar} alt="User Image" className="avatar-img rounded-circle" width={40} height={40} />
                 </div>
                 <div className="user-text">
                   <h6>{username}</h6>
                   <p className="text-muted mb-0">{userRole}</p>
                 </div>
               </div>
-              <a className="dropdown-item d-none" href="/adminaccount">My Profile</a>
-              <a className="dropdown-item d-none" href="/adminaccount">Account Settings</a>
-              <a
-                className="dropdown-item cpointer"
-                onClick={() => {
-                    destroyAppSession();
-                  
-                }}
-              >
-                Logout
-              </a>
+              <a className="dropdown-item cpointer" onClick={() => destroyAppSession()}>Logout</a>
             </div>
           </li>
         </ul>
       </div>
+
+      {/* Sidebar */}
       <div className="sidebar" id="sidebar">
         <div className="sidebar-inner slimscroll">
           <div id="sidebar-menu" className="sidebar-menu">
             <ul>
-            <li className="menu-title p-4"> </li>    
-            <li>
-              <a className="nav-link d-none" href={`${hiveRoutes.nextinvoice}/dashboard/main`}>
-                <i className="fa fa-home"></i> <span> Dashboard </span>
-              </a>
-            </li>
-            <li>
-                <a className="nav-link" href={`${hiveRoutes.nextinvoice}/docs/invoiceprofile`}>
-                  <i className="fa fa-plus-circle"></i> <span> Create invoice </span>
-                </a>
-              </li>
-
-              <li className="submenu">
-                <a href="#"><i className="fa fa-copy"></i> <span> Invoices </span> <span className="menu-arrow"></span></a>
-                <ul style={{display: "none"}} >
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/docs/invoiceprofile`}>Create invoice</a></li>
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/docs/invoices`}>Manage invoices</a></li>
-                </ul>
-               </li>   
-
-               <li className="submenu">
-                <a href="#"><i className="fa fa-file-text"></i> <span> Quotations </span> <span className="menu-arrow"></span></a>
-                <ul style={{display: "none"}} >
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/docs/quotation`}>Create quotation</a></li>
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/docs/quotations`}>Manage Quotations</a></li>
-                </ul>
-               </li>     
-               <li className="submenu">
-                <a href="#"><i className="fa fa-list"></i> <span> Items </span> <span className="menu-arrow"></span></a>
-                <ul style={{display: "none"}} >
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/pns/profile`}>Add item</a></li>
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/pns/list`}>Manage items</a></li>
-                </ul>
-               </li> 
-
-               <li className="submenu">
-                <a href="#"><i className="fa fa-users"></i> <span> Clients </span> <span className="menu-arrow"></span></a>
-                <ul style={{display: "none"}} >
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/clients/profile`}>Add client</a></li>
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/clients/list`}>Manage clients</a></li>
-                </ul>
-               </li>  
-
-               <li className="submenu">
-                <a href="#"><i className="fa fa-briefcase"></i> <span> My businesses </span> <span className="menu-arrow"></span></a>
-                <ul style={{display: "none"}} >
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/vendors/business`}>Add company</a></li>
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/vendors/businesslist`}>Manage companies</a></li>
-                </ul>
-               </li> 
-
-               <li className="submenu">
-                <a href="#"><i className="fa fa-credit-card"></i> <span> Payments </span> <span className="menu-arrow"></span></a>
-                <ul style={{display: "none"}} >
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/payments/profile`}>Add payment</a></li>
-                  <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/payments/list`}>Manage Payments</a></li>
-                </ul>
-               </li>  
-
-               <li className="submenu">
-                <a href="#"><i className="fa fa-envelope"></i> <span> Notifications </span> <span className="menu-arrow"></span></a>
-                <ul style={{display: "none"}} >
-                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/reminders/message`}>Send message</a></li>
-                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/reminders/messages`}>Manage messages</a></li>
-                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/messagetemplates/list`}>Message templates</a></li>                
-                </ul>
-               </li>
-
-               <li className="submenu">
-                <a href="#"><i className="fa fa-edit"></i> <span> Lead Management </span> <span className="menu-arrow"></span></a>
-                <ul style={{display: "none"}} >
-                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/leads_list/profile`}>Add lead</a></li>
-                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/leads_list/list`}>Manage leads</a></li>
-                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/lead_followup/list`}>Lead Followups</a></li>                
-                <li><a className="nav-link" href={`${hiveRoutes.nextinvoice}/quick_notes/list`}>My Documents</a></li>                
-                </ul>
-               </li>
-
-               <li>
-                <a className="nav-link text-white cpointer " onClick={()=>{loadTrxHistory()}}>
-                  <i className="fa fa-database"></i> <span> Billing </span>
-                </a>
-              </li>
-              <li>
-                <a className="nav-link " href={`${hiveRoutes.nextinvoice}/accounts/list`}>
-                  <i className="fa fa-shield"></i> <span> My account </span>
-                </a>
-              </li>                      
-
+              <li className="menu-title p-4"> </li>
+              {sidebarConfig.map(renderMenuItem)}
             </ul>
           </div>
         </div>

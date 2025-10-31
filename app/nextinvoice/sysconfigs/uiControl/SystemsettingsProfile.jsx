@@ -16,10 +16,10 @@ import MosySnackWidget from '../../../MosyUtils/MosySnackWidget';
 import { mosyScrollTo , deleteUrlParam, mosyFormInputHandler,mosyUrlParam  } from '../../../MosyUtils/hiveUtils';
 
 //data control and processors
-import { inteprateMessagetemplatesFormAction, messagetemplatesProfileData , popDeleteDialog, InteprateMessagetemplatesEvent } from '../dataControl/MessagetemplatesRequestHandler';
+import { inteprateSystemsettingsFormAction, systemsettingsProfileData , popDeleteDialog, InteprateSystemsettingsEvent } from '../dataControl/SystemsettingsRequestHandler';
 
 //state management
-import { useMessagetemplatesState } from '../dataControl/MessagetemplatesStateManager';
+import { useSystemsettingsState } from '../dataControl/SystemsettingsStateManager';
 
 //profile components
 import {
@@ -29,19 +29,25 @@ import {
   MosySmartField,
   MosyActionButton,
   SmartDropdown,
-  DeleteButton
+  DeleteButton ,
 } from '../../UiControl/componentControl';
 
 //nextinvoice custom functions
-//import {  } from '../../nextinvoice_custom_functions';
+import { convertToCustomer } from '../../nextinvoice_custom_functions';
 
-import  MessagetemplatesList from './MessagetemplatesList';
-import { PlaceHolderButtons } from '../../nextinvoice_custom_functions';
+//def logo
+import logo from '../../../img/logo/logo.png'; // outside public!
+
+import MosyHtmlEditor from '../../../MosyUtils/htmlEditor'
+
+import LeadfollowupProfile from '../../lead_followup/uiControl/LeadfollowupProfile';
+
+import {InteprateLeadfollowupEvent } from '../../lead_followup/dataControl/LeadfollowupRequestHandler';
 
 
 // export profile
 
-export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
+export default function SystemsettingsProfile({ dataIn = {}, dataOut = {} }) {
   
   //initiate data exchange manifest
   //incoming data from parent
@@ -51,8 +57,8 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
     parentUseEffectKey = "",
     parentStateSetters=null,
     customProfileData={},
-    hostParent="MessagetemplatesMainProfilePage",
-    parentProfileItemId = "MessagetemplatesProfileTray"
+    hostParent="SystemsettingsMainProfilePage",
+    parentProfileItemId = "SystemsettingsProfileTray"
     
   } = dataIn;
   
@@ -66,13 +72,13 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
   //set default state values
   const settersOverrides  = {localEventSignature : parentUseEffectKey,   activeScrollId : parentProfileItemId}
   
-  //manage Messagetemplates states
-  const [stateItem, stateItemSetters] = useMessagetemplatesState(settersOverrides);
-  const message_templatesNode = stateItem.messagetemplatesNode
+  //manage Systemsettings states
+  const [stateItem, stateItemSetters] = useSystemsettingsState(settersOverrides);
+  const account_urlsNode = stateItem.systemsettingsNode
   
   // -- basic states --//
-  const paramMessagetemplatesUptoken  = stateItem.messagetemplatesUptoken
-  const messagetemplatesActionStatus = stateItem.messagetemplatesActionStatus
+  const paramSystemsettingsUptoken  = stateItem.systemsettingsUptoken
+  const systemsettingsActionStatus = stateItem.systemsettingsActionStatus
   const snackMessage = stateItem.snackMessage
   const activeScrollId = stateItem.activeScrollId
   
@@ -80,23 +86,23 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
   
   const localEventSignature = stateItem.localEventSignature
   
-  const handleInputChange = mosyFormInputHandler(stateItemSetters.setMessagetemplatesNode);
+  const handleInputChange = mosyFormInputHandler(stateItemSetters.setSystemsettingsNode);
   
   //use route navigation system
   const router = useRouter();
   
   //manage post form
-  function postMessagetemplatesFormData(e) {
+  function postSystemsettingsFormData(e) {
     
     MosyNotify({message: "Sending request",icon:"send"})
     
-    inteprateMessagetemplatesFormAction(e, stateItemSetters).then(response=>{
+    inteprateSystemsettingsFormAction(e, stateItemSetters).then(response=>{
       
       setChildDataOut({
         
         actionName : response.actionName,
         dataToken : response.newToken,
-        actionsSource : "postMessagetemplatesFormData",
+        actionsSource : "postSystemsettingsFormData",
         setters :{
           
           childStateSetters: stateItemSetters,
@@ -107,7 +113,7 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
       })
       
       //focus on this form on submission
-      stateItemSetters.setActiveScrollId("MessagetemplatesProfileTray")
+      stateItemSetters.setActiveScrollId("SystemsettingsProfileTray")
       mosyScrollTo(activeScrollId)
       
       closeMosyModal()
@@ -118,7 +124,7 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
   
   useEffect(() => {
     
-    messagetemplatesProfileData(customQueryStr, stateItemSetters, router, customProfileData)
+    systemsettingsProfileData(customQueryStr, stateItemSetters, router, customProfileData)
     
     mosyScrollTo(activeScrollId)
     
@@ -132,26 +138,26 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
   
   return (
     
-    <div className="p-0 col-md-12 text-center row justify-content-center m-0  " id="MessagetemplatesProfileTray">
+    <div className="p-0 col-md-12 text-center row justify-content-center m-0  " id="SystemsettingsProfileTray">
       {/* ================== Start Feature Section========================== ------*/}
       
       
       <div className="col-md-12 rounded text-left p-2 mb-0  bg-white ">
         <div className={` profile_container col-md-12 m-0 p-0  ${showNavigationIsle &&("pr-lg-4 pl-lg-4 m-0")}`}>
-          <form onSubmit={postMessagetemplatesFormData} encType="multipart/form-data" id="message_templates_profile_form">
+          <form onSubmit={postSystemsettingsFormData} encType="multipart/form-data" id="account_urls_profile_form">
             
             {/*    Title isle      */}
             <div className="col-md-12 pt-4 p-0 hive_profile_title_top d-lg-none" id=""></div>
             <h3 className="col-md-12 title_text text-left p-0 pt-3 hive_profile_title row justify-content-center m-0 ">
               <div className="col m-0 p-0 pb-3">
-                {message_templatesNode?.primkey ? (  <span> Template / {message_templatesNode?.template_code || ""}</span> ) :(<span>  Create template </span>)}
+                {account_urlsNode?.primkey ? (  <span>System settings Profile</span>) : (<span>Add Account Urls</span>)}
               </div>
               <>{!showNavigationIsle && (<div className="col m-0 p-0 text-right ">
-                {paramMessagetemplatesUptoken && (
+                {paramSystemsettingsUptoken && (
                   <DeleteButton
-                  src="MessagetemplatesMainProfilePage"
-                  tableName="message_templates"
-                  uptoken={paramMessagetemplatesUptoken}
+                  src="SystemsettingsMainProfilePage"
+                  tableName="account_urls"
+                  uptoken={paramSystemsettingsUptoken}
                   stateItemSetters={stateItemSetters}
                   parentStateSetters={parentStateSetters}
                   
@@ -175,19 +181,19 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
                 
                 
                 
-                {paramMessagetemplatesUptoken && (
+                {paramSystemsettingsUptoken && (
                   <>
                   
                 </>
               )}
               
-              {paramMessagetemplatesUptoken && showNavigationIsle && (
+              {paramSystemsettingsUptoken && showNavigationIsle && (
                 <>
                 
                 <DeleteButton
-                src="MessagetemplatesMainProfilePage"
-                tableName="message_templates"
-                uptoken={paramMessagetemplatesUptoken}
+                src="SystemsettingsMainProfilePage"
+                tableName="account_urls"
+                uptoken={paramSystemsettingsUptoken}
                 stateItemSetters={stateItemSetters}
                 parentStateSetters={parentStateSetters}
                 router={router}
@@ -196,10 +202,10 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
                 
                 
                 <AddNewButton
-                src="MessagetemplatesMainProfilePage"
-                tableName="message_templates"
+                src="SystemsettingsMainProfilePage"
+                tableName="account_urls"
                 link="./profile"
-                label=" Create template "
+                label=" Add new"
                 icon="plus-circle" />
               </>
             )}
@@ -219,15 +225,29 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
           
           <div className="col-md-12 row justify-content-center m-0  p-0">
             {/*    Input cells section isle      */}
-            <div className="col-md-12 row p-0 justify-content-center p-0 m-0">
+            <div className="col-md-12 row p-0 justify-content-start p-0 m-0">
               <div className="col-md-12 row justify-content-center p-0 m-0">
-                <div className="col-md-12 row p-0 justify-content-center p-0 m-0">
+                <div className="col-md-12 row p-0 justify-content-start p-0 m-0">
+                  
+                  <div className="form-group col-md-6 hive_data_cell ">
+                    <label >Setting Name</label>
+                    
+                    <select name="txt_url_name" id="txt_url_name" className="form-control">
+                      <option  value={account_urlsNode?.url_name || ""}>{account_urlsNode?.url_name || "Select Setting Name"}</option>
+                      <option>sms_api</option>
+                      <option>company_name</option>
+                      <option>email_address</option>
+                      <option>email_password</option>
+                      
+                    </select>
+                  </div>
+                  
                   
                   <MosySmartField
-                  module="message_templates"
-                  field="template_name"
-                  label="Template Name"
-                  value={message_templatesNode?.template_name || ""}
+                  module="account_urls"
+                  field="url"
+                  label="Setting value"
+                  value={account_urlsNode?.url || ""}
                   onChange={handleInputChange}
                   context={{ hostParent: hostParent  }}
                   inputOverrides={{}}
@@ -237,37 +257,23 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
                   
                   
                   <MosySmartField
-                  module="message_templates"
-                  field="template_code"
-                  label="Template Code"
-                  value={message_templatesNode?.template_code || ""}
-                  onChange={handleInputChange}
-                  context={{ hostParent: hostParent  }}
-                  inputOverrides={{}}
-                  type="text"
-                  cellOverrides={{additionalClass: "col-md-6 hive_data_cell "}}
-                  />
-                  
-                  
-                  <MosySmartField
-                  module="message_templates"
-                  field="message_template"
-                  label="Message Template"
-                  value={message_templatesNode?.message_template || ""}
+                  module="account_urls"
+                  field="description"
+                  label="Description"
+                  value={account_urlsNode?.description || ""}
                   onChange={handleInputChange}
                   context={{ hostParent: hostParent  }}
                   inputOverrides={{}}
                   type="textarea"
                   cellOverrides={{additionalClass: "col-md-12 hive_data_cell"}}
                   />
-                  <PlaceHolderButtons textareaId="txt_message_template" insertAfterId="label_message_templates_txt_message_template"/>
                   
                 </div>
                 
                 <div className="col-md-12 text-center">
                   <SubmitButtons
-                  src="MessagetemplatesMainProfilePage"
-                  tblName="message_templates"
+                  src="SystemsettingsMainProfilePage"
+                  tblName="account_urls"
                   extraClass="optional-custom-class"
                   
                   />
@@ -277,8 +283,8 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
             </div>
             
             <section className="hive_control">
-              <input type="hidden" id="message_templates_uptoken" name="message_templates_uptoken" value={paramMessagetemplatesUptoken}/>
-              <input type="hidden" id="message_templates_mosy_action" name="message_templates_mosy_action" value={messagetemplatesActionStatus}/>
+              <input type="hidden" id="account_urls_uptoken" name="account_urls_uptoken" value={paramSystemsettingsUptoken}/>
+              <input type="hidden" id="account_urls_mosy_action" name="account_urls_mosy_action" value={systemsettingsActionStatus}/>
             </section>
             
             
@@ -291,67 +297,31 @@ export default function MessagetemplatesProfile({ dataIn = {}, dataOut = {} }) {
           {/*<hive_mini_list/>*/}
           
           
-          
-          <style jsx global>{`
-          .data_list_section {
-            display: none;
-          }
-          .bottom_tbl_handler{
-            padding-bottom:70px!important;
-          }
-          `}
-        </style>
-        {message_templatesNode?.primkey && (
-          <section className="col-md-12 m-0 bg-white pt-5 p-0 ">
-            <h5 className="col-md-12 text-left  border-bottom pl-lg-1 text-muted mb-3"> {`More templates`} </h5>
-            
-            <div className="col-md-12 p-2 text-right ">
-              <a href={`./list?message_templates_mosyfilter`} className="cpointer"> View More  <i className="fa fa-arrow-right "></i></a>
-            </div>
-            
-            <MessagetemplatesList
-            key={`${customQueryStr}-${localEventSignature}`}
-            dataIn={{
-              parentStateSetters : stateItemSetters,
-              parentUseEffectKey : localEventSignature,
-              showNavigationIsle:false,
-              customQueryStr : '',
-              customProfilePath:""
-              
-            }}
-            
-            dataOut={{
-              setChildDataOut: InteprateMessagetemplatesEvent,
-              setChildDataOutSignature: (sig) => console.log("Signature changed:", sig),
-            }}
-            />
-          </section>
-        )}
+        </div>
       </div>
     </div>
-  </div>
-  
-  
-  {/* snack notifications -- */}
-  {snackMessage &&(
-    <MosySnackWidget
-    content={snackMessage}
-    duration={5000}
-    type="custom"
-    onDone={() => {
-      stateItemSetters.setSnackMessage("");
-      stateItem.snackOnDone(); // Run whats inside onDone
-      deleteUrlParam("snack_alert")
-    }}
     
-    />)}
+    
     {/* snack notifications -- */}
+    {snackMessage &&(
+      <MosySnackWidget
+      content={snackMessage}
+      duration={5000}
+      type="custom"
+      onDone={() => {
+        stateItemSetters.setSnackMessage("");
+        stateItem.snackOnDone(); // Run whats inside onDone
+        deleteUrlParam("snack_alert")
+      }}
+      
+      />)}
+      {/* snack notifications -- */}
+      
+      
+      {/* ================== End Feature Section========================== ------*/}
+    </div>
     
-    
-    {/* ================== End Feature Section========================== ------*/}
-  </div>
+  );
   
-);
-
 }
 

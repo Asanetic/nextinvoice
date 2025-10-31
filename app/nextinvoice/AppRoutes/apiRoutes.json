@@ -1,0 +1,6 @@
+{
+    "systemsettings": {
+        "base": "/api/nextinvoice/sysconfigs/systemsettings",
+        "delete": "/api/nextinvoice/sysconfigs/delete"
+    }
+}

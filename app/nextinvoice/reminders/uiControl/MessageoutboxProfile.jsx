@@ -33,7 +33,7 @@ import {
 } from '../../UiControl/componentControl';
 
 //nextinvoice custom functions
-import { sendMessage , loadDocMessage, grabMessage , sendWhatsappMessage, PlaceHolderButtons } from '../../nextinvoice_custom_functions';
+import { sendMessage , loadDocMessage, grabMessage , sendWhatsappMessage, PlaceHolderButtons, sendPrimarySMS } from '../../nextinvoice_custom_functions';
 
 import  MessageoutboxList from './MessageoutboxList';
 
@@ -198,14 +198,21 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
                   <>
                   
                   <MosyActionButton
-                  label=" Send"
-                  icon="send"
+                  label=" Send as sms "
+                  icon="comment"
                   onClick={()=>{
-                    sendMessage()
+                    sendMessage({sms:true, email: false})
                     handleInputChange('txt_message_details', loadDocMessage(invoiceDataSet));
                   }}
                   />
-                  
+                  <MosyActionButton
+                  label=" Send as email"
+                  icon="envelope"
+                  onClick={()=>{
+                    sendMessage({sms:false, email: true})
+                    handleInputChange('txt_message_details', loadDocMessage(invoiceDataSet));
+                  }}
+                  />                  
                   <MosyActionButton
                   label=" Copy"
                   icon="copy"
