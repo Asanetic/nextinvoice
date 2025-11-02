@@ -313,6 +313,7 @@ export default function MessageoutboxProfile({ dataIn = {}, dataOut = {} }) {
                   onSelect={(id) => console.log("Just the ID:", id)}
                   onSelectFull={(dataRes) =>
                   {
+                    console.log(`live search bo dd `, dataRes)
                     handleInputChange('txt_message_details', loadDocMessage(dataRes));
                     handleInputChange('txt_receiver_contacts', `${dataRes?.client_tel} / ${dataRes?.client_email}`);
                     handleInputChange('txt_receiver_tel', `${dataRes?.client_tel}`);

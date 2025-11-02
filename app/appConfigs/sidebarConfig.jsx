@@ -3,7 +3,6 @@ import { loadTrxHistory } from '../mosybilling/PricingCards';
 
 // sidebarConfig.js
 export const sidebarConfig = [
-    { type: "link", label: "Dashboard", icon: "fa fa-home", href: (routes) => `${routes.nextinvoice}/dashboard/main`, roles: [] },
   
     { type: "link", label: "Create invoice", icon: "fa fa-plus-circle", href: (routes) => `${routes.nextinvoice}/docs/invoiceprofile`, roles: [] },
     //{ type: "link", label: "Create Campaign", icon: "fa fa-check-circle", href: (routes) => `${routes.nextinvoice}/docs/invoiceprofile`, roles: [] },

@@ -525,6 +525,7 @@ const defaultTokens = [
 
 export function loadDocMessage(dataRes = {}, templateMsg = "", docType="i") {
 
+  console.log("loaddocmessage", dataRes)
   dataRes.invoice_balance = mosyTonum(dataRes?.invoice_balance)
   dataRes.subtotal = mosyTonum(dataRes?.subtotal)
   dataRes.grand_total = mosyTonum(dataRes?.grand_total)
