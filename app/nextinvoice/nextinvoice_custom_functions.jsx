@@ -521,6 +521,7 @@ const defaultTokens = [
   { label: "Due Date", value: "{{due_date}}", key: "date_due" },
   { label: "Footnote", value: "{{footnote}}", key: "footnote" },
   { label: "Document link", value: "{{doc_link}}", key: "doc_link" },
+  { label: "Invoice remark", value: "{{remark}}", key: "remark" },
 ];
 
 export function loadDocMessage(dataRes = {}, templateMsg = "", docType="i") {
@@ -561,6 +562,8 @@ As agreed, the remaining balance of ${dataRes?.currency} {{balance}} is now due 
 
 Kindly find the attached details for your project invoice
 
+ Service :  {{remark}}
+ 
  invoice Number {{doc_no}}
  
  Total amount  : ${dataRes?.currency}  {{subtotal}}
