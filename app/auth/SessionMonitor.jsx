@@ -20,7 +20,7 @@ export default function SessionMonitor({ sessionPrefix = 'sauth', loginPath = '/
 
 
     //monitor billing
-    loadBillingAccountDetails()    
+    //loadBillingAccountDetails()    
   }, []);
 
   return null; // This component just checks, doesn't render anything
